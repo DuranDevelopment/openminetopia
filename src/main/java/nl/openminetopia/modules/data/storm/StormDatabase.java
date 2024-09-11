@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.api.player.manager.PlayerManager;
+import nl.openminetopia.api.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +63,7 @@ public class StormDatabase {
             if (playerModel.isEmpty()) {
                 PlayerModel createdModel = new PlayerModel();
                 createdModel.setUniqueId(uuid);
+                createdModel.setLevel(1);
 
                 PlayerManager.getInstance().getPlayerModels().put(uuid, createdModel);
                 completableFuture.complete(createdModel);

@@ -14,13 +14,13 @@ import java.util.UUID;
 @Table(name = "prefix_colors")
 public class PrefixColorsModel extends StormModel {
 
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid")
     private UUID uniqueId;
 
     @Column(name = "color", defaultValue = "<gray>")
     private String color;
 
     @Column(name = "expires_at")
-    private Timestamp expiresAt;
+    private Long expiresAt;
 
 }

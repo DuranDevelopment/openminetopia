@@ -1,8 +1,7 @@
 package nl.openminetopia.modules.player.listeners;
 
-import nl.openminetopia.api.player.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.api.player.manager.PlayerManager;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
+import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

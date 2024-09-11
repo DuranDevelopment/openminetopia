@@ -1,8 +1,7 @@
-package nl.openminetopia.api.player.manager;
+package nl.openminetopia.api.player;
 
 import lombok.Getter;
-import nl.openminetopia.api.player.MinetopiaPlayer;
-import nl.openminetopia.api.player.OnlineMinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

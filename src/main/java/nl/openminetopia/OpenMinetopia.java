@@ -9,6 +9,7 @@ import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.mod.ModModule;
 import nl.openminetopia.modules.player.PlayerModule;
+import nl.openminetopia.modules.prefix.PrefixModule;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +39,7 @@ public final class OpenMinetopia extends JavaPlugin {
                 new DataModule(),
                 new PlayerModule(),
                 new ModModule(),
+                new PrefixModule(),
                 new ChatModule()
         );
 

@@ -19,4 +19,7 @@ public class PlayerModel extends StormModel {
     @Column(name = "level", defaultValue = "1")
     private Integer level;
 
+    @Column(name = "active_prefix_id")
+    private Integer activePrefixId;
+
 }

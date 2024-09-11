@@ -3,7 +3,7 @@ package nl.openminetopia.modules.player.listeners;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.api.player.manager.PlayerManager;
+import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

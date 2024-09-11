@@ -1,13 +1,9 @@
 package nl.openminetopia.modules.mod.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
-import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.OnlineMinetopiaPlayer;
-import nl.openminetopia.api.player.manager.PlayerManager;
+import co.aikar.commands.annotation.*;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
+import nl.openminetopia.api.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,6 +14,7 @@ public class ModSetLevelCommand extends BaseCommand {
 
     @Subcommand("setlevel")
     @Syntax("<player> <level>")
+    @CommandCompletion("@players")
     @Description("Set the level of a player.")
     public static void setLevelCommand(Player player, OfflinePlayer offlinePlayer, int newLevel) {
         if (offlinePlayer.getPlayer() == null) {

@@ -14,15 +14,12 @@ import java.util.UUID;
 @Table(name = "prefixes")
 public class PrefixesModel extends StormModel {
 
-    @Column(name = "uuid", unique = true)
+    @Column(name = "uuid")
     private UUID uniqueId;
 
     @Column(name = "prefix")
     private String prefix;
 
-    @Column(name = "color_id")
-    private Integer colorId;
-
     @Column(name = "expires_at")
-    private Timestamp expiresAt;
+    private Long expiresAt;
 }
