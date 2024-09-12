@@ -1,8 +1,8 @@
-package nl.openminetopia.modules.player.listeners;
+package nl.openminetopia.modules.fitness.listeners;
 
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +20,7 @@ public class PlayerJoinListener implements Listener {
             player.kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
             return;
         }
-        minetopiaPlayer.load();
+        minetopiaPlayer.getFitnessRunnable().runTaskTimer(OpenMinetopia.getInstance(),0,60 * 20L);
+
     }
 }

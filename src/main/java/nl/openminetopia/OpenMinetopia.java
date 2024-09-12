@@ -12,6 +12,7 @@ import nl.openminetopia.modules.fitness.FitnessModule;
 import nl.openminetopia.modules.mod.ModModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
+import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -48,7 +49,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new FitnessModule(),
                 new ModModule(),
                 new PrefixModule(),
-                new ChatModule()
+                new ChatModule(),
+                new ScoreboardModule()
         );
 
         commandManager.enableUnstableAPI("help");

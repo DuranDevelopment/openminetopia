@@ -20,7 +20,6 @@ public class PlayerQuitListener implements Listener {
         PlayerModel playerModel = minetopiaPlayer.getPlayerModel();
 
         StormDatabase.getInstance().saveStormModel(playerModel);
-        minetopiaPlayer.getFitnessRunnable().cancel();
 
         PlayerManager.getInstance().getMinetopiaPlayers().remove(player.getUniqueId());
         PlayerManager.getInstance().getPlayerModels().remove(player.getUniqueId());
