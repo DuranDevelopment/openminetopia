@@ -10,4 +10,8 @@ public class ChatUtils {
     public static Component color(String message) {
         return MiniMessage.miniMessage().deserialize(message);
     }
+
+    public static String stripMiniMessage(Component component) {
+        return MiniMessage.miniMessage().serialize(component);
+    }
 }

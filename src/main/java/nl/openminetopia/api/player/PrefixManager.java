@@ -3,6 +3,7 @@ package nl.openminetopia.api.player;
 import com.craftmend.storm.api.enums.Where;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
@@ -29,6 +30,46 @@ public class PrefixManager {
         prefixesModel.setExpiresAt(expiresAt);
 
         StormDatabase.getInstance().saveStormModel(prefixesModel);
+    }
+
+    public void setActivePrefixId(MinetopiaPlayer player, int id) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                PlayerModel playerModel = StormDatabase.getInstance().getStorm().buildQuery(PlayerModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (playerModel != null) {
+                    playerModel.setActivePrefixId(id);
+                    StormDatabase.getInstance().saveStormModel(playerModel);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    public void removePrefix(MinetopiaPlayer player, Prefix prefix) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                PrefixesModel prefixesModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixesModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .where("id", Where.EQUAL, prefix.getId())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                StormDatabase.getInstance().getStorm().delete(prefixesModel);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
     }
 
     public CompletableFuture<Prefix> getPlayerActivePrefix(MinetopiaPlayer player) {

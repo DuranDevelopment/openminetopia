@@ -22,12 +22,9 @@ public class PrefixAddCommand extends BaseCommand {
             return;
         }
 
-//        if (expiresAt == null) expiresAt = -1L;
-
         OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
         player.sendMessage("Added the prefix to the player.");
-
 
         Prefix prefix1 = new Prefix(PrefixManager.getInstance().getNextId(), prefix, -1);
         minetopiaPlayer.addPrefix(prefix1);

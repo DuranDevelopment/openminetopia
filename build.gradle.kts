@@ -31,16 +31,25 @@ repositories {
 }
 
 dependencies {
+    /* Paper */
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
-    implementation("org.spongepowered:configurate-yaml:4.1.2")
-    implementation("org.spongepowered:configurate-core:4.1.2")
-    implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.4.1")
-    implementation("org.xerial:sqlite-jdbc:3.46.1.0")
+
+    /* Configuration */
+    compileOnly("org.spongepowered:configurate-yaml:4.1.2")
+    compileOnly("org.spongepowered:configurate-core:4.1.2")
+
+    /* Database */
+    compileOnly("com.zaxxer:HikariCP:5.1.0")
+    compileOnly("mysql:mysql-connector-java:8.0.33")
+    compileOnly("org.mariadb.jdbc:mariadb-java-client:3.4.1")
+    compileOnly("org.xerial:sqlite-jdbc:3.46.1.0")
     implementation("com.github.Mindgamesnl:storm:e1f961b480")
 
+    /* Command Framework */
+    implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
+
+    /* Scoreboard */
+    implementation("fr.mrmicky:fastboard:2.1.3")
 }
 
 val targetJavaVersion = 21
@@ -79,6 +88,7 @@ tasks.processResources {
 tasks.named<ShadowJar>("shadowJar") {
     relocate("co.aikar.commands", "nl.openminetopia.shaded.acf")
     relocate("co.aikar.locales", "nl.openminetopia.shaded.locales")
+    relocate("fr.mrmicky.fastboard", "nl.openminetopia.shaded.fastboard")
 }
 
 tasks.build {

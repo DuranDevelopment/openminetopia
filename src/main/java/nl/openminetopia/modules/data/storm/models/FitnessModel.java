@@ -10,16 +10,18 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-@Table(name = "prefix_colors")
-public class PrefixColorsModel extends StormModel {
+@Table(name = "fitness")
+public class FitnessModel extends StormModel {
 
-    @Column(name = "uuid")
+    @Column(name = "uuid", unique = true)
     private UUID uniqueId;
 
-    @Column(name = "color", defaultValue = "<gray>")
-    private String color;
+    @Column(name = "total")
+    private Integer total;
 
-    @Column(name = "expires_at")
-    private Long expiresAt;
+    @Column(name = "walkingPoints")
+    private Integer walkingPoints;
 
+    @Column(name = "climbingPoints")
+    private Integer climbingPoints;
 }

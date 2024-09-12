@@ -1,5 +1,6 @@
 package nl.openminetopia.modules.player.listeners;
 
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.utils.ChatUtils;
@@ -20,6 +21,7 @@ public class PlayerJoinListener implements Listener {
             return;
         }
         minetopiaPlayer.load();
+        minetopiaPlayer.getFitnessRunnable().runTaskTimer(OpenMinetopia.getInstance(),0,60 * 20L);
 
         player.sendMessage("Welcome back, " + minetopiaPlayer.getUuid() + "!");
     }
