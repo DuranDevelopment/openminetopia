@@ -1,11 +1,14 @@
 package nl.openminetopia.modules;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ModuleManager {
 
-    private final Map<Class<? extends Module>, Module> modules = new HashMap<>();
+    /**
+     * We use a LinkedHashMap to keep the order of the modules, this to prevent issues with modules enabling/disabling before they should.
+     */
+    private final Map<Class<? extends Module>, Module> modules = new LinkedHashMap<>();
 
     public void register(Module... module) {
         for (Module modules : module) {
@@ -19,7 +22,8 @@ public class ModuleManager {
     }
 
     public void disable() {
-        this.modules.values().forEach(Module::disable);
+        // Disabling should be done in reverse order to prevent issues
+        this.modules.values().stream().toList().reversed().forEach(Module::disable);
     }
 
     public <M> M getModule(Class<M> clazz) {

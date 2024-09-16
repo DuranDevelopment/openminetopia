@@ -4,10 +4,14 @@ plugins {
     java
     id("io.freefair.lombok") version "8.10"
     id("com.gradleup.shadow") version "8.3.0"
+    id("io.papermc.paperweight.userdev") version "1.7.1"
 }
 
 group = "nl.openminetopia"
 version = "1.0-SNAPSHOT"
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
+
 
 repositories {
     mavenCentral()
@@ -32,7 +36,7 @@ repositories {
 
 dependencies {
     /* Paper */
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 
     /* Configuration */
     compileOnly("org.spongepowered:configurate-yaml:4.1.2")
@@ -49,7 +53,10 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
 
     /* Scoreboard */
-    implementation("fr.mrmicky:fastboard:2.1.3")
+    val scoreboardLibraryVersion = "2.1.12"
+    implementation("net.megavex:scoreboard-library-api:$scoreboardLibraryVersion")
+    runtimeOnly("net.megavex:scoreboard-library-implementation:$scoreboardLibraryVersion")
+    runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion:mojmap")
 }
 
 val targetJavaVersion = 21
@@ -86,9 +93,11 @@ tasks.processResources {
 }
 
 tasks.named<ShadowJar>("shadowJar") {
+    archiveFileName.set(rootProject.name + "-" + rootProject.version + ".jar")
+
     relocate("co.aikar.commands", "nl.openminetopia.shaded.acf")
     relocate("co.aikar.locales", "nl.openminetopia.shaded.locales")
-    relocate("fr.mrmicky.fastboard", "nl.openminetopia.shaded.fastboard")
+    relocate("net.megavex.scoreboardlibrary", "nl.openminetopia.shaded.scoreboard")
 }
 
 tasks.build {

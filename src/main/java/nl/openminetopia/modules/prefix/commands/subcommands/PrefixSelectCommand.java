@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.prefix.objects.Prefix;
@@ -24,6 +25,12 @@ public class PrefixSelectCommand extends BaseCommand {
             return;
         }
 
+        if (id == -1) {
+            minetopiaPlayer.setActivePrefix(new Prefix(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefix(), -1));
+            player.sendMessage("You selected the default prefix!");
+            return;
+        }
+
         List<Prefix> prefixes = minetopiaPlayer.getPrefixes();
         if (prefixes == null) {
             player.sendMessage("An error occurred while trying to get your prefixes.");
@@ -34,6 +41,7 @@ public class PrefixSelectCommand extends BaseCommand {
             player.sendMessage("You don't have a prefix with id " + id + "!");
             // send available prefixes:
             player.sendMessage("Available prefixes:");
+            player.sendMessage("-1 - " + OpenMinetopia.getDefaultConfiguration().getDefaultPrefix());
             prefixes.forEach(prefix -> player.sendMessage(prefix.getId() + " - " + prefix.getPrefix()));
             return;
         }

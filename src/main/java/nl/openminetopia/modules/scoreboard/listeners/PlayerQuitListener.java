@@ -1,6 +1,6 @@
 package nl.openminetopia.modules.scoreboard.listeners;
 
-import fr.mrmicky.fastboard.adventure.FastBoard;
+import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import nl.openminetopia.api.player.ScoreboardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,10 +13,11 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        FastBoard board = ScoreboardManager.getInstance().getScoreboard(player.getUniqueId());
-        
-        if (board != null) {
-            board.delete();
+        Sidebar sidebar = ScoreboardManager.getInstance().getScoreboard(player.getUniqueId());
+        ScoreboardManager.getInstance().removeScoreboard(player);
+
+        if (sidebar != null) {
+            sidebar.close();
         }
     }
 }

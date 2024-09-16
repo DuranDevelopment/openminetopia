@@ -25,7 +25,6 @@ public class PlayerManager {
     public HashMap<UUID, PlayerModel> playerModels = new HashMap<>();
     public HashMap<UUID, OnlineMinetopiaPlayer> minetopiaPlayers = new HashMap<>();
 
-
     public @Nullable OnlineMinetopiaPlayer getMinetopiaPlayer(@NotNull Player player) {
         if (!minetopiaPlayers.containsKey(player.getUniqueId())) {
             OnlineMinetopiaPlayer onlineMinetopiaPlayer = new OnlineMinetopiaPlayer(player.getUniqueId(), playerModels.get(player.getUniqueId()));

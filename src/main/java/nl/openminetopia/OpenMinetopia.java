@@ -37,8 +37,13 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         moduleManager = new ModuleManager();
 
-        defaultConfiguration = new DefaultConfiguration(getDataFolder());
-        defaultConfiguration.saveConfiguration();
+        try {
+            defaultConfiguration = new DefaultConfiguration(getDataFolder());
+            defaultConfiguration.saveConfiguration();
+        } catch (Exception e) {
+            this.getLogger().severe("An error occurred while loading the configuration file.");
+            e.printStackTrace();
+        }
 
         messageConfiguration = new MessageConfiguration(getDataFolder());
         messageConfiguration.saveConfiguration();

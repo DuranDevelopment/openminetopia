@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandAlias("fitness")
@@ -14,17 +15,17 @@ public class FitnessInfoCommand extends BaseCommand {
     @Syntax("<player>")
     @CommandCompletion("@players")
     @Description("Get the fitness info of a player.")
-    public void onInfoCommand(OfflinePlayer offlinePlayer) {
+    public void onInfoCommand(CommandSender sender, OfflinePlayer offlinePlayer) {
         Player player = offlinePlayer.getPlayer();
         if (player == null) return;
 
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
-        
-        player.sendMessage("Fitness info of " + player.getName() + ":");
-        player.sendMessage("Walking points: " + minetopiaPlayer.getWalkingPoints());
-        player.sendMessage("Climbing points: " + minetopiaPlayer.getClimbingPoints());
-        player.sendMessage("Total points: " + minetopiaPlayer.getTotalPoints());
+
+        sender.sendMessage("Fitness info of " + player.getName() + ":");
+        sender.sendMessage("Walking points: " + minetopiaPlayer.getWalkingPoints());
+        sender.sendMessage("Climbing points: " + minetopiaPlayer.getClimbingPoints());
+        sender.sendMessage("Total points: " + minetopiaPlayer.getTotalPoints());
 
     }
 }

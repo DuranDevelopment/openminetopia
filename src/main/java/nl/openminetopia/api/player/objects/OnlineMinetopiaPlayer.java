@@ -5,7 +5,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.FitnessManager;
 import nl.openminetopia.api.player.LevelManager;
 import nl.openminetopia.api.player.PrefixManager;
-import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
@@ -32,6 +32,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private Prefix activePrefix;
     private FitnessRunnable fitnessRunnable;
 
+    private final DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+
     public OnlineMinetopiaPlayer(UUID uuid, PlayerModel playerModel) {
         this.uuid = uuid;
         this.playerModel = playerModel;
@@ -41,7 +43,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         this.level = playerModel.getLevel();
         this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).join();
         this.prefixes = PrefixManager.getInstance().getPrefixes(this).join();
-
         this.fitnessRunnable = new FitnessRunnable(getBukkit());
     }
 
@@ -89,13 +90,13 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public Prefix getActivePrefix() {
         if (activePrefix == null) {
-            activePrefix = new Prefix(-1, "Zwerver", -1);
+            activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
         }
 
         if (activePrefix.getExpiresAt() < System.currentTimeMillis() && activePrefix.getExpiresAt() != -1) {
             getBukkit().sendMessage(ChatUtils.color("<red>Je prefix " + activePrefix + " is verlopen!"));
             removePrefix(activePrefix);
-            setActivePrefix(new Prefix(-1, "Zwerver", -1));
+            setActivePrefix(new Prefix(-1, configuration.getDefaultPrefix(), -1));
         }
 
         return activePrefix;
