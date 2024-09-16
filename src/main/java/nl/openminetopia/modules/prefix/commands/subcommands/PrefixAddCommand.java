@@ -26,7 +26,7 @@ public class PrefixAddCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
         player.sendMessage("Added the prefix to the player.");
 
-        Prefix prefix1 = new Prefix(PrefixManager.getInstance().getNextId(), prefix, -1);
+        Prefix prefix1 = new Prefix(PrefixManager.getInstance().getNextPrefixId(), prefix, -1);
         minetopiaPlayer.addPrefix(prefix1);
     }
 }

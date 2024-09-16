@@ -10,7 +10,7 @@ import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
-import nl.openminetopia.modules.prefix.objects.PrefixColor;
+import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -55,6 +55,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         try {
             this.level = playerModel.getLevel();
             this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).get();
+            this.activePrefixColor = PrefixManager.getInstance().getPlayerActivePrefixColor(this).get();
             this.prefixes = PrefixManager.getInstance().getPrefixes(this).get();
             this.prefixColors = PrefixManager.getInstance().getPrefixColors(this).get();
             this.fitnessRunnable = new FitnessRunnable(getBukkit());
@@ -85,7 +86,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void addPrefix(Prefix prefix) {
         prefixes.add(prefix);
-        PrefixManager.getInstance().addPrefix(this, prefix.getPrefix(), prefix.getExpiresAt());
+        PrefixManager.getInstance().addPrefix(this, prefix);
     }
 
     @Override
@@ -117,8 +118,11 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     @Override
     public void addPrefixColor(PrefixColor color) {
+        System.out.println(color.getColor());
+        System.out.println(color.getId());
+        System.out.println(color.getExpiresAt());
         prefixColors.add(color);
-        PrefixManager.getInstance().addPrefixColor(this, color, color.getExpiresAt());
+        PrefixManager.getInstance().addPrefixColor(this, color);
     }
 
     @Override
@@ -130,17 +134,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void setActivePrefixColor(PrefixColor color) {
         this.activePrefixColor = color;
-        PrefixManager.getInstance().setActivePrefixColorId(this, color.getId());
+        PrefixManager.getInstance().setActivePrefixColor(this, color);
     }
 
     @Override
     public PrefixColor getActivePrefixColor() {
-        if (activePrefixColor == null) {
+        System.out.println(activePrefixColor);
+        if (activePrefixColor == null || activePrefixColor.getId() == 0 ) {
             activePrefixColor = new PrefixColor(-1, "<gray>", -1);
         }
 
         if (activePrefixColor.getExpiresAt() < System.currentTimeMillis() && activePrefixColor.getExpiresAt() != -1) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix kleur " + activePrefixColor + " is verlopen!"));
+            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix kleur " + activePrefixColor.getColor() + " is verlopen!"));
+            removePrefixColor(activePrefixColor);
             setActivePrefixColor(new PrefixColor(-1, "<gray>", -1));
         }
 

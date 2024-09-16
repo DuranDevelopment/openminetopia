@@ -67,6 +67,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
      * Default settings configuration
      */
     private final String defaultPrefix;
+    private final String defaultPrefixColor;
     private final int defaultLevel;
 
 
@@ -87,6 +88,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
          * Default settings configuration
          */
         this.defaultPrefix = rootNode.node("default", "prefix").getString("Zwerver");
+        this.defaultPrefixColor = rootNode.node("default", "prefixColor").getString("<gray>");
         this.defaultLevel = rootNode.node("default", "level").getInt(1);
 
         /*

@@ -7,6 +7,7 @@ import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.chat.ChatModule;
+import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
 import nl.openminetopia.modules.mod.ModModule;
@@ -55,6 +56,7 @@ public final class OpenMinetopia extends JavaPlugin {
                 new ModModule(),
                 new PrefixModule(),
                 new ChatModule(),
+                new ColorModule(),
                 new ScoreboardModule()
         );
 
