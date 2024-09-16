@@ -50,7 +50,7 @@ public class PlayerChatListener implements Listener {
         String formattedMessage = configuration.getChatFormat()
                 .replace("<levelcolor>", "<white>")
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
-                .replace("<prefixcolor>", "<white>")
+                .replace("<prefixcolor>", minetopiaPlayer.getActivePrefixColor().getColor())
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
                 .replace("<namecolor>", "<white>")
                 .replace("<name>", source.getName())

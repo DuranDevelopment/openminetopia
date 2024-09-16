@@ -2,6 +2,7 @@ package nl.openminetopia.api.player.objects;
 
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
+import nl.openminetopia.modules.prefix.objects.PrefixColor;
 import org.bukkit.OfflinePlayer;
 
 import java.util.List;
@@ -25,6 +26,15 @@ public interface MinetopiaPlayer {
 
     Prefix getActivePrefix();
     void setActivePrefix(Prefix prefix);
+
+    /* Prefix Colors */
+    List<PrefixColor> getPrefixColors();
+    void addPrefixColor(PrefixColor color);
+    void removePrefixColor(PrefixColor color);
+
+    PrefixColor getActivePrefixColor();
+    void setActivePrefixColor(PrefixColor color);
+
 
     /* Fitness */
     void setLastDrinkingTime(long time);

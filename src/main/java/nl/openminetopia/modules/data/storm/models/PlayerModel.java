@@ -22,4 +22,7 @@ public class PlayerModel extends StormModel {
     @Column(name = "active_prefix_id")
     private Integer activePrefixId;
 
+    @Column(name = "active_prefixcolor_id")
+    private Integer activePrefixColorId;
+
 }

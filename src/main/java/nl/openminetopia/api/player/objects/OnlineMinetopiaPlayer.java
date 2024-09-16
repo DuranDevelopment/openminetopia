@@ -10,6 +10,7 @@ import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
+import nl.openminetopia.modules.prefix.objects.PrefixColor;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,7 +25,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private final PlayerModel playerModel;
 
     private int level;
+
     private List<Prefix> prefixes;
+    private Prefix activePrefix;
+
+    private List<PrefixColor> prefixColors;
+    private PrefixColor activePrefixColor;
 
     private int fitness;
     private int fitnessGainedByDrinking;
@@ -36,7 +42,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private int fitnessGainedBySwimming;
     private int fitnessGainedByFlying;
 
-    private Prefix activePrefix;
     private FitnessRunnable fitnessRunnable;
 
     private final DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
@@ -51,6 +56,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.level = playerModel.getLevel();
             this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).get();
             this.prefixes = PrefixManager.getInstance().getPrefixes(this).get();
+            this.prefixColors = PrefixManager.getInstance().getPrefixColors(this).get();
             this.fitnessRunnable = new FitnessRunnable(getBukkit());
             this.drinkingPoints = FitnessManager.getInstance().getDrinkingPoints(this).get();
             this.fitnessGainedByDrinking = FitnessManager.getInstance().getFitnessGainedByDrinking(this).get();
@@ -107,6 +113,38 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         }
 
         return activePrefix;
+    }
+
+    @Override
+    public void addPrefixColor(PrefixColor color) {
+        prefixColors.add(color);
+        PrefixManager.getInstance().addPrefixColor(this, color, color.getExpiresAt());
+    }
+
+    @Override
+    public void removePrefixColor(PrefixColor color) {
+        prefixColors.remove(color);
+        PrefixManager.getInstance().removePrefixColor(this, color);
+    }
+
+    @Override
+    public void setActivePrefixColor(PrefixColor color) {
+        this.activePrefixColor = color;
+        PrefixManager.getInstance().setActivePrefixColorId(this, color.getId());
+    }
+
+    @Override
+    public PrefixColor getActivePrefixColor() {
+        if (activePrefixColor == null) {
+            activePrefixColor = new PrefixColor(-1, "<gray>", -1);
+        }
+
+        if (activePrefixColor.getExpiresAt() < System.currentTimeMillis() && activePrefixColor.getExpiresAt() != -1) {
+            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix kleur " + activePrefixColor + " is verlopen!"));
+            setActivePrefixColor(new PrefixColor(-1, "<gray>", -1));
+        }
+
+        return activePrefixColor;
     }
 
     /* Fitness */
