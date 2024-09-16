@@ -48,6 +48,15 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final int maxFitnessByClimbing;
     private final int cmPerClimbingPoint;
 
+    private final int maxFitnessBySprinting;
+    private final int cmPerSprintingPoint;
+
+    private final int maxFitnessBySwimming;
+    private final int cmPerSwimmingPoint;
+
+    private final int maxFitnessByFlying;
+    private final int cmPerFlyingPoint;
+
     /**
      * Scoreboard configuration
      */
@@ -92,11 +101,20 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.drinkingPointsPerFitnessPoint = rootNode.node("fitness", "drinking", "drinkingPointsPerFitnessPoint").getInt(1);
         this.drinkingCooldown = rootNode.node("fitness", "drinking", "drinkingCooldown").getInt(5);
 
-        this.maxFitnessByWalking = rootNode.node("fitness", "statistics", "maxFitnessByWalking").getInt(10);
+        this.maxFitnessByWalking = rootNode.node("fitness", "statistics", "maxFitnessByWalking").getInt(30);
         this.cmPerWalkingPoint = rootNode.node("fitness", "statistics", "cmPerWalkingPoint").getInt(1000000);
+
+        this.maxFitnessBySprinting = rootNode.node("fitness", "statistics", "maxFitnessBySprinting").getInt(40);
+        this.cmPerSprintingPoint = rootNode.node("fitness", "statistics", "cmPerSprintingPoint").getInt(2000000);
 
         this.maxFitnessByClimbing = rootNode.node("fitness", "statistics", "maxFitnessByClimbing").getInt(30);
         this.cmPerClimbingPoint = rootNode.node("fitness", "statistics", "cmPerClimbingPoint").getInt(500000);
+
+        this.maxFitnessBySwimming = rootNode.node("fitness", "statistics", "maxFitnessBySwimming").getInt(30);
+        this.cmPerSwimmingPoint = rootNode.node("fitness", "statistics", "cmPerSwimmingPoint").getInt(600000);
+
+        this.maxFitnessByFlying = rootNode.node("fitness", "statistics", "maxFitnessBySwimming").getInt(30);
+        this.cmPerFlyingPoint = rootNode.node("fitness", "statistics", "cmPerSwimmingPoint").getInt(3000000);
 
         /*
          * Chat configuration

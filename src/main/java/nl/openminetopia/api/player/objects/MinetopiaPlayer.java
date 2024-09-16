@@ -44,4 +44,13 @@ public interface MinetopiaPlayer {
 
     void setFitnessGainedByWalking(int points);
     int getFitnessGainedByWalking();
+
+    void setFitnessGainedBySprinting(int points);
+    int getFitnessGainedBySprinting();
+
+    void setFitnessGainedBySwimming(int points);
+    int getFitnessGainedBySwimming();
+
+    void setFitnessGainedByFlying(int points);
+    int getFitnessGainedByFlying();
 }

@@ -32,6 +32,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private @Setter long lastDrinkingTime;
     private int fitnessGainedByClimbing;
     private int fitnessGainedByWalking;
+    private int fitnessGainedBySprinting;
+    private int fitnessGainedBySwimming;
+    private int fitnessGainedByFlying;
 
     private Prefix activePrefix;
     private FitnessRunnable fitnessRunnable;
@@ -143,5 +146,23 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     public void setFitnessGainedByWalking(int points) {
         this.fitnessGainedByWalking = points;
         FitnessManager.getInstance().setFitnessGainedByWalking(this, points);
+    }
+
+    @Override
+    public void setFitnessGainedBySprinting(int points) {
+        this.fitnessGainedBySprinting = points;
+        FitnessManager.getInstance().setFitnessGainedBySprinting(this, points);
+    }
+
+    @Override
+    public void setFitnessGainedBySwimming(int points) {
+        this.fitnessGainedBySwimming = points;
+        FitnessManager.getInstance().setFitnessGainedBySwimming(this, points);
+    }
+
+    @Override
+    public void setFitnessGainedByFlying(int points) {
+        this.fitnessGainedByFlying = points;
+        FitnessManager.getInstance().setFitnessGainedByFlying(this, points);
     }
 }

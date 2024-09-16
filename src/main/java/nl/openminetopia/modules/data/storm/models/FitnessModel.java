@@ -30,4 +30,13 @@ public class FitnessModel extends StormModel {
 
     @Column(name = "fitness_by_climbing", defaultValue = "0")
     private Integer fitnessGainedByClimbing;
+
+    @Column(name = "fitness_by_sprinting", defaultValue = "0")
+    private Integer fitnessGainedBySprinting;
+
+    @Column(name = "fitness_by_swimming", defaultValue = "0")
+    private Integer fitnessGainedBySwimming;
+
+    @Column(name = "fitness_by_flying", defaultValue = "0")
+    private Integer fitnessGainedByFlying;
 }

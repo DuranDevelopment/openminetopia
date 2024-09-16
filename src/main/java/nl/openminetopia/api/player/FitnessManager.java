@@ -165,6 +165,75 @@ public class FitnessManager {
         });
     }
 
+    public void setFitnessGainedBySprinting(MinetopiaPlayer player, int amount) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel == null) {
+                    fitnessModel = new FitnessModel();
+                    fitnessModel.setUniqueId(player.getUuid());
+                }
+                fitnessModel.setFitnessGainedBySprinting(amount);
+                StormDatabase.getInstance().saveStormModel(fitnessModel);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    public void setFitnessGainedByFlying(MinetopiaPlayer player, int amount) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel == null) {
+                    fitnessModel = new FitnessModel();
+                    fitnessModel.setUniqueId(player.getUuid());
+                }
+                fitnessModel.setFitnessGainedByFlying(amount);
+                StormDatabase.getInstance().saveStormModel(fitnessModel);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    public void setFitnessGainedBySwimming(MinetopiaPlayer player, int amount) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel == null) {
+                    fitnessModel = new FitnessModel();
+                    fitnessModel.setUniqueId(player.getUuid());
+                }
+                fitnessModel.setFitnessGainedBySwimming(amount);
+                StormDatabase.getInstance().saveStormModel(fitnessModel);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
     public void setFitnessGainedByWalking(MinetopiaPlayer player, int amount) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
