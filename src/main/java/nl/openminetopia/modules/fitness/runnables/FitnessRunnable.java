@@ -1,6 +1,7 @@
 package nl.openminetopia.modules.fitness.runnables;
 
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.FitnessManager;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
@@ -26,23 +27,22 @@ public class FitnessRunnable extends BukkitRunnable {
         /* Walking points */
 
         int currentWalkedDistance = player.getStatistic(Statistic.WALK_ONE_CM); // Huidige afstand in centimeters
-        int amountOfCmWalkedPerPoint = configuration.getWalkingPointsPerCm();
-        int newWalkingPoints = (currentWalkedDistance - currentWalkedDistance % amountOfCmWalkedPerPoint) / amountOfCmWalkedPerPoint;  // Eén punt per 1000 cm
+        int amountOfCmWalkedPerPoint = configuration.getCmPerWalkingPoint();
+        int newWalkingFitness = (currentWalkedDistance - currentWalkedDistance % amountOfCmWalkedPerPoint) / amountOfCmWalkedPerPoint;
 
-        minetopiaPlayer.setWalkingPoints(newWalkingPoints);
+        if (minetopiaPlayer.getFitnessGainedByWalking() != newWalkingFitness && newWalkingFitness <= configuration.getMaxFitnessByWalking()) minetopiaPlayer.setFitnessGainedByWalking(newWalkingFitness);
 
         /* Climbing points */
 
         int currentClimbingDistance = player.getStatistic(Statistic.CLIMB_ONE_CM); // Huidige afstand in centimeters
-        int amountOfCmClimbedPerPoint = configuration.getClimbingPointsPerCm();
-        int newClimbingPoints = (currentClimbingDistance - currentClimbingDistance % amountOfCmClimbedPerPoint) / amountOfCmClimbedPerPoint;  // Eén punt per 1000 cm
+        int amountOfCmClimbedPerPoint = configuration.getCmPerClimbingPoint();
+        int newClimbingFitness = (currentClimbingDistance - currentClimbingDistance % amountOfCmClimbedPerPoint) / amountOfCmClimbedPerPoint;
 
-        minetopiaPlayer.setClimbingPoints(newClimbingPoints);
+        if (minetopiaPlayer.getFitnessGainedByClimbing() != newClimbingFitness && newClimbingFitness <= configuration.getMaxFitnessByClimbing()) minetopiaPlayer.setFitnessGainedByClimbing(newClimbingFitness);
 
         /* Total points */
 
-        int newTotalPoints = newWalkingPoints + newClimbingPoints;
-        minetopiaPlayer.setTotalPoints(newTotalPoints);
-
+        int newTotalFitness = minetopiaPlayer.getFitnessGainedByDrinking() + newWalkingFitness + newClimbingFitness;
+        if (minetopiaPlayer.getFitness() != newTotalFitness && newTotalFitness <= configuration.getMaxFitnessLevel()) minetopiaPlayer.setFitness(newTotalFitness);
     }
 }

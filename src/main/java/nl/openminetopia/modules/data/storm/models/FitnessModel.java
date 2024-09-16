@@ -16,12 +16,18 @@ public class FitnessModel extends StormModel {
     @Column(name = "uuid", unique = true)
     private UUID uniqueId;
 
-    @Column(name = "total")
+    @Column(name = "total", defaultValue = "20")
     private Integer total;
 
-    @Column(name = "walkingPoints")
-    private Integer walkingPoints;
+    @Column(name = "drinking_points", defaultValue = "0")
+    private Double drinkingPoints;
 
-    @Column(name = "climbingPoints")
-    private Integer climbingPoints;
+    @Column(name = "fitness_by_drinking", defaultValue = "0")
+    private Integer fitnessGainedByDrinking;
+
+    @Column(name = "fitness_by_walking", defaultValue = "0")
+    private Integer fitnessGainedByWalking;
+
+    @Column(name = "fitness_by_climbing", defaultValue = "0")
+    private Integer fitnessGainedByClimbing;
 }

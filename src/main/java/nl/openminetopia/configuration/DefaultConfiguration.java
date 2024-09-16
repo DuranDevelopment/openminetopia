@@ -33,8 +33,20 @@ public class DefaultConfiguration extends ConfigurateConfig {
     /**
      * Fitness configuration
      */
-    private final int walkingPointsPerCm;
-    private final int climbingPointsPerCm;
+    private final int maxFitnessLevel;
+    private final int defaultFitnessLevel;
+
+    private final int maxFitnessByDrinking;
+    private final double drinkingPointsPerPotion;
+    private final double drinkingPointsPerWaterBottle;
+    private final int drinkingPointsPerFitnessPoint;
+    private final int drinkingCooldown;
+
+    private final int maxFitnessByWalking;
+    private final int cmPerWalkingPoint;
+
+    private final int maxFitnessByClimbing;
+    private final int cmPerClimbingPoint;
 
     /**
      * Scoreboard configuration
@@ -71,8 +83,20 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Fitness configuration
          */
-        this.walkingPointsPerCm = rootNode.node("fitness", "walkingPointsPerCm").getInt(1000000);
-        this.climbingPointsPerCm = rootNode.node("fitness", "climbingPointsPerCm").getInt(1000000);
+        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(255);
+        this.defaultFitnessLevel = rootNode.node("fitness", "defaultFitnessLevel").getInt(20);
+
+        this.maxFitnessByDrinking = rootNode.node("fitness", "drinking", "maxFitnessByDrinking").getInt(20);
+        this.drinkingPointsPerPotion = rootNode.node("fitness", "drinking", "drinkingPointsPerPotion").getDouble(0.05);
+        this.drinkingPointsPerWaterBottle = rootNode.node("fitness", "drinking", "drinkingPointsPerWaterBottle").getDouble(0.02);
+        this.drinkingPointsPerFitnessPoint = rootNode.node("fitness", "drinking", "drinkingPointsPerFitnessPoint").getInt(1);
+        this.drinkingCooldown = rootNode.node("fitness", "drinking", "drinkingCooldown").getInt(5);
+
+        this.maxFitnessByWalking = rootNode.node("fitness", "statistics", "maxFitnessByWalking").getInt(10);
+        this.cmPerWalkingPoint = rootNode.node("fitness", "statistics", "cmPerWalkingPoint").getInt(1000000);
+
+        this.maxFitnessByClimbing = rootNode.node("fitness", "statistics", "maxFitnessByClimbing").getInt(30);
+        this.cmPerClimbingPoint = rootNode.node("fitness", "statistics", "cmPerClimbingPoint").getInt(500000);
 
         /*
          * Chat configuration

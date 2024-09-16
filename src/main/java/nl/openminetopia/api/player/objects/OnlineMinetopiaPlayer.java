@@ -1,6 +1,7 @@
 package nl.openminetopia.api.player.objects;
 
 import lombok.Getter;
+import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.FitnessManager;
 import nl.openminetopia.api.player.LevelManager;
@@ -25,9 +26,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private int level;
     private List<Prefix> prefixes;
 
-    private int totalPoints;
-    private int climbingPoints;
-    private int walkingPoints;
+    private int fitness;
+    private int fitnessGainedByDrinking;
+    private double drinkingPoints;
+    private @Setter long lastDrinkingTime;
+    private int fitnessGainedByClimbing;
+    private int fitnessGainedByWalking;
 
     private Prefix activePrefix;
     private FitnessRunnable fitnessRunnable;
@@ -40,10 +44,18 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     }
 
     public void load() {
-        this.level = playerModel.getLevel();
-        this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).join();
-        this.prefixes = PrefixManager.getInstance().getPrefixes(this).join();
-        this.fitnessRunnable = new FitnessRunnable(getBukkit());
+        try {
+            this.level = playerModel.getLevel();
+            this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).get();
+            this.prefixes = PrefixManager.getInstance().getPrefixes(this).get();
+            this.fitnessRunnable = new FitnessRunnable(getBukkit());
+            this.drinkingPoints = FitnessManager.getInstance().getDrinkingPoints(this).get();
+            this.fitnessGainedByDrinking = FitnessManager.getInstance().getFitnessGainedByDrinking(this).get();
+        } catch (Exception exception) {
+            getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
+            exception.printStackTrace();
+        }
+        fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
     }
 
     @Override
@@ -56,11 +68,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void setLevel(int level) {
         this.level = level;
-
-        // Update the player model
         LevelManager.getInstance().setLevel(this, level);
-//        playerModel.setLevel(level);
-//        StormDatabase.getInstance().saveStormModel(playerModel);
     }
 
     /* Prefix */
@@ -80,11 +88,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void setActivePrefix(Prefix prefix) {
         this.activePrefix = prefix;
-
-        // Update the player model
         PrefixManager.getInstance().setActivePrefixId(this, prefix.getId());
-//        playerModel.setActivePrefixId(prefix.getId());
-//        StormDatabase.getInstance().saveStormModel(playerModel);
     }
 
     @Override
@@ -105,20 +109,39 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     /* Fitness */
 
     @Override
-    public void setTotalPoints(int points) {
-        this.totalPoints = points;
-        FitnessManager.getInstance().setTotalPoints(this, points);
+    public void setFitness(int amount) {
+        this.fitness = amount;
+        FitnessManager.getInstance().setFitness(this, amount);
     }
 
     @Override
-    public void setClimbingPoints(int points) {
-        this.climbingPoints = points;
-        FitnessManager.getInstance().setClimbingPoints(this, points);
+    public void setFitnessGainedByDrinking(int amount) {
+        this.fitnessGainedByDrinking = amount;
+        FitnessManager.getInstance().setFitnessGainedByDrinking(this, amount);
     }
 
     @Override
-    public void setWalkingPoints(int points) {
-        this.walkingPoints = points;
-        FitnessManager.getInstance().setWalkingPoints(this, points);
+    public void setDrinkingPoints(double points) {
+        this.drinkingPoints = points;
+        if (drinkingPoints >= configuration.getDrinkingPointsPerFitnessPoint() && fitnessGainedByDrinking < configuration.getMaxFitnessByDrinking() ) {
+            this.setFitnessGainedByDrinking(fitnessGainedByDrinking + 1);
+            this.setFitness(fitness + 1);
+            this.drinkingPoints = 0;
+            FitnessManager.getInstance().setDrinkingPoints(this, 0);
+            return;
+        }
+        FitnessManager.getInstance().setDrinkingPoints(this, points);
+    }
+
+    @Override
+    public void setFitnessGainedByClimbing(int points) {
+        this.fitnessGainedByClimbing = points;
+        FitnessManager.getInstance().setFitnessGainedByClimbing(this, points);
+    }
+
+    @Override
+    public void setFitnessGainedByWalking(int points) {
+        this.fitnessGainedByWalking = points;
+        FitnessManager.getInstance().setFitnessGainedByWalking(this, points);
     }
 }

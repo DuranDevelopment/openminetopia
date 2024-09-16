@@ -21,6 +21,5 @@ public class PlayerJoinListener implements Listener {
             return;
         }
         minetopiaPlayer.load();
-        minetopiaPlayer.getFitnessRunnable().runTaskTimer(OpenMinetopia.getInstance(),0,60 * 20L);
     }
 }

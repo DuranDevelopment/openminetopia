@@ -5,6 +5,8 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
+import java.util.concurrent.CompletableFuture;
+
 public class FitnessManager {
 
     private static FitnessManager instance;
@@ -16,7 +18,7 @@ public class FitnessManager {
         return instance;
     }
 
-    public void setTotalPoints(MinetopiaPlayer player, int amount) {
+    public void setFitness(MinetopiaPlayer player, int amount) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
@@ -26,7 +28,6 @@ public class FitnessManager {
                         .stream()
                         .findFirst()
                         .orElse(null);
-
 
                 if (fitnessModel == null) {
                     fitnessModel = new FitnessModel();
@@ -40,7 +41,7 @@ public class FitnessManager {
         });
     }
 
-    public void setClimbingPoints(MinetopiaPlayer player, int amount) {
+    public void setFitnessGainedByDrinking(MinetopiaPlayer player, int amount) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
@@ -51,11 +52,12 @@ public class FitnessManager {
                         .findFirst()
                         .orElse(null);
 
+
                 if (fitnessModel == null) {
                     fitnessModel = new FitnessModel();
                     fitnessModel.setUniqueId(player.getUuid());
                 }
-                fitnessModel.setClimbingPoints(amount);
+                fitnessModel.setFitnessGainedByDrinking(amount);
                 StormDatabase.getInstance().saveStormModel(fitnessModel);
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -63,8 +65,61 @@ public class FitnessManager {
         });
     }
 
+    public CompletableFuture<Integer> getFitnessGainedByDrinking(MinetopiaPlayer player) {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
 
-    public void setWalkingPoints(MinetopiaPlayer player, int amount) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel != null) {
+                    completableFuture.complete(fitnessModel.getFitnessGainedByDrinking());
+                } else {
+                    completableFuture.complete(0);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
+
+        return completableFuture;
+    }
+
+    public CompletableFuture<Double> getDrinkingPoints(MinetopiaPlayer player) {
+        CompletableFuture<Double> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel != null) {
+                    completableFuture.complete(fitnessModel.getDrinkingPoints());
+                } else {
+                    completableFuture.complete(0.0);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
+
+        return completableFuture;
+    }
+
+    public void setDrinkingPoints(MinetopiaPlayer player, double amount) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
@@ -79,7 +134,53 @@ public class FitnessManager {
                     fitnessModel = new FitnessModel();
                     fitnessModel.setUniqueId(player.getUuid());
                 }
-                fitnessModel.setWalkingPoints(amount);
+                fitnessModel.setDrinkingPoints(amount);
+                StormDatabase.getInstance().saveStormModel(fitnessModel);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    public void setFitnessGainedByClimbing(MinetopiaPlayer player, int amount) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel == null) {
+                    fitnessModel = new FitnessModel();
+                    fitnessModel.setUniqueId(player.getUuid());
+                }
+                fitnessModel.setFitnessGainedByClimbing(amount);
+                StormDatabase.getInstance().saveStormModel(fitnessModel);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+    public void setFitnessGainedByWalking(MinetopiaPlayer player, int amount) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                FitnessModel fitnessModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString())
+                        .execute()
+                        .join()
+                        .stream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (fitnessModel == null) {
+                    fitnessModel = new FitnessModel();
+                    fitnessModel.setUniqueId(player.getUuid());
+                }
+                fitnessModel.setFitnessGainedByWalking(amount);
                 StormDatabase.getInstance().saveStormModel(fitnessModel);
             } catch (Exception exception) {
                 exception.printStackTrace();

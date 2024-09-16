@@ -1,12 +1,15 @@
 package nl.openminetopia.modules.chat.listeners;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,17 +45,33 @@ public class PlayerChatListener implements Listener {
         OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(source);
         if (minetopiaPlayer == null) return;
 
-        // Format
-        String format = configuration.getChatFormat()
+        // Format the message
+        String originalMessage = ChatUtils.stripMiniMessage(event.message());
+        String formattedMessage = configuration.getChatFormat()
                 .replace("<levelcolor>", "<white>")
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
                 .replace("<prefixcolor>", "<white>")
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
                 .replace("<namecolor>", "<white>")
                 .replace("<name>", source.getName())
-                .replace("<chatcolor>", "<white>")
-                .replace("<message>", ChatUtils.stripMiniMessage(event.message()));
+                .replace("<chatcolor>", "<white>");
 
-        recipients.forEach(player -> player.sendMessage(ChatUtils.color(format)));
+// Iterate over recipients
+        recipients.forEach(player -> {
+            // Replace <message> placeholder with original message
+            String finalMessage = formattedMessage.replace("<message>", originalMessage);
+
+            // Check if the player's name is in the original message and highlight it
+            if (originalMessage.contains(player.getName())) {
+                String highlightedMessage = originalMessage.replace(player.getName(), "<green>" + player.getName() + "<white>");
+                finalMessage = formattedMessage.replace("<message>", highlightedMessage);
+
+                // Play sound for the mentioned player
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+            }
+
+            // Send the formatted message to the player
+            player.sendMessage(ChatUtils.color(finalMessage));
+        });
     }
 }

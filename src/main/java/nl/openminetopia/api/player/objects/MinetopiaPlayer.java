@@ -22,14 +22,26 @@ public interface MinetopiaPlayer {
     List<Prefix> getPrefixes();
     void addPrefix(Prefix prefix);
     void removePrefix(Prefix prefix);
+
     Prefix getActivePrefix();
     void setActivePrefix(Prefix prefix);
 
     /* Fitness */
-    void setTotalPoints(int points);
-    int getTotalPoints();
-    void setClimbingPoints(int points);
-    int getClimbingPoints();
-    void setWalkingPoints(int points);
-    int getWalkingPoints();
+    void setLastDrinkingTime(long time);
+    long getLastDrinkingTime();
+
+    void setFitness(int amount);
+    int getFitness();
+
+    int getFitnessGainedByDrinking();
+    void setFitnessGainedByDrinking(int points);
+
+    void setDrinkingPoints(double points);
+    double getDrinkingPoints();
+
+    void setFitnessGainedByClimbing(int points);
+    int getFitnessGainedByClimbing();
+
+    void setFitnessGainedByWalking(int points);
+    int getFitnessGainedByWalking();
 }

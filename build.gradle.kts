@@ -31,7 +31,10 @@ repositories {
         name = "jitpack"
         url = uri("https://jitpack.io")
     }
-
+    maven {
+        name = "extendedclip"
+        url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    }
 }
 
 dependencies {
@@ -57,6 +60,9 @@ dependencies {
     implementation("net.megavex:scoreboard-library-api:$scoreboardLibraryVersion")
     runtimeOnly("net.megavex:scoreboard-library-implementation:$scoreboardLibraryVersion")
     runtimeOnly("net.megavex:scoreboard-library-modern:$scoreboardLibraryVersion:mojmap")
+
+    /* PlaceholderAPI */
+    compileOnly("me.clip:placeholderapi:2.11.6")
 }
 
 val targetJavaVersion = 21

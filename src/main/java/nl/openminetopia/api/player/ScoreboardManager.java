@@ -31,7 +31,7 @@ public class ScoreboardManager {
         List<String> lines = configuration.getScoreboardLines();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i)
-                    .replace("<fitness>", String.valueOf(minetopiaPlayer.getTotalPoints()))
+                    .replace("<fitness>", String.valueOf(minetopiaPlayer.getFitness()))
                     .replace("<level>", String.valueOf(minetopiaPlayer.getLevel()))
                     .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix());
             if (i == 0) {
