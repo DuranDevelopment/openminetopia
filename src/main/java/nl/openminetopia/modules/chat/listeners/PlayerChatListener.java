@@ -56,7 +56,7 @@ public class PlayerChatListener implements Listener {
                 .replace("<name>", source.getName())
                 .replace("<chatcolor>", "<white>");
 
-// Iterate over recipients
+        // Iterate over recipients
         recipients.forEach(player -> {
             // Replace <message> placeholder with original message
             String finalMessage = formattedMessage.replace("<message>", originalMessage);

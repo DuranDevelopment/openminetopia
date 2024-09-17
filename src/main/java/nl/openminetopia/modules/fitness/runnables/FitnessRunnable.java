@@ -46,7 +46,7 @@ public class FitnessRunnable extends BukkitRunnable {
         int amountOfCmSprintedPerPoint = configuration.getCmPerClimbingPoint();
         int newSprintingFitness = (currentSprintingDistance - currentSprintingDistance % amountOfCmSprintedPerPoint) / amountOfCmSprintedPerPoint;
 
-        if (minetopiaPlayer.getFitnessGainedByClimbing() != newSprintingFitness && newSprintingFitness <= configuration.getMaxFitnessByClimbing()) minetopiaPlayer.setFitnessGainedByClimbing(newClimbingFitness);
+        if (minetopiaPlayer.getFitnessGainedByClimbing() != newSprintingFitness && newSprintingFitness <= configuration.getMaxFitnessByClimbing()) minetopiaPlayer.setFitnessGainedBySprinting(newClimbingFitness);
 
         /* Swimming points */
 
