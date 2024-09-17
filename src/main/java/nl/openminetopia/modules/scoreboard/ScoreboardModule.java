@@ -30,7 +30,6 @@ public class ScoreboardModule extends Module {
             scoreboardLibrary = new NoopScoreboardLibrary();
             OpenMinetopia.getInstance().getLogger().info("No scoreboard packet adapter available!");
         }
-
     }
 
     @Override

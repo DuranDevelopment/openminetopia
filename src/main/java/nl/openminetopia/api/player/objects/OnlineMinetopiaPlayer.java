@@ -2,14 +2,15 @@ package nl.openminetopia.api.player.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.ColorManager;
-import nl.openminetopia.api.player.FitnessManager;
-import nl.openminetopia.api.player.LevelManager;
-import nl.openminetopia.api.player.PrefixManager;
+import nl.openminetopia.api.player.*;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
+import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
+import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.utils.ChatUtils;
@@ -25,6 +26,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private final UUID uuid;
     private final PlayerModel playerModel;
 
+    private int playtime;
+    private PlaytimeRunnable playtimeRunnable;
+
     private int level;
 
     private List<Prefix> prefixes;
@@ -34,14 +38,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private PrefixColor activePrefixColor;
 
     private int fitness;
-    private int fitnessGainedByDrinking;
     private double drinkingPoints;
+    private int healthPoints;
     private @Setter long lastDrinkingTime;
+
+    private int fitnessGainedByHealth;
+    private int fitnessGainedByDrinking;
     private int fitnessGainedByClimbing;
     private int fitnessGainedByWalking;
     private int fitnessGainedBySprinting;
     private int fitnessGainedBySwimming;
     private int fitnessGainedByFlying;
+
+    private List<FitnessBooster> fitnessBoosters;
 
     private FitnessRunnable fitnessRunnable;
 
@@ -62,16 +71,43 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.fitnessRunnable = new FitnessRunnable(getBukkit());
             this.drinkingPoints = FitnessManager.getInstance().getDrinkingPoints(this).get();
             this.fitnessGainedByDrinking = FitnessManager.getInstance().getFitnessGainedByDrinking(this).get();
+            this.fitnessBoosters = FitnessManager.getInstance().getFitnessBoosters(this).get();
+            this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
+            this.playtime = PlayerManager.getInstance().getPlaytime(this).get();
         } catch (Exception exception) {
             getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();
         }
         fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
+        playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+    }
+
+    public void save() {
+        StormDatabase.getInstance().updateModel(this, PlayerModel.class, playerModel -> {
+            playerModel.setLevel(level);
+            playerModel.setActivePrefixId(activePrefix.getId());
+            playerModel.setActivePrefixColorId(activePrefixColor.getId());
+            playerModel.setPlaytime(playtime);
+        });
     }
 
     @Override
     public Player getBukkit() {
         return Bukkit.getPlayer(uuid);
+    }
+
+    /* Playtime */
+
+    /**
+     * Sets the playtime in seconds
+     *
+     * @param seconds        The amount of seconds
+     * @param updateDatabase If true, the playtime will be pushed to the database, otherwise it will only be set in the object
+     *                       This should be set to false by default, and only set to true when the player logs out to prevent unnecessary database calls
+     */
+    @Override
+    public void setPlaytime(int seconds, boolean updateDatabase) {
+        this.playtime = seconds;
     }
 
     /* Level */
@@ -109,7 +145,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         }
 
         if (activePrefix.getExpiresAt() < System.currentTimeMillis() && activePrefix.getExpiresAt() != -1) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix " + activePrefix + " is verlopen!"));
+            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix <dark_red>" + activePrefix + " is verlopen!"));
             removePrefix(activePrefix);
             setActivePrefix(new Prefix(-1, configuration.getDefaultPrefix(), -1));
         }
@@ -119,9 +155,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     @Override
     public void addPrefixColor(PrefixColor color) {
-        System.out.println(color.getColor());
-        System.out.println(color.getId());
-        System.out.println(color.getExpiresAt());
         prefixColors.add(color);
         ColorManager.getInstance().addPrefixColor(this, color);
     }
@@ -140,13 +173,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     @Override
     public PrefixColor getActivePrefixColor() {
-        System.out.println(activePrefixColor);
-        if (activePrefixColor == null || activePrefixColor.getId() == 0 ) {
+        if (activePrefixColor == null || activePrefixColor.getId() == 0) {
             activePrefixColor = new PrefixColor(-1, "<gray>", -1);
         }
 
         if (activePrefixColor.getExpiresAt() < System.currentTimeMillis() && activePrefixColor.getExpiresAt() != -1) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix kleur " + activePrefixColor.getColor() + " is verlopen!"));
+            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix kleur <dark_red>" + activePrefixColor.getColor() + " is verlopen!"));
             removePrefixColor(activePrefixColor);
             setActivePrefixColor(new PrefixColor(-1, "<gray>", -1));
         }
@@ -163,6 +195,24 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     }
 
     @Override
+    public void setFitnessGainedByHealth(int amount) {
+        this.fitnessGainedByHealth = amount;
+        FitnessManager.getInstance().setFitnessGainedByHealth(this, amount);
+    }
+
+    @Override
+    public void setHealthPoints(int points) {
+        this.healthPoints = points;
+        if (healthPoints >= 750 && fitnessGainedByHealth < configuration.getMaxFitnessByHealth()) {
+            this.setFitnessGainedByHealth(fitnessGainedByHealth + 1);
+            this.healthPoints = 0;
+            FitnessManager.getInstance().setHealthPoints(this, 0);
+            return;
+        }
+        FitnessManager.getInstance().setHealthPoints(this, points);
+    }
+
+    @Override
     public void setFitnessGainedByDrinking(int amount) {
         this.fitnessGainedByDrinking = amount;
         FitnessManager.getInstance().setFitnessGainedByDrinking(this, amount);
@@ -171,7 +221,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void setDrinkingPoints(double points) {
         this.drinkingPoints = points;
-        if (drinkingPoints >= configuration.getDrinkingPointsPerFitnessPoint() && fitnessGainedByDrinking < configuration.getMaxFitnessByDrinking() ) {
+        if (drinkingPoints >= configuration.getDrinkingPointsPerFitnessPoint() && fitnessGainedByDrinking < configuration.getMaxFitnessByDrinking()) {
             this.setFitnessGainedByDrinking(fitnessGainedByDrinking + 1);
             this.setFitness(fitness + 1);
             this.drinkingPoints = 0;
@@ -209,5 +259,17 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     public void setFitnessGainedByFlying(int points) {
         this.fitnessGainedByFlying = points;
         FitnessManager.getInstance().setFitnessGainedByFlying(this, points);
+    }
+
+    /* Fitness Boosters */
+
+    public void addFitnessBooster(FitnessBooster booster) {
+        fitnessBoosters.add(booster);
+        FitnessManager.getInstance().addFitnessBooster(this, booster);
+    }
+
+    public void removeFitnessBooster(FitnessBooster booster) {
+        fitnessBoosters.remove(booster);
+        FitnessManager.getInstance().removeFitnessBooster(this, booster);
     }
 }

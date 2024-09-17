@@ -4,10 +4,8 @@ import com.craftmend.storm.api.enums.Where;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.storm.models.ColorsModel;
 import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
-import nl.openminetopia.modules.color.objects.PrefixColor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,29 +70,6 @@ public class PrefixManager {
             exception.printStackTrace();
         }
         return null;
-    }
-
-    public int getNextPrefixId() {
-        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<PrefixesModel> prefixesModels = StormDatabase.getInstance().getStorm().buildQuery(PrefixesModel.class)
-                        .execute()
-                        .join();
-
-                int id = 1;
-                for (PrefixesModel prefixesModel : prefixesModels) {
-                    if (prefixesModel.getId() >= id) {
-                        id = prefixesModel.getId() + 1;
-                    }
-                }
-                completableFuture.complete(id);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture.join();
     }
 
     public CompletableFuture<List<Prefix>> getPrefixes(MinetopiaPlayer player) {

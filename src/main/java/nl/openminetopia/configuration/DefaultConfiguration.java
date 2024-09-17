@@ -57,6 +57,15 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final int maxFitnessByFlying;
     private final int cmPerFlyingPoint;
 
+    private final int maxFitnessByHealth;
+    private final int pointsAbove9Hearts;
+    private final int pointsBelow5Hearts;
+    private final int pointsBelow2Hearts;
+
+    private final boolean fitnessDeathPunishmentEnabled;
+    private final int fitnessDeathPunishmentAmount;
+    private final int fitnessDeathPunishmentDuration;
+
     /**
      * Scoreboard configuration
      */
@@ -117,6 +126,15 @@ public class DefaultConfiguration extends ConfigurateConfig {
 
         this.maxFitnessByFlying = rootNode.node("fitness", "statistics", "maxFitnessBySwimming").getInt(30);
         this.cmPerFlyingPoint = rootNode.node("fitness", "statistics", "cmPerSwimmingPoint").getInt(3000000);
+
+        this.maxFitnessByHealth = rootNode.node("fitness", "health", "maxFitnessByHealth").getInt(10);
+        this.pointsAbove9Hearts = rootNode.node("fitness", "health", "pointsAbove9Hearts").getInt(60);
+        this.pointsBelow5Hearts = rootNode.node("fitness", "health", "pointsBelow5Hearts").getInt(-50);
+        this.pointsBelow2Hearts = rootNode.node("fitness", "health", "pointsBelow2Hearts").getInt(-75);
+
+        this.fitnessDeathPunishmentDuration = rootNode.node("fitness", "deathPunishment", "duration").getInt(1440);
+        this.fitnessDeathPunishmentEnabled = rootNode.node("fitness", "deathPunishment", "enabled").getBoolean(true);
+        this.fitnessDeathPunishmentAmount = rootNode.node("fitness", "deathPunishment", "amount").getInt(-20);
 
         /*
          * Chat configuration

@@ -2,17 +2,15 @@ package nl.openminetopia.modules.color.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import nl.openminetopia.api.player.ColorManager;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.api.player.PrefixManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
-import nl.openminetopia.modules.color.objects.OwnableColor;
 import nl.openminetopia.modules.color.objects.PrefixColor;
+import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.modules.data.storm.models.ColorsModel;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandAlias("color")
@@ -43,7 +41,7 @@ public class ColorAddCommand extends BaseCommand {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
-                minetopiaPlayer.addPrefixColor(new PrefixColor(ColorManager.getInstance().getNextPrefixColorId(), color, -1L));
+                minetopiaPlayer.addPrefixColor(new PrefixColor(StormDatabase.getInstance().getNextId(ColorsModel.class, ColorsModel::getId), color, -1L));
                 player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color + "kleur <dark_aqua>toegevoegd."));
                 break;
             case CHAT:

@@ -8,11 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.models.ColorsModel;
-import nl.openminetopia.modules.data.storm.models.FitnessModel;
-import nl.openminetopia.modules.data.storm.models.PlayerModel;
+import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -97,7 +94,7 @@ public class StormDatabase {
     }
 
     /**
-     * Copyright 2024 Aaron Duran (niet chatgpt of copilot)
+     * Doing something very ugly here, but it's for the greater good. TM
      */
     public <T extends StormModel> void updateModel(MinetopiaPlayer player, Class<T> modelClass, Consumer<T> updateAction) {
         StormDatabase.getExecutorService().submit(() -> {
@@ -122,6 +119,9 @@ public class StormDatabase {
                     } else if (modelClass == ColorsModel.class) {
                         model = modelClass.cast(new ColorsModel());
                         ((ColorsModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == FitnessBoostersModel.class) {
+                        model = modelClass.cast(new PrefixesModel());
+                        ((PrefixesModel) model).setUniqueId(player.getUuid());
                     }
                 }
 
@@ -200,5 +200,31 @@ public class StormDatabase {
                 exception.printStackTrace();
             }
         });
+    }
+
+    public <M extends StormModel> int getNextId(Class<M> modelClass, Function<M, Integer> idGetter) {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                // Fetch all models of the given class
+                Collection<M> models = StormDatabase.getInstance().getStorm().buildQuery(modelClass)
+                        .execute()
+                        .join();
+
+                // Use the stream to find the maximum ID using the idGetter function
+                int nextId = models.stream()
+                        .mapToInt(idGetter::apply) // Use the idGetter to get the ID
+                        .max()
+                        .orElse(0) + 1;
+
+                completableFuture.complete(nextId);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
+
+        return completableFuture.join();
     }
 }

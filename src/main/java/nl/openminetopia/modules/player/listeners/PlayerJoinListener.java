@@ -1,6 +1,5 @@
 package nl.openminetopia.modules.player.listeners;
 
-import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.utils.ChatUtils;

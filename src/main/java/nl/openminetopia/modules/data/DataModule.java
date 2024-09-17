@@ -7,10 +7,7 @@ import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.data.adapter.DatabaseAdapter;
 import nl.openminetopia.modules.data.adapter.utils.AdapterUtil;
 import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.FitnessModel;
-import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.storm.models.ColorsModel;
-import nl.openminetopia.modules.data.storm.models.PrefixesModel;
+import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.data.type.DatabaseType;
 
 public class DataModule extends Module {
@@ -34,6 +31,7 @@ public class DataModule extends Module {
                 storm.registerModel(new PrefixesModel());
                 storm.registerModel(new ColorsModel());
                 storm.registerModel(new FitnessModel());
+                storm.registerModel(new FitnessBoostersModel());
                 storm.runMigrations();
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());

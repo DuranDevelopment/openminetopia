@@ -17,6 +17,7 @@ public class ChatUtils {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
         message = message
+                .replace("<fitness>", minetopiaPlayer.getFitness() + "")
                 .replace("<levelcolor>", "<white>")
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
                 .replace("<prefixcolor>", minetopiaPlayer.getActivePrefixColor().getColor())

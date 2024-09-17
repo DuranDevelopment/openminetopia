@@ -1,6 +1,7 @@
 package nl.openminetopia.api.player.objects;
 
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
+import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import org.bukkit.OfflinePlayer;
@@ -14,6 +15,11 @@ public interface MinetopiaPlayer {
     PlayerModel getPlayerModel();
 
     OfflinePlayer getBukkit();
+
+    /* Playtime */
+    void setPlaytime(int playtime, boolean updateDatabase);
+    /** Returns the playtime in seconds */
+    int getPlaytime();
 
     /* Level */
     void setLevel(int level);
@@ -43,11 +49,17 @@ public interface MinetopiaPlayer {
     void setFitness(int amount);
     int getFitness();
 
-    int getFitnessGainedByDrinking();
-    void setFitnessGainedByDrinking(int points);
+    void setHealthPoints(int points);
+    int getHealthPoints();
 
     void setDrinkingPoints(double points);
     double getDrinkingPoints();
+
+    void setFitnessGainedByHealth(int points);
+    int getFitnessGainedByHealth();
+
+    void setFitnessGainedByDrinking(int points);
+    int getFitnessGainedByDrinking();
 
     void setFitnessGainedByClimbing(int points);
     int getFitnessGainedByClimbing();
@@ -63,4 +75,10 @@ public interface MinetopiaPlayer {
 
     void setFitnessGainedByFlying(int points);
     int getFitnessGainedByFlying();
+
+    /* Fitness Boosters */
+
+    void addFitnessBooster(FitnessBooster booster);
+    void removeFitnessBooster(FitnessBooster booster);
+    List<FitnessBooster> getFitnessBoosters();
 }

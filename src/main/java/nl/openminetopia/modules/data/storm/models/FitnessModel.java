@@ -22,6 +22,9 @@ public class FitnessModel extends StormModel {
     @Column(name = "drinking_points", defaultValue = "0")
     private Double drinkingPoints;
 
+    @Column(name = "health_points", defaultValue = "0")
+    private Integer healthPoints;
+
     @Column(name = "fitness_by_drinking", defaultValue = "0")
     private Integer fitnessGainedByDrinking;
 
@@ -39,4 +42,9 @@ public class FitnessModel extends StormModel {
 
     @Column(name = "fitness_by_flying", defaultValue = "0")
     private Integer fitnessGainedByFlying;
+
+    @Column(name = "fitness_by_health", defaultValue = "0")
+    private Integer fitnessGainedByHealth;
+
+
 }

@@ -19,16 +19,4 @@ public abstract class OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
-
-    public boolean isExpired() {
-        return System.currentTimeMillis() > expiresAt;
-    }
-
-    public boolean isPermanent() {
-        return expiresAt == -1;
-    }
-
-    public void setPermanent() {
-        expiresAt = -1;
-    }
 }

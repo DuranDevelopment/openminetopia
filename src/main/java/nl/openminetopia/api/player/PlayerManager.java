@@ -1,7 +1,9 @@
 package nl.openminetopia.api.player;
 
 import lombok.Getter;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
+import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class PlayerManager {
@@ -33,5 +36,9 @@ public class PlayerManager {
         }
 
         return minetopiaPlayers.get(player.getUniqueId());
+    }
+
+    public CompletableFuture<Integer> getPlaytime(@NotNull MinetopiaPlayer player) {
+        return StormDatabase.getInstance().getModelData(player, PlayerModel.class, query -> {}, model -> true, PlayerModel::getPlaytime, 0);
     }
 }
