@@ -4,6 +4,5 @@ public enum OwnableColorType {
     PREFIX,
     CHAT,
     NAME,
-    LEVEL;
-
+    LEVEL
 }

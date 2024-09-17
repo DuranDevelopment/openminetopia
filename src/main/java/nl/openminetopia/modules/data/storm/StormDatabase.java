@@ -2,12 +2,17 @@ package nl.openminetopia.modules.data.storm;
 
 import com.craftmend.storm.Storm;
 import com.craftmend.storm.api.StormModel;
+import com.craftmend.storm.api.builders.QueryBuilder;
 import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.data.storm.models.ColorsModel;
+import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +23,9 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 @Setter
 public class StormDatabase {
@@ -41,11 +49,7 @@ public class StormDatabase {
         executorService.submit(() -> {
             try {
                 Collection<PlayerModel> playerModel;
-                playerModel = storm.buildQuery(PlayerModel.class)
-                        .where("uuid", Where.EQUAL, uuid.toString())
-                        .limit(1)
-                        .execute()
-                        .join();
+                playerModel = storm.buildQuery(PlayerModel.class).where("uuid", Where.EQUAL, uuid.toString()).limit(1).execute().join();
                 Bukkit.getScheduler().runTaskLaterAsynchronously(OpenMinetopia.getInstance(), () -> completableFuture.complete(playerModel.stream().findFirst()), 1L);
             } catch (Exception exception) {
                 exception.printStackTrace();
@@ -90,5 +94,111 @@ public class StormDatabase {
         });
 
         return completableFuture;
+    }
+
+    /**
+     * Copyright 2024 Aaron Duran (niet chatgpt of copilot)
+     */
+    public <T extends StormModel> void updateModel(MinetopiaPlayer player, Class<T> modelClass, Consumer<T> updateAction) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                T model = StormDatabase.getInstance().getStorm().buildQuery(modelClass).where("uuid", Where.EQUAL, player.getUuid().toString()).execute().join().stream().findFirst().orElse(null);
+
+                if (modelClass == PlayerModel.class) {
+                    model = modelClass.cast(player.getPlayerModel());
+                }
+
+                if (model == null) {
+                    // Create a new model instance if needed
+                    if (modelClass == FitnessModel.class) {
+                        model = modelClass.cast(new FitnessModel());
+                        ((FitnessModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == PlayerModel.class) {
+                        model = modelClass.cast(new PlayerModel());
+                        ((PlayerModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == PrefixesModel.class) {
+                        model = modelClass.cast(new PrefixesModel());
+                        ((PrefixesModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == ColorsModel.class) {
+                        model = modelClass.cast(new ColorsModel());
+                        ((ColorsModel) model).setUniqueId(player.getUuid());
+                    }
+                }
+
+                // Apply the update
+                updateAction.accept(model);
+
+                // Save the model
+                StormDatabase.getInstance().saveStormModel(model);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+    }
+
+
+    /**
+     * This method is used to fetch data from a model in the database.
+     * It will return a CompletableFuture that will be completed with the data from the model.
+     *
+     * @param player The player to fetch the data for
+     * @param modelClass The class of the model to fetch
+     * @param filterBuilder A consumer that can be used to apply additional filters to the query
+     *                      (e.g. query -> query.where("some_column", Where.EQUAL, someValue))
+     * @param dataExtractor A function that extracts the data from the model, this may be used to filter through the stream
+     *                      (e.g. model -> model.getSomeData())
+     * @param defaultValue The default value to return if the model is not found
+     *
+     */
+    public <T, M extends StormModel> CompletableFuture<T> getModelData(MinetopiaPlayer player,
+                                                                       Class<M> modelClass,
+                                                                       Consumer<QueryBuilder<M>> filterBuilder,
+                                                                       Predicate<M> postQueryFilter,  // New parameter to filter the stream
+                                                                       Function<M, T> dataExtractor,
+                                                                       T defaultValue) {
+        CompletableFuture<T> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                QueryBuilder<M> query = StormDatabase.getInstance().getStorm().buildQuery(modelClass)
+                        .where("uuid", Where.EQUAL, player.getUuid().toString());
+
+                // Apply additional query filters via filterBuilder
+                filterBuilder.accept(query);
+
+                M model = query.execute()
+                        .join()
+                        .stream()
+                        .filter(postQueryFilter) // Apply the stream filter after fetching the data
+                        .findFirst()
+                        .orElse(null);
+
+                if (model != null) {
+                    completableFuture.complete(dataExtractor.apply(model));
+                } else {
+                    completableFuture.complete(defaultValue);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
+
+        return completableFuture;
+    }
+
+
+    public <M extends StormModel> void deleteModel(MinetopiaPlayer player, Class<M> modelClass, Predicate<M> deleteCondition) {
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                M model = StormDatabase.getInstance().getStorm().buildQuery(modelClass).where("uuid", Where.EQUAL, player.getUuid().toString()).execute().join().stream().filter(deleteCondition).findFirst().orElse(null);
+
+                if (model != null) {
+                    StormDatabase.getInstance().getStorm().delete(model);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
     }
 }

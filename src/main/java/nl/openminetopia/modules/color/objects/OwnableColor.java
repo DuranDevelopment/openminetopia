@@ -14,8 +14,21 @@ public abstract class OwnableColor {
     private long expiresAt;
 
     public OwnableColor(OwnableColorType type, int id, String color, long expiresAt) {
+        this.type = type;
         this.id = id;
         this.color = color;
         this.expiresAt = expiresAt;
+    }
+
+    public boolean isExpired() {
+        return System.currentTimeMillis() > expiresAt;
+    }
+
+    public boolean isPermanent() {
+        return expiresAt == -1;
+    }
+
+    public void setPermanent() {
+        expiresAt = -1;
     }
 }

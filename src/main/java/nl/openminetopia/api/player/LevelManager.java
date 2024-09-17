@@ -17,23 +17,6 @@ public class LevelManager {
     }
 
     public void setLevel(MinetopiaPlayer player, int level) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PlayerModel playerModel = StormDatabase.getInstance().getStorm().buildQuery(PlayerModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                if (playerModel != null) {
-                    playerModel.setLevel(level);
-                    StormDatabase.getInstance().saveStormModel(playerModel);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
+        StormDatabase.getInstance().updateModel(player, PlayerModel.class, playerModel -> playerModel.setLevel(level));
     }
 }

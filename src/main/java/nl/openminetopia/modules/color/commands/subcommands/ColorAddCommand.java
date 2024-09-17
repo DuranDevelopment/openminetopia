@@ -3,6 +3,7 @@ package nl.openminetopia.modules.color.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import nl.openminetopia.api.player.ColorManager;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.PrefixManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
@@ -42,9 +43,7 @@ public class ColorAddCommand extends BaseCommand {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
-                System.out.println("ColorAddCommand.onPrefix: " + color);
-                System.out.println("ColorAddCommand.onPrefix: " + PrefixManager.getInstance().getNextPrefixColorId());
-                minetopiaPlayer.addPrefixColor(new PrefixColor(PrefixManager.getInstance().getNextPrefixColorId(), color, -1L));
+                minetopiaPlayer.addPrefixColor(new PrefixColor(ColorManager.getInstance().getNextPrefixColorId(), color, -1L));
                 player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color + "kleur <dark_aqua>toegevoegd."));
                 break;
             case CHAT:

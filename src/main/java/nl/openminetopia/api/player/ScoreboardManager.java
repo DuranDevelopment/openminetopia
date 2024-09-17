@@ -30,15 +30,12 @@ public class ScoreboardManager {
     public void updateBoard(MinetopiaPlayer minetopiaPlayer, Sidebar sidebar) {
         List<String> lines = configuration.getScoreboardLines();
         for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i)
-                    .replace("<fitness>", String.valueOf(minetopiaPlayer.getFitness()))
-                    .replace("<level>", String.valueOf(minetopiaPlayer.getLevel()))
-                    .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix());
+            String line = lines.get(i);
             if (i == 0) {
-                sidebar.title(ChatUtils.color(line));
+                sidebar.title(ChatUtils.format(minetopiaPlayer, line));
                 continue;
             }
-            sidebar.line(i, ChatUtils.color(line));
+            sidebar.line(i, ChatUtils.format(minetopiaPlayer, line));
         }
     }
 

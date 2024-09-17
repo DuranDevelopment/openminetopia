@@ -4,7 +4,7 @@ import com.craftmend.storm.api.enums.Where;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.storm.models.PrefixColorsModel;
+import nl.openminetopia.modules.data.storm.models.ColorsModel;
 import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.modules.color.objects.PrefixColor;
@@ -23,151 +23,6 @@ public class PrefixManager {
             instance = new PrefixManager();
         }
         return instance;
-    }
-
-    /*
-     * Prefix colors
-     */
-    public void addPrefixColor(MinetopiaPlayer player, PrefixColor color) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PrefixColorsModel prefixColorsModel = new PrefixColorsModel();
-                prefixColorsModel.setUniqueId(player.getUuid());
-                prefixColorsModel.setColor(color.getColor());
-                prefixColorsModel.setExpiresAt(color.getExpiresAt());
-
-                StormDatabase.getInstance().saveStormModel(prefixColorsModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
-    public void removePrefixColor(MinetopiaPlayer player, PrefixColor color) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PrefixColorsModel prefixColorsModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixColorsModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .where("id", Where.EQUAL, color.getId())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                StormDatabase.getInstance().getStorm().delete(prefixColorsModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
-    public void setActivePrefixColor(MinetopiaPlayer player, PrefixColor color) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PlayerModel playerModel = StormDatabase.getInstance().getStorm().buildQuery(PlayerModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                if (playerModel != null) {
-                    playerModel.setActivePrefixColorId(color.getId());
-                    StormDatabase.getInstance().saveStormModel(playerModel);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
-    public CompletableFuture<List<PrefixColor>> getPrefixColors(MinetopiaPlayer player) {
-        CompletableFuture<List<PrefixColor>> completableFuture = new CompletableFuture<>();
-
-        findPlayerPrefixColors(player).thenAccept(prefixColorsModels -> {
-            // Create a list to store the prefixes
-            List<PrefixColor> prefixColors = new ArrayList<>();
-            for (PrefixColorsModel prefixColorsModel : prefixColorsModels) {
-                prefixColors.add(new PrefixColor(prefixColorsModel.getId(), prefixColorsModel.getColor(), prefixColorsModel.getExpiresAt()));
-            }
-            completableFuture.complete(prefixColors);
-        }).exceptionally(ex -> {
-            completableFuture.completeExceptionally(ex);
-            return null;
-        });
-
-        return completableFuture;
-    }
-
-    private CompletableFuture<List<PrefixColorsModel>> findPlayerPrefixColors(MinetopiaPlayer player) {
-        CompletableFuture<List<PrefixColorsModel>> completableFuture = new CompletableFuture<>();
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<PrefixColorsModel> prefixColorsModels = StormDatabase.getInstance().getStorm().buildQuery(PrefixColorsModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join();
-
-                completableFuture.complete(new ArrayList<>(prefixColorsModels));
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
-    }
-
-    public CompletableFuture<PrefixColor> getPlayerActivePrefixColor(MinetopiaPlayer player) {
-        CompletableFuture<PrefixColor> completableFuture = new CompletableFuture<>();
-
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PrefixColorsModel prefixColorsModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixColorsModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join()
-                        .stream()
-                        .filter(prefixColorsModel1 -> prefixColorsModel1.getExpiresAt() > System.currentTimeMillis() || prefixColorsModel1.getExpiresAt() == -1)
-                        .findFirst()
-                        .orElse(null);
-
-                if (prefixColorsModel != null) {
-                    completableFuture.complete(new PrefixColor(prefixColorsModel.getId(), prefixColorsModel.getColor(), prefixColorsModel.getExpiresAt()));
-                } else {
-                    completableFuture.complete(null);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-
-        return completableFuture;
-    }
-
-    public int getNextPrefixColorId() {
-        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<PrefixColorsModel> prefixColorsModels = StormDatabase.getInstance().getStorm().buildQuery(PrefixColorsModel.class)
-                        .execute()
-                        .join();
-
-                int id = 1;
-                for (PrefixColorsModel prefixColorsModel : prefixColorsModels) {
-                    if (prefixColorsModel.getId() >= id) {
-                        id = prefixColorsModel.getId() + 1;
-                    }
-                }
-                completableFuture.complete(id);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture.join();
     }
 
     /*
@@ -190,71 +45,33 @@ public class PrefixManager {
     }
 
     public void setActivePrefixId(MinetopiaPlayer player, int id) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PlayerModel playerModel = StormDatabase.getInstance().getStorm().buildQuery(PlayerModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                if (playerModel != null) {
-                    playerModel.setActivePrefixId(id);
-                    StormDatabase.getInstance().saveStormModel(playerModel);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
+        StormDatabase.getInstance().updateModel(player, PlayerModel.class, playerModel -> playerModel.setActivePrefixId(id));
     }
 
     public void removePrefix(MinetopiaPlayer player, Prefix prefix) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PrefixesModel prefixesModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixesModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .where("id", Where.EQUAL, prefix.getId())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                StormDatabase.getInstance().getStorm().delete(prefixesModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
+        StormDatabase.getInstance().deleteModel(player, PrefixesModel.class, prefixesModel -> prefixesModel.getId() == prefix.getId());
     }
 
     public CompletableFuture<Prefix> getPlayerActivePrefix(MinetopiaPlayer player) {
-        CompletableFuture<Prefix> completableFuture = new CompletableFuture<>();
+        try {
+            int activePrefixId = StormDatabase.getInstance().getModelData(player,
+                    PlayerModel.class,
+                    query -> {
+                    },
+                    playerModel -> true,
+                    PlayerModel::getActivePrefixId,
+                    0).get();
 
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                PrefixesModel prefixesModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixesModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join()
-                        .stream()
-                        .filter(prefixesModel2 -> prefixesModel2.getExpiresAt() > System.currentTimeMillis() || prefixesModel2.getExpiresAt() == -1)
-                        .findFirst()
-                        .orElse(null);
-
-                if (prefixesModel != null) {
-                    completableFuture.complete(new Prefix(prefixesModel.getId(), prefixesModel.getPrefix(), prefixesModel.getExpiresAt()));
-                } else {
-                    completableFuture.complete(null);
-                }
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-
-        return completableFuture;
+            return StormDatabase.getInstance().getModelData(player,
+                    PrefixesModel.class,
+                    query -> query.where("id", Where.EQUAL, activePrefixId),
+                    prefixesModel -> prefixesModel.getExpiresAt() > System.currentTimeMillis() || prefixesModel.getExpiresAt() == -1,
+                    prefixesModel -> new Prefix(prefixesModel.getId(), prefixesModel.getPrefix(), prefixesModel.getExpiresAt()),
+                    null);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
     }
 
     public int getNextPrefixId() {

@@ -9,7 +9,7 @@ import nl.openminetopia.modules.data.adapter.utils.AdapterUtil;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.storm.models.PrefixColorsModel;
+import nl.openminetopia.modules.data.storm.models.ColorsModel;
 import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import nl.openminetopia.modules.data.type.DatabaseType;
 
@@ -32,7 +32,7 @@ public class DataModule extends Module {
             try {
                 storm.registerModel(new PlayerModel());
                 storm.registerModel(new PrefixesModel());
-                storm.registerModel(new PrefixColorsModel());
+                storm.registerModel(new ColorsModel());
                 storm.registerModel(new FitnessModel());
                 storm.runMigrations();
             } catch (Exception e) {

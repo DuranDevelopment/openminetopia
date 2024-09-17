@@ -28,7 +28,6 @@ public class ColorSelectCommand extends BaseCommand {
             player.sendMessage("An error occurred while trying to get your player data.");
             return;
         }
-        OwnableColor ownableColor;
 
         switch (ownableColorType) {
             case PREFIX:

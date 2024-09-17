@@ -3,6 +3,7 @@ package nl.openminetopia.api.player.objects;
 import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.ColorManager;
 import nl.openminetopia.api.player.FitnessManager;
 import nl.openminetopia.api.player.LevelManager;
 import nl.openminetopia.api.player.PrefixManager;
@@ -55,9 +56,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         try {
             this.level = playerModel.getLevel();
             this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).get();
-            this.activePrefixColor = PrefixManager.getInstance().getPlayerActivePrefixColor(this).get();
+            this.activePrefixColor = ColorManager.getInstance().getPlayerActivePrefixColor(this).get();
             this.prefixes = PrefixManager.getInstance().getPrefixes(this).get();
-            this.prefixColors = PrefixManager.getInstance().getPrefixColors(this).get();
+            this.prefixColors = ColorManager.getInstance().getPrefixColors(this).get();
             this.fitnessRunnable = new FitnessRunnable(getBukkit());
             this.drinkingPoints = FitnessManager.getInstance().getDrinkingPoints(this).get();
             this.fitnessGainedByDrinking = FitnessManager.getInstance().getFitnessGainedByDrinking(this).get();
@@ -122,19 +123,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         System.out.println(color.getId());
         System.out.println(color.getExpiresAt());
         prefixColors.add(color);
-        PrefixManager.getInstance().addPrefixColor(this, color);
+        ColorManager.getInstance().addPrefixColor(this, color);
     }
 
     @Override
     public void removePrefixColor(PrefixColor color) {
         prefixColors.remove(color);
-        PrefixManager.getInstance().removePrefixColor(this, color);
+        ColorManager.getInstance().removePrefixColor(this, color);
     }
 
     @Override
     public void setActivePrefixColor(PrefixColor color) {
         this.activePrefixColor = color;
-        PrefixManager.getInstance().setActivePrefixColor(this, color);
+        ColorManager.getInstance().setActivePrefixColor(this, color);
     }
 
     @Override
