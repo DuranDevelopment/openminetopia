@@ -129,6 +129,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void removePrefix(Prefix prefix) {
         prefixes.remove(prefix);
+
+        if (activePrefix == prefix) {
+            activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
+            setActivePrefix(activePrefix);
+        }
+
         PrefixManager.getInstance().removePrefix(this, prefix);
     }
 

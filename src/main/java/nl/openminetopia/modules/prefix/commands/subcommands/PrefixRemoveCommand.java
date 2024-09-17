@@ -3,22 +3,20 @@ package nl.openminetopia.modules.prefix.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.api.player.PrefixManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.PrefixesModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
+import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @CommandAlias("prefix")
-public class PrefixAddCommand extends BaseCommand {
+public class PrefixRemoveCommand extends BaseCommand {
 
-    @Subcommand("add")
-    @Syntax("<player> <expiresAt> <prefix>")
+    @Subcommand("remove")
+    @Syntax("<player> <id>")
     @CommandCompletion("@players")
-    @Description("Add a prefix to a player.")
-    public static void addPrefixCommand(Player player, OfflinePlayer offlinePlayer, Integer expiresAt, String prefix) {
+    @Description("Remove a prefix from a player.")
+    public static void addPrefixCommand(Player player, OfflinePlayer offlinePlayer, Integer id) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage("This player does not exist.");
             return;
@@ -26,9 +24,14 @@ public class PrefixAddCommand extends BaseCommand {
 
         OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
-        player.sendMessage("Added the prefix to the player.");
 
-        Prefix prefix1 = new Prefix(StormDatabase.getInstance().getNextId(PrefixesModel.class, PrefixesModel::getId), prefix, expiresAt);
-        minetopiaPlayer.addPrefix(prefix1);
+        for (Prefix prefix : minetopiaPlayer.getPrefixes()) {
+            if (prefix.getId() == id) {
+                minetopiaPlayer.removePrefix(prefix);
+                player.sendMessage(ChatUtils.color("<red>Removed the prefix from the player."));
+                return;
+            }
+        }
+        player.sendMessage(ChatUtils.color("<red>This player does not have a prefix with this id."));
     }
 }

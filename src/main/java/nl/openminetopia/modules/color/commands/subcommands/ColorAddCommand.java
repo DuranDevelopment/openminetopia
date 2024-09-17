@@ -2,6 +2,7 @@ package nl.openminetopia.modules.color.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import net.kyori.adventure.text.Component;
 import nl.openminetopia.api.player.ColorManager;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
@@ -31,7 +32,7 @@ public class ColorAddCommand extends BaseCommand {
 
         // Validate the color
         if (!isValidColor(color)) {
-            player.sendMessage(ChatUtils.color("<red>Ongeldige kleur ingevoerd. Gebruik een geldige kleur zoals <red>, <blue> of <#RRGGBB>."));
+            player.sendMessage(ChatUtils.color("<red>Ongeldige kleur ingevoerd. Gebruik een geldige kleur zoals ").append(Component.text("<red>, <blue>, <#RRGGBB>")));
             return;
         }
 
@@ -42,7 +43,7 @@ public class ColorAddCommand extends BaseCommand {
                     return;
                 }
                 minetopiaPlayer.addPrefixColor(new PrefixColor(StormDatabase.getInstance().getNextId(ColorsModel.class, ColorsModel::getId), color, -1L));
-                player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color + "kleur <dark_aqua>toegevoegd."));
+                player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color).append(Component.text(color).append(ChatUtils.color(" kleur <dark_aqua>toegevoegd."))));
                 break;
             case CHAT:
                 break;
@@ -64,7 +65,7 @@ public class ColorAddCommand extends BaseCommand {
 
         // Check for named colors
         String[] validColors = {
-                "red", "blue", "green", "yellow", "aqua", "dark_red", "dark_blue", "dark_green", "gold", "white", "black", "gray", "dark_gray", "light_purple", "dark_purple"
+                "rainbow", "red", "blue", "green", "yellow", "aqua", "dark_red", "dark_blue", "dark_green", "gold", "white", "black", "gray", "dark_gray", "light_purple", "dark_purple"
         };
         for (String validColor : validColors) {
             if (color.equalsIgnoreCase(validColor)) {
