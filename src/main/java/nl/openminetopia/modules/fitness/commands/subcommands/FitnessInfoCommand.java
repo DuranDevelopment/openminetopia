@@ -33,10 +33,6 @@ public class FitnessInfoCommand extends BaseCommand {
 
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
-        player.sendMessage(player.getWalkSpeed() + "");
-        player.getActivePotionEffects().forEach(potionEffect -> player.sendMessage(potionEffect.getType().getName() + " - " + potionEffect.getAmplifier()));
-
-
         player.sendMessage(ChatUtils.color("<dark_aqua>Fitness info of <aqua>" + offlinePlayer.getName() + "<dark_aqua>:"));
         player.sendMessage("");
         player.sendMessage(ChatUtils.color("<dark_aqua>Drinking points: <aqua>" + minetopiaPlayer.getDrinkingPoints()));
