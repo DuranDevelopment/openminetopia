@@ -6,6 +6,7 @@ import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.fitness.objects.FitnessBooster;
+import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -93,5 +94,7 @@ public class FitnessRunnable extends BukkitRunnable {
         if (newTotalFitness < 0) newTotalFitness = 0;
 
         if (minetopiaPlayer.getFitness() != newTotalFitness) minetopiaPlayer.setFitness(newTotalFitness);
+
+        FitnessUtils.applyFitness(player);
     }
 }

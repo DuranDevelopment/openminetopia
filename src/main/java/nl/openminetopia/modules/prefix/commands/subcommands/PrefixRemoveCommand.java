@@ -3,6 +3,7 @@ package nl.openminetopia.modules.prefix.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
@@ -22,7 +23,7 @@ public class PrefixRemoveCommand extends BaseCommand {
             return;
         }
 
-        OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
+        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
 
         for (Prefix prefix : minetopiaPlayer.getPrefixes()) {

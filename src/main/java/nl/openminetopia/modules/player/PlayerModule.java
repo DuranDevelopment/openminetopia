@@ -24,7 +24,7 @@ public class PlayerModule extends Module {
     @Override
     public void disable() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
+            OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(player);
             if (minetopiaPlayer == null) continue;
             minetopiaPlayer.save();
         }

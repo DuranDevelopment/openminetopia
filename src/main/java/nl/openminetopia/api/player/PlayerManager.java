@@ -2,9 +2,11 @@ package nl.openminetopia.api.player;
 
 import lombok.Getter;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OfflineMinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,16 +28,37 @@ public class PlayerManager {
     }
 
     public HashMap<UUID, PlayerModel> playerModels = new HashMap<>();
-    public HashMap<UUID, OnlineMinetopiaPlayer> minetopiaPlayers = new HashMap<>();
+    public HashMap<UUID, MinetopiaPlayer> minetopiaPlayers = new HashMap<>();
 
-    public @Nullable OnlineMinetopiaPlayer getMinetopiaPlayer(@NotNull Player player) {
-        if (!minetopiaPlayers.containsKey(player.getUniqueId())) {
-            OnlineMinetopiaPlayer onlineMinetopiaPlayer = new OnlineMinetopiaPlayer(player.getUniqueId(), playerModels.get(player.getUniqueId()));
-            minetopiaPlayers.put(player.getUniqueId(), onlineMinetopiaPlayer);
-            return onlineMinetopiaPlayer;
+    public @Nullable MinetopiaPlayer getMinetopiaPlayer(@NotNull OfflinePlayer player) {
+
+        UUID playerId = player.getUniqueId();
+        MinetopiaPlayer minetopiaPlayer = minetopiaPlayers.get(playerId);
+
+        if (minetopiaPlayer != null) {
+            // If the player is online and the current instance is offline, update to online
+            if (minetopiaPlayer instanceof OfflineMinetopiaPlayer && player.isOnline()) {
+                minetopiaPlayer = new OnlineMinetopiaPlayer(playerId, playerModels.get(playerId));
+            }
+            // If the player is offline and the current instance is online, update to offline
+            else if (minetopiaPlayer instanceof OnlineMinetopiaPlayer && !player.isOnline()) {
+                minetopiaPlayer = new OfflineMinetopiaPlayer(playerId);
+            }
+
+            // Update the player in the map if we made a change
+            minetopiaPlayers.put(playerId, minetopiaPlayer);
+        } else {
+            // If no player was found, create the correct instance based on online status
+            if (player.isOnline()) {
+                minetopiaPlayer = new OnlineMinetopiaPlayer(playerId, playerModels.get(playerId));
+            } else {
+                minetopiaPlayer = new OfflineMinetopiaPlayer(playerId);
+            }
+
+            minetopiaPlayers.put(playerId, minetopiaPlayer);
         }
 
-        return minetopiaPlayers.get(player.getUniqueId());
+        return minetopiaPlayer;
     }
 
     public CompletableFuture<Integer> getPlaytime(@NotNull MinetopiaPlayer player) {

@@ -1,12 +1,19 @@
 package nl.openminetopia.configuration;
 
+import com.google.common.reflect.TypeToken;
 import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import nl.openminetopia.utils.ConfigurateConfig;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class DefaultConfiguration extends ConfigurateConfig {
@@ -66,6 +73,10 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final int fitnessDeathPunishmentAmount;
     private final int fitnessDeathPunishmentDuration;
 
+    private final Map<String, FitnessLevel> fitnessLevels = new HashMap<>();
+
+    private final boolean rainSlowdownEnabled;
+
     /**
      * Scoreboard configuration
      */
@@ -78,7 +89,6 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final String defaultPrefix;
     private final String defaultPrefixColor;
     private final int defaultLevel;
-
 
     public DefaultConfiguration(File file) throws SerializationException {
         super(file, "config.yml");
@@ -135,6 +145,47 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.fitnessDeathPunishmentDuration = rootNode.node("fitness", "deathPunishment", "duration").getInt(1440);
         this.fitnessDeathPunishmentEnabled = rootNode.node("fitness", "deathPunishment", "enabled").getBoolean(true);
         this.fitnessDeathPunishmentAmount = rootNode.node("fitness", "deathPunishment", "amount").getInt(-20);
+
+        Map<String, FitnessLevel> defaultFitnessLevels = new HashMap<>();
+        defaultFitnessLevels.put("1-9", new FitnessLevel(0.1, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("10-19", new FitnessLevel(0.12, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("20-29", new FitnessLevel(0.15, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("30-39", new FitnessLevel(0.16, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("40-49", new FitnessLevel(0.17, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("50-59", new FitnessLevel(0.19, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("60-69", new FitnessLevel(0.19, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("70-79", new FitnessLevel(0.2, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("80-99", new FitnessLevel(0.22, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("100-119", new FitnessLevel(0.235, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("120-139", new FitnessLevel(0.25, List.of("JUMP_BOOST:0")));
+        defaultFitnessLevels.put("140-159", new FitnessLevel(0.27, List.of("JUMP_BOOST:1")));
+        defaultFitnessLevels.put("160-179", new FitnessLevel(0.29, List.of("JUMP_BOOST:2")));
+        defaultFitnessLevels.put("180-199", new FitnessLevel(0.31, List.of("JUMP_BOOST:2")));
+        defaultFitnessLevels.put("200-209", new FitnessLevel(0.325, List.of("JUMP_BOOST:3")));
+
+        ConfigurationNode fitnessNode = this.rootNode.node("fitness", "levels");
+
+        for (Map.Entry<String, FitnessLevel> fitnessLevelMap : defaultFitnessLevels.entrySet()) {
+            ConfigurationNode levelNode = fitnessNode.node(fitnessLevelMap.getKey());
+
+            FitnessLevel value = fitnessLevelMap.getValue();
+
+            levelNode.node("effects").getList(String.class, value.getEffects());
+            levelNode.node("walkSpeed").getDouble(value.getWalkSpeed());
+        }
+
+        fitnessNode.childrenMap().forEach((key, val) -> {
+            try {
+                String level = key.toString();
+                FitnessLevel fitnessLevel = new FitnessLevel(val.node("walkSpeed").getDouble(0.1), val.node("effects").getList(String.class, List.of("JUMP_BOOST:1", "LEVITATION:1")));
+                this.fitnessLevels.put(level, fitnessLevel);
+            } catch (SerializationException e) {
+                OpenMinetopia.getInstance().getLogger().severe("An error occurred while loading the fitness levels.");
+                e.printStackTrace();
+            }
+        });
+
+        this.rainSlowdownEnabled = rootNode.node("fitness", "rainSlowdownEnabled").getBoolean(false);
 
         /*
          * Chat configuration

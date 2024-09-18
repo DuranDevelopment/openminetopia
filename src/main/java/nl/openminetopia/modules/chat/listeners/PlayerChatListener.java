@@ -4,6 +4,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.configuration.DefaultConfiguration;
@@ -42,7 +43,7 @@ public class PlayerChatListener implements Listener {
         }
 
         recipients.add(source);
-        OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(source);
+        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(source);
         if (minetopiaPlayer == null) return;
 
         // Format the message

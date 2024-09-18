@@ -2,6 +2,7 @@ package nl.openminetopia.modules.mod.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.api.player.PlayerManager;
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ public class ModSetLevelCommand extends BaseCommand {
             return;
         }
 
-        OnlineMinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
+        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
         int oldLevel = minetopiaPlayer.getLevel();
         minetopiaPlayer.setLevel(newLevel);

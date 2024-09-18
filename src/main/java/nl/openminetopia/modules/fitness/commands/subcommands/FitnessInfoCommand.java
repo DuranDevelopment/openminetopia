@@ -19,35 +19,40 @@ public class FitnessInfoCommand extends BaseCommand {
     @Syntax("<player>")
     @CommandCompletion("@players")
     @Description("Get the fitness info of a player.")
-    public void onInfoCommand(CommandSender sender, OfflinePlayer offlinePlayer) {
-        Player player = offlinePlayer.getPlayer();
-        if (player == null) return;
+    public void onInfoCommand(Player player, OfflinePlayer offlinePlayer) {
+        if (offlinePlayer == null) {
+            player.sendMessage(ChatUtils.color("<red>This player does not exist."));
+            return;
+        }
 
-        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
-        if (minetopiaPlayer == null) return;
+        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer);
+        if (minetopiaPlayer == null) {
+            player.sendMessage(ChatUtils.color("<red>There was an error loading the data of this player! Please try again later."));
+            return;
+        }
 
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness info of <aqua>" + player.getName() + "<dark_aqua>:"));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Drinking points: <aqua>" + minetopiaPlayer.getDrinkingPoints()));
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by drinking: <aqua>" + minetopiaPlayer.getFitnessGainedByDrinking() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByDrinking()));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Kilometers walked: <aqua>" + (player.getStatistic(Statistic.WALK_ONE_CM) / 100000) + "km"));
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by walking: <aqua>" + minetopiaPlayer.getFitnessGainedByWalking() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByWalking()));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Kilometers climbed: <aqua>" + (player.getStatistic(Statistic.CLIMB_ONE_CM) / 100000) + "km"));
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by climbing: <aqua>" + minetopiaPlayer.getFitnessGainedByClimbing() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByClimbing()));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Kilometers sprinted: <aqua>" + (player.getStatistic(Statistic.SPRINT_ONE_CM) / 100000) + "km"));
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by sprinting: <aqua>" + minetopiaPlayer.getFitnessGainedBySprinting() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessBySprinting()));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Kilometers swam: <aqua>" + (player.getStatistic(Statistic.SWIM_ONE_CM) / 100000) + "km"));
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by swimming: <aqua>" + minetopiaPlayer.getFitnessGainedBySwimming() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessBySwimming()));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Kilometers flown: <aqua>" + (player.getStatistic(Statistic.AVIATE_ONE_CM) / 100000) + "km"));
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by flying: <aqua>" + minetopiaPlayer.getFitnessGainedByFlying() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByFlying()));
-        sender.sendMessage("");
-        sender.sendMessage(ChatUtils.color("<dark_aqua>Total fitness: <aqua>" + minetopiaPlayer.getFitness() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessLevel()));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness info of <aqua>" + offlinePlayer.getName() + "<dark_aqua>:"));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Drinking points: <aqua>" + minetopiaPlayer.getDrinkingPoints()));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by drinking: <aqua>" + minetopiaPlayer.getFitnessGainedByDrinking() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByDrinking()));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Kilometers walked: <aqua>" + (offlinePlayer.getStatistic(Statistic.WALK_ONE_CM) / 100000) + "km"));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by walking: <aqua>" + minetopiaPlayer.getFitnessGainedByWalking() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByWalking()));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Kilometers climbed: <aqua>" + (offlinePlayer.getStatistic(Statistic.CLIMB_ONE_CM) / 100000) + "km"));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by climbing: <aqua>" + minetopiaPlayer.getFitnessGainedByClimbing() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByClimbing()));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Kilometers sprinted: <aqua>" + (offlinePlayer.getStatistic(Statistic.SPRINT_ONE_CM) / 100000) + "km"));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by sprinting: <aqua>" + minetopiaPlayer.getFitnessGainedBySprinting() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessBySprinting()));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Kilometers swam: <aqua>" + (offlinePlayer.getStatistic(Statistic.SWIM_ONE_CM) / 100000) + "km"));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by swimming: <aqua>" + minetopiaPlayer.getFitnessGainedBySwimming() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessBySwimming()));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Kilometers flown: <aqua>" + (offlinePlayer.getStatistic(Statistic.AVIATE_ONE_CM) / 100000) + "km"));
+        player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by flying: <aqua>" + minetopiaPlayer.getFitnessGainedByFlying() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessByFlying()));
+        player.sendMessage("");
+        player.sendMessage(ChatUtils.color("<dark_aqua>Total fitness: <aqua>" + minetopiaPlayer.getFitness() + "<dark_aqua>/<aqua>" + configuration.getMaxFitnessLevel()));
     }
 }

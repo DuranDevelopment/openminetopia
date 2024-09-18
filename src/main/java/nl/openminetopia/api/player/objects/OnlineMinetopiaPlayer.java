@@ -10,6 +10,7 @@ import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
+import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.modules.color.objects.PrefixColor;
@@ -75,11 +76,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
             this.playtime = PlayerManager.getInstance().getPlaytime(this).get();
         } catch (Exception exception) {
-            getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
+            getBukkit().kick(ChatUtils.color("<red>4Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();
         }
         fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+        FitnessUtils.applyFitness(getBukkit());
     }
 
     public void save() {
