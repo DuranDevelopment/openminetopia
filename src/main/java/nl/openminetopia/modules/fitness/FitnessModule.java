@@ -30,10 +30,10 @@ public class FitnessModule extends Module {
                 newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
                 minetopiaPlayer.setHealthPoints(newHealthPoints);
             } else if (player.getFoodLevel() <= 4) {
-                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
+                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow2Hearts();
                 minetopiaPlayer.setHealthPoints(newHealthPoints);
             } else if (player.getFoodLevel() <= 10) {
-                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
+                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow5Hearts();
                 minetopiaPlayer.setHealthPoints(newHealthPoints);
             }
         }), 0, 4 * 60 * 20); // Run timer every 4 minutes

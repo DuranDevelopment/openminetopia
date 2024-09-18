@@ -72,6 +72,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.fitnessRunnable = new FitnessRunnable(getBukkit());
             this.drinkingPoints = FitnessManager.getInstance().getDrinkingPoints(this).get();
             this.fitnessGainedByDrinking = FitnessManager.getInstance().getFitnessGainedByDrinking(this).get();
+            this.fitnessGainedByHealth = FitnessManager.getInstance().getFitnessGainedByHealth(this).get();
             this.fitnessBoosters = FitnessManager.getInstance().getFitnessBoosters(this).get();
             this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
             this.playtime = PlayerManager.getInstance().getPlaytime(this).get();

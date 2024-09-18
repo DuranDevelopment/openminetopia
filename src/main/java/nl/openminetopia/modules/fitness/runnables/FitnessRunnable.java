@@ -47,11 +47,11 @@ public class FitnessRunnable extends BukkitRunnable {
         /* Sprinting points */
 
         int currentSprintingDistance = player.getStatistic(Statistic.SPRINT_ONE_CM);
-        int amountOfCmSprintedPerPoint = configuration.getCmPerClimbingPoint();
+        int amountOfCmSprintedPerPoint = configuration.getCmPerSprintingPoint();
         int newSprintingFitness = (currentSprintingDistance - currentSprintingDistance % amountOfCmSprintedPerPoint) / amountOfCmSprintedPerPoint;
 
-        if (minetopiaPlayer.getFitnessGainedByClimbing() != newSprintingFitness && newSprintingFitness <= configuration.getMaxFitnessByClimbing())
-            minetopiaPlayer.setFitnessGainedBySprinting(newClimbingFitness);
+        if (minetopiaPlayer.getFitnessGainedByClimbing() != newSprintingFitness && newSprintingFitness <= configuration.getMaxFitnessBySprinting())
+            minetopiaPlayer.setFitnessGainedBySprinting(newSprintingFitness);
 
         /* Swimming points */
 
@@ -71,8 +71,6 @@ public class FitnessRunnable extends BukkitRunnable {
         if (minetopiaPlayer.getFitnessGainedByFlying() != newFlyingFitness && newFlyingFitness <= configuration.getMaxFitnessByFlying())
             minetopiaPlayer.setFitnessGainedByFlying(newFlyingFitness);
 
-        /* Food points */
-
         /* Fitness boosts */
 
         int fitnessBoost = 0;
@@ -88,7 +86,23 @@ public class FitnessRunnable extends BukkitRunnable {
 
         /* Total points */
 
-        int newTotalFitness = minetopiaPlayer.getFitnessGainedByDrinking() + minetopiaPlayer.getFitnessGainedByHealth() + newWalkingFitness + newClimbingFitness + newSprintingFitness + newSwimmingFitness + newFlyingFitness + fitnessBoost;
+        int newTotalFitness = minetopiaPlayer.getFitnessGainedByDrinking() +
+                minetopiaPlayer.getFitnessGainedByHealth() +
+                newWalkingFitness +
+                newClimbingFitness +
+                newSprintingFitness +
+                newSwimmingFitness +
+                newFlyingFitness +
+                fitnessBoost;
+
+        System.out.println("Drinking: " + minetopiaPlayer.getFitnessGainedByDrinking());
+        System.out.println("Health: " + minetopiaPlayer.getFitnessGainedByHealth());
+        System.out.println("Walking: " + newWalkingFitness);
+        System.out.println("Climbing: " + newClimbingFitness);
+        System.out.println("Sprinting: " + newSprintingFitness);
+        System.out.println("Swimming: " + newSwimmingFitness);
+        System.out.println("Flying: " + newFlyingFitness);
+        System.out.println("Boost: " + fitnessBoost);
 
         if (newTotalFitness > configuration.getMaxFitnessLevel()) newTotalFitness = configuration.getMaxFitnessLevel();
         if (newTotalFitness < 0) newTotalFitness = 0;

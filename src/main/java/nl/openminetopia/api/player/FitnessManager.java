@@ -32,6 +32,11 @@ public class FitnessManager {
         }, model -> true, FitnessModel::getFitnessGainedByDrinking, 0);
     }
 
+    public CompletableFuture<Integer> getFitnessGainedByHealth(MinetopiaPlayer player) {
+        return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
+        }, model -> true, FitnessModel::getFitnessGainedByHealth, 0);
+    }
+
     public CompletableFuture<Double> getDrinkingPoints(MinetopiaPlayer player) {
         return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
         }, model -> true, FitnessModel::getDrinkingPoints, 0.0);
