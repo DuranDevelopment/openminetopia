@@ -21,7 +21,7 @@ public class PlayerPreLoginListener implements Listener {
             CompletableFuture<PlayerModel> future = StormDatabase.getInstance().loadPlayerModel(event.getUniqueId());
             future.get();
         } catch (Exception e) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>1Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
             OpenMinetopia.getInstance().getLogger().warning("Error loading player model: " + e.getMessage());
         }
     }

@@ -77,7 +77,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
             this.playtime = PlayerManager.getInstance().getPlaytime(this).get();
         } catch (Exception exception) {
-            getBukkit().kick(ChatUtils.color("<red>4Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
+            getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();
         }
         fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);

@@ -95,6 +95,15 @@ public class FitnessRunnable extends BukkitRunnable {
                 newFlyingFitness +
                 fitnessBoost;
 
+        System.out.println("Drinking: " + minetopiaPlayer.getFitnessGainedByDrinking());
+        System.out.println("Health: " + minetopiaPlayer.getFitnessGainedByHealth());
+        System.out.println("Walking: " + newWalkingFitness);
+        System.out.println("Climbing: " + newClimbingFitness);
+        System.out.println("Sprinting: " + newSprintingFitness);
+        System.out.println("Swimming: " + newSwimmingFitness);
+        System.out.println("Flying: " + newFlyingFitness);
+        System.out.println("Boost: " + fitnessBoost);
+
         if (newTotalFitness > configuration.getMaxFitnessLevel()) newTotalFitness = configuration.getMaxFitnessLevel();
         if (newTotalFitness < 0) newTotalFitness = 0;
 
