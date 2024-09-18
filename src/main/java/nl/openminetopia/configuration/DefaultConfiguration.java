@@ -135,8 +135,8 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.maxFitnessBySwimming = rootNode.node("fitness", "statistics", "maxFitnessBySwimming").getInt(30);
         this.cmPerSwimmingPoint = rootNode.node("fitness", "statistics", "cmPerSwimmingPoint").getInt(600000);
 
-        this.maxFitnessByFlying = rootNode.node("fitness", "statistics", "maxFitnessBySwimming").getInt(30);
-        this.cmPerFlyingPoint = rootNode.node("fitness", "statistics", "cmPerSwimmingPoint").getInt(3000000);
+        this.maxFitnessByFlying = rootNode.node("fitness", "statistics", "maxFitnessByFlying").getInt(30);
+        this.cmPerFlyingPoint = rootNode.node("fitness", "statistics", "cmPerFlyingPoint").getInt(3000000);
 
         this.maxFitnessByHealth = rootNode.node("fitness", "health", "maxFitnessByHealth").getInt(10);
         this.pointsAbove9Hearts = rootNode.node("fitness", "health", "pointsAbove9Hearts").getInt(60);
