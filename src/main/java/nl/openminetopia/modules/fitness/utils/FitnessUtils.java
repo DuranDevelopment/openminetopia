@@ -14,7 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @UtilityClass
@@ -28,18 +30,32 @@ public class FitnessUtils {
 
         int totalFitness = minetopiaPlayer.getFitness();
         double walkSpeed = 0.2;
+
+        List<PotionEffectType> possibleEffects = new ArrayList<>();
         Map<PotionEffectType, Integer> effects = new HashMap<>();
 
         for (Map.Entry<String, FitnessLevel> entry : configuration.getFitnessLevels().entrySet()) {
             int minFitness = Integer.parseInt(entry.getKey().split("-")[0]);
             int maxFitness = Integer.parseInt(entry.getKey().split("-")[1]);
 
+            entry.getValue().getEffects().forEach(effect -> {
+                String effectName = effect.split(":")[0].toLowerCase();
+                if (!possibleEffects.contains(Registry.EFFECT.get(NamespacedKey.minecraft(effectName))))
+                    possibleEffects.add(Registry.EFFECT.get(NamespacedKey.minecraft(effectName)));
+            });
+
             if (totalFitness >= minFitness && totalFitness <= maxFitness) {
                 walkSpeed = entry.getValue().getWalkSpeed();
                 entry.getValue().getEffects().forEach(effect -> {
                     String effectName = effect.split(":")[0].toLowerCase();
                     int effectAmplifier = Integer.parseInt(effect.split(":")[1]);
-                    effects.put(Registry.EFFECT.get(NamespacedKey.minecraft(effectName)), effectAmplifier);
+                    PotionEffectType potionEffectType = Registry.EFFECT.get(NamespacedKey.minecraft(effectName));
+                    if (potionEffectType == null) {
+                        OpenMinetopia.getInstance().getLogger().warning("Could not find potion effect type for " + effectName);
+                        return;
+                    }
+
+                    effects.put(potionEffectType, effectAmplifier);
                 });
             }
         }
@@ -50,8 +66,13 @@ public class FitnessUtils {
                 if (player.getWalkSpeed() != finalWalkSpeed - 0.05f) {
                     player.setWalkSpeed(finalWalkSpeed - 0.05f);
                 }
-            } else if (player.getWalkSpeed() != finalWalkSpeed) {
-                player.setWalkSpeed(finalWalkSpeed);
+            }
+            player.setWalkSpeed(finalWalkSpeed);
+
+            if (effects.isEmpty()) {
+                possibleEffects.forEach(potionEffect -> {
+                    if (player.hasPotionEffect(potionEffect)) player.removePotionEffect(potionEffect);
+                });
             }
 
             effects.forEach((effect, amplifier) -> {

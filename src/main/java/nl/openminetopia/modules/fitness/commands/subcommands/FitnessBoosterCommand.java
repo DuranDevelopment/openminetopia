@@ -12,10 +12,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @CommandAlias("fitness")
-public class FitnessBoosterCommand  extends BaseCommand {
+public class FitnessBoosterCommand extends BaseCommand {
 
     @Subcommand("booster")
-    @Syntax("<player> <amount> <expiresAt>")
+    @Syntax("<player> <amount> [expiresAt]")
     @CommandCompletion("@players")
     public void onBooster(Player player, OfflinePlayer offlinePlayer, int amount, @Optional int expiresAt) {
         if (offlinePlayer.getPlayer() == null) return;
@@ -25,11 +25,12 @@ public class FitnessBoosterCommand  extends BaseCommand {
         if (expiresAt == 0) expiresAt = -1;
 
         int nextId = StormDatabase.getInstance().getNextId(FitnessBoostersModel.class, FitnessBoostersModel::getId);
-        FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, expiresAt);
+        FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, System.currentTimeMillis() + expiresAt);
         minetopiaPlayer.addFitnessBooster(fitnessBooster);
 
-        if (minetopiaPlayer instanceof OnlineMinetopiaPlayer player1) {
-            player1.getFitnessRunnable().run();
-        }
+        if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitnessRunnable().run();
+
+        player.sendMessage("Added fitness booster to " + offlinePlayer.getName());
+        minetopiaPlayer.getFitnessBoosters().forEach(fitnessBooster1 -> player.sendMessage("Booster: " + fitnessBooster1.getAmount() + " - " + fitnessBooster1.getExpiresAt()));
     }
 }

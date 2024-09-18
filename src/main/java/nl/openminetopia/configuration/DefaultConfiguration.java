@@ -12,6 +12,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +147,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.fitnessDeathPunishmentEnabled = rootNode.node("fitness", "deathPunishment", "enabled").getBoolean(true);
         this.fitnessDeathPunishmentAmount = rootNode.node("fitness", "deathPunishment", "amount").getInt(-20);
 
-        Map<String, FitnessLevel> defaultFitnessLevels = new HashMap<>();
+        Map<String, FitnessLevel> defaultFitnessLevels = new LinkedHashMap<>();
         defaultFitnessLevels.put("1-9", new FitnessLevel(0.1, List.of("JUMP_BOOST:0")));
         defaultFitnessLevels.put("10-19", new FitnessLevel(0.12, List.of("JUMP_BOOST:0")));
         defaultFitnessLevels.put("20-29", new FitnessLevel(0.15, List.of("JUMP_BOOST:0")));
@@ -162,6 +163,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         defaultFitnessLevels.put("160-179", new FitnessLevel(0.29, List.of("JUMP_BOOST:2")));
         defaultFitnessLevels.put("180-199", new FitnessLevel(0.31, List.of("JUMP_BOOST:2")));
         defaultFitnessLevels.put("200-209", new FitnessLevel(0.325, List.of("JUMP_BOOST:3")));
+        defaultFitnessLevels.put("210-255", new FitnessLevel(0.335, List.of("JUMP_BOOST:3")));
 
         ConfigurationNode fitnessNode = this.rootNode.node("fitness", "levels");
 
