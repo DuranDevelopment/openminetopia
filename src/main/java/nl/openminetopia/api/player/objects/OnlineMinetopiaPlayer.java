@@ -64,18 +64,79 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     public void load() {
         try {
-            this.level = playerModel.getLevel();
-            this.activePrefix = PrefixManager.getInstance().getPlayerActivePrefix(this).get();
-            this.activePrefixColor = ColorManager.getInstance().getPlayerActivePrefixColor(this).get();
-            this.prefixes = PrefixManager.getInstance().getPrefixes(this).get();
-            this.prefixColors = ColorManager.getInstance().getPrefixColors(this).get();
+            LevelManager.getInstance().getLevel(this).whenComplete((level, throwable) -> {
+                if (level == null) {
+                    this.level = 0;
+                    return;
+                }
+                this.level = level;
+            });
+            PrefixManager.getInstance().getPlayerActivePrefix(this).whenComplete((prefix, throwable) -> {
+                if (prefix == null) {
+                    this.activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
+                    return;
+                }
+                this.activePrefix = prefix;
+            });
+            ColorManager.getInstance().getPlayerActivePrefixColor(this).whenComplete((color, throwable) -> {
+                if (color == null) {
+                    this.activePrefixColor = new PrefixColor(-1, configuration.getDefaultPrefixColor(), -1);
+                    return;
+                }
+                this.activePrefixColor = color;
+            });
+            PrefixManager.getInstance().getPrefixes(this).whenComplete((prefixes, throwable) -> {
+                if (prefixes == null) {
+                    this.prefixes = List.of();
+                    return;
+                }
+                this.prefixes = prefixes;
+            });
+            ColorManager.getInstance().getPrefixColors(this).whenComplete((colors, throwable) -> {
+                if (colors == null) {
+                    this.prefixColors = List.of();
+                    return;
+                }
+                this.prefixColors = colors;
+            });
+            FitnessManager.getInstance().getDrinkingPoints(this).whenComplete((drinkingPoints, throwable) -> {
+                if (drinkingPoints == null) {
+                    this.drinkingPoints = 0;
+                    return;
+                }
+                this.drinkingPoints = drinkingPoints;
+            });
+            FitnessManager.getInstance().getFitnessGainedByDrinking(this).whenComplete((fitnessGainedByDrinking, throwable) -> {
+                if (fitnessGainedByDrinking == null) {
+                    this.fitnessGainedByDrinking = 0;
+                    return;
+                }
+                this.fitnessGainedByDrinking = fitnessGainedByDrinking;
+            });
+            FitnessManager.getInstance().getFitnessGainedByHealth(this).whenComplete((fitnessGainedByHealth, throwable) -> {
+                if (fitnessGainedByHealth == null) {
+                    this.fitnessGainedByHealth = 0;
+                    return;
+                }
+                this.fitnessGainedByHealth = fitnessGainedByHealth;
+            });
+            FitnessManager.getInstance().getFitnessBoosters(this).whenComplete((fitnessBoosters, throwable) -> {
+                if (fitnessBoosters == null) {
+                    this.fitnessBoosters = List.of();
+                    return;
+                }
+                this.fitnessBoosters = fitnessBoosters;
+            });
+            PlayerManager.getInstance().getPlaytime(this).whenComplete((playtime, throwable) -> {
+                if (playtime == null) {
+                    this.playtime = 0;
+                    return;
+                }
+                this.playtime = playtime;
+            });
+
             this.fitnessRunnable = new FitnessRunnable(getBukkit());
-            this.drinkingPoints = FitnessManager.getInstance().getDrinkingPoints(this).get();
-            this.fitnessGainedByDrinking = FitnessManager.getInstance().getFitnessGainedByDrinking(this).get();
-            this.fitnessGainedByHealth = FitnessManager.getInstance().getFitnessGainedByHealth(this).get();
-            this.fitnessBoosters = FitnessManager.getInstance().getFitnessBoosters(this).get();
             this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
-            this.playtime = PlayerManager.getInstance().getPlaytime(this).get();
         } catch (Exception exception) {
             getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();

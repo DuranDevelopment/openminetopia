@@ -147,6 +147,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.fitnessDeathPunishmentEnabled = rootNode.node("fitness", "deathPunishment", "enabled").getBoolean(true);
         this.fitnessDeathPunishmentAmount = rootNode.node("fitness", "deathPunishment", "amount").getInt(-20);
 
+        // Use LinkedHashMap to keep the order of the fitness levels in the configuration
         Map<String, FitnessLevel> defaultFitnessLevels = new LinkedHashMap<>();
         defaultFitnessLevels.put("1-9", new FitnessLevel(0.1, List.of("JUMP_BOOST:0")));
         defaultFitnessLevels.put("10-19", new FitnessLevel(0.12, List.of("JUMP_BOOST:0")));

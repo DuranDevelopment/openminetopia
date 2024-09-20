@@ -7,6 +7,7 @@ import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
+import nl.openminetopia.modules.scoreboard.commands.ScoreboardCommand;
 import nl.openminetopia.modules.scoreboard.listeners.PlayerJoinListener;
 import nl.openminetopia.modules.scoreboard.listeners.PlayerQuitListener;
 
@@ -22,6 +23,8 @@ public class ScoreboardModule extends Module {
 
         registerListener(new PlayerJoinListener());
         registerListener(new PlayerQuitListener());
+
+        registerCommand(new ScoreboardCommand());
 
         try {
             scoreboardLibrary = ScoreboardLibrary.loadScoreboardLibrary(OpenMinetopia.getInstance());

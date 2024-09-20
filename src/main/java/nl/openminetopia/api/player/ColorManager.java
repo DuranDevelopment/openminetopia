@@ -63,24 +63,36 @@ public class ColorManager {
     }
 
     public CompletableFuture<PrefixColor> getPlayerActivePrefixColor(MinetopiaPlayer player) {
-        try {
-            int activePrefixId = StormDatabase.getInstance().getModelData(player,
-                    PlayerModel.class,
-                    query -> {},
-                    playerModel -> true,
-                    PlayerModel::getActivePrefixColorId,
-                    0).get();
+        CompletableFuture<PrefixColor> result = new CompletableFuture<>();
 
-            return StormDatabase.getInstance().getModelData(player,
-                    ColorsModel.class,
-                    query -> query.where("id", Where.EQUAL, activePrefixId).where("type", Where.EQUAL, "prefix"),
-                    colorsModel -> colorsModel.getExpiresAt() > System.currentTimeMillis() || colorsModel.getExpiresAt() == -1,
-                    colorsModel -> new PrefixColor(colorsModel.getId(), colorsModel.getColor(), colorsModel.getExpiresAt()),
-                    null);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return null;
+        StormDatabase.getInstance().getModelData(player, PlayerModel.class,
+                        query -> {},
+                        playerModel -> true,
+                        PlayerModel::getActivePrefixColorId, 0)
+                .whenComplete((activePrefixId, ex) -> {
+                    if (ex != null) {
+                        ex.printStackTrace();
+                        result.completeExceptionally(ex); // Handle exception
+                        return;
+                    }
+
+                    StormDatabase.getInstance().getModelData(player,
+                                    ColorsModel.class,
+                                    query -> query.where("id", Where.EQUAL, activePrefixId).where("type", Where.EQUAL, "prefix"),
+                                    colorsModel -> colorsModel.getExpiresAt() > System.currentTimeMillis() || colorsModel.getExpiresAt() == -1,
+                                    colorsModel -> new PrefixColor(colorsModel.getId(), colorsModel.getColor(), colorsModel.getExpiresAt()),
+                                    null)
+                            .whenComplete((prefixColor, ex2) -> {
+                                if (ex2 != null) {
+                                    ex2.printStackTrace();
+                                    result.completeExceptionally(ex2); // Handle exception
+                                } else {
+                                    result.complete(prefixColor); // Complete with the retrieved prefix color
+                                }
+                            });
+                });
+
+        return result;
     }
 
     /**

@@ -31,16 +31,14 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
-        Sidebar sidebar = scoreboardModule.getScoreboardLibrary().createSidebar();
-
-        ScoreboardManager.getInstance().addScoreboard(player, sidebar);
+        ScoreboardManager.getInstance().addScoreboard(player);
 
         Bukkit.getServer().getScheduler().runTaskTimer(OpenMinetopia.getInstance(), task -> {
             if (!player.isOnline()) {
                 task.cancel();
                 return;
             }
-            ScoreboardManager.getInstance().updateBoard(minetopiaPlayer, sidebar);
+            ScoreboardManager.getInstance().updateBoard(minetopiaPlayer);
         }, 0, 20);
     }
 }

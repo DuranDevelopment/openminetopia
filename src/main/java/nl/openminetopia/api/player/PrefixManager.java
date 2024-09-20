@@ -51,25 +51,35 @@ public class PrefixManager {
     }
 
     public CompletableFuture<Prefix> getPlayerActivePrefix(MinetopiaPlayer player) {
-        try {
-            int activePrefixId = StormDatabase.getInstance().getModelData(player,
-                    PlayerModel.class,
-                    query -> {
-                    },
-                    playerModel -> true,
-                    PlayerModel::getActivePrefixId,
-                    0).get();
+        CompletableFuture<Prefix> result = new CompletableFuture<>();
 
-            return StormDatabase.getInstance().getModelData(player,
-                    PrefixesModel.class,
-                    query -> query.where("id", Where.EQUAL, activePrefixId),
-                    prefixesModel -> prefixesModel.getExpiresAt() > System.currentTimeMillis() || prefixesModel.getExpiresAt() == -1,
-                    prefixesModel -> new Prefix(prefixesModel.getId(), prefixesModel.getPrefix(), prefixesModel.getExpiresAt()),
-                    null);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return null;
+        StormDatabase.getInstance().getModelData(player, PlayerModel.class,
+                        query -> {},
+                        playerModel -> true,
+                        PlayerModel::getActivePrefixId, 0)
+                .whenComplete((activePrefixId, ex) -> {
+                    if (ex != null) {
+                        ex.printStackTrace();
+                        result.completeExceptionally(ex); // Handle exception in the result future
+                        return;
+                    }
+
+                    StormDatabase.getInstance().getModelData(player,
+                                    PrefixesModel.class,
+                                    query -> query.where("id", Where.EQUAL, activePrefixId),
+                                    prefixesModel -> prefixesModel.getExpiresAt() > System.currentTimeMillis() || prefixesModel.getExpiresAt() == -1,
+                                    prefixesModel -> new Prefix(prefixesModel.getId(), prefixesModel.getPrefix(), prefixesModel.getExpiresAt()),
+                                    null)
+                            .whenComplete((prefix, ex2) -> {
+                                if (ex2 != null) {
+                                    ex2.printStackTrace();
+                                    result.completeExceptionally(ex2); // Handle exception in the result future
+                                } else {
+                                    result.complete(prefix); // Complete with the retrieved prefix
+                                }
+                            });
+                });
+        return result;
     }
 
     public CompletableFuture<List<Prefix>> getPrefixes(MinetopiaPlayer player) {
