@@ -2,6 +2,7 @@ package nl.openminetopia;
 
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
+import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
@@ -14,6 +15,7 @@ import nl.openminetopia.modules.mod.ModModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
+import nl.openminetopia.modules.teleporter.TeleporterModule;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +40,8 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         moduleManager = new ModuleManager();
 
+        CustomBlockData.registerListener(this);
+
         try {
             defaultConfiguration = new DefaultConfiguration(getDataFolder());
             defaultConfiguration.saveConfiguration();
@@ -57,7 +61,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PrefixModule(),
                 new ChatModule(),
                 new ColorModule(),
-                new ScoreboardModule()
+                new ScoreboardModule(),
+                new TeleporterModule()
         );
 
         commandManager.enableUnstableAPI("help");
