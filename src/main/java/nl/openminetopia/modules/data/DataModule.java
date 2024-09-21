@@ -28,10 +28,12 @@ public class DataModule extends Module {
         if (type != DatabaseType.MONGO) {
             try {
                 storm.registerModel(new PlayerModel());
-                storm.registerModel(new PrefixesModel());
-                storm.registerModel(new ColorsModel());
+                storm.registerModel(new PrefixModel());
+                storm.registerModel(new ColorModel());
                 storm.registerModel(new FitnessModel());
-                storm.registerModel(new FitnessBoostersModel());
+                storm.registerModel(new FitnessBoosterModel());
+                storm.registerModel(new WorldModel());
+                storm.registerModel(new CityModel());
                 storm.runMigrations();
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());

@@ -1,5 +1,7 @@
 package nl.openminetopia.api.player.objects;
 
+import nl.openminetopia.api.places.objects.MTPlace;
+import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.objects.FitnessBooster;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
+
 
     public OfflineMinetopiaPlayer(UUID uuid) {
         super();
@@ -28,6 +31,16 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public OfflinePlayer getBukkit() {
         return null;
+    }
+
+    @Override
+    public boolean isScoreboardVisible() {
+        return false;
+    }
+
+    @Override
+    public void setScoreboardVisible(boolean visible) {
+
     }
 
     @Override
@@ -226,5 +239,20 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public List<FitnessBooster> getFitnessBoosters() {
         return List.of();
+    }
+
+    @Override
+    public boolean isInPlace() {
+        return false;
+    }
+
+    @Override
+    public MTPlace getPlace() {
+        return null;
+    }
+
+    @Override
+    public MTWorld getWorld() {
+        return null;
     }
 }

@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.*;
+import nl.openminetopia.api.places.MTPlaceManager;
+import nl.openminetopia.api.places.MTWorldManager;
+import nl.openminetopia.api.places.objects.MTPlace;
+import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.StormDatabase;
@@ -25,6 +29,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     private final UUID uuid;
     private final PlayerModel playerModel;
+
+    private @Setter boolean scoreboardVisible;
 
     private int playtime;
     private PlaytimeRunnable playtimeRunnable;
@@ -134,12 +140,15 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                 this.playtime = playtime;
             });
 
-            this.fitnessRunnable = new FitnessRunnable(getBukkit());
-            this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
+
         } catch (Exception exception) {
             getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();
         }
+
+        this.fitnessRunnable = new FitnessRunnable(getBukkit());
+        this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
+
         fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
         FitnessUtils.applyFitness(getBukkit());
@@ -171,6 +180,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void setPlaytime(int seconds, boolean updateDatabase) {
         this.playtime = seconds;
+    }
+
+    /* Places */
+    public boolean isInPlace() {
+        return getPlace() != null;
+    }
+
+    public MTPlace getPlace() {
+        return MTPlaceManager.getInstance().getPlace(getBukkit().getLocation());
+    }
+
+    public MTWorld getWorld() {
+        return MTWorldManager.getInstance().getWorld(getBukkit().getLocation());
     }
 
     /* Level */

@@ -8,7 +8,7 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.ColorsModel;
+import nl.openminetopia.modules.data.storm.models.ColorModel;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -41,7 +41,7 @@ public class ColorAddCommand extends BaseCommand {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
-                minetopiaPlayer.addPrefixColor(new PrefixColor(StormDatabase.getInstance().getNextId(ColorsModel.class, ColorsModel::getId), color, -1L));
+                minetopiaPlayer.addPrefixColor(new PrefixColor(StormDatabase.getInstance().getNextId(ColorModel.class, ColorModel::getId), color, -1L));
                 player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color).append(Component.text(color).append(ChatUtils.color(" kleur <dark_aqua>toegevoegd."))));
                 break;
             case CHAT:

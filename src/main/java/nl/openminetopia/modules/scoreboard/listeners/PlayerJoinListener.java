@@ -26,6 +26,7 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
+        minetopiaPlayer.setScoreboardVisible(true);
         ScoreboardManager.getInstance().addScoreboard(player);
 
         Bukkit.getServer().getScheduler().runTaskTimer(OpenMinetopia.getInstance(), task -> {

@@ -113,15 +113,15 @@ public class StormDatabase {
                     } else if (modelClass == PlayerModel.class) {
                         model = modelClass.cast(new PlayerModel());
                         ((PlayerModel) model).setUniqueId(player.getUuid());
-                    } else if (modelClass == PrefixesModel.class) {
-                        model = modelClass.cast(new PrefixesModel());
-                        ((PrefixesModel) model).setUniqueId(player.getUuid());
-                    } else if (modelClass == ColorsModel.class) {
-                        model = modelClass.cast(new ColorsModel());
-                        ((ColorsModel) model).setUniqueId(player.getUuid());
-                    } else if (modelClass == FitnessBoostersModel.class) {
-                        model = modelClass.cast(new PrefixesModel());
-                        ((PrefixesModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == PrefixModel.class) {
+                        model = modelClass.cast(new PrefixModel());
+                        ((PrefixModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == ColorModel.class) {
+                        model = modelClass.cast(new ColorModel());
+                        ((ColorModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == FitnessBoosterModel.class) {
+                        model = modelClass.cast(new PrefixModel());
+                        ((PrefixModel) model).setUniqueId(player.getUuid());
                     }
                 }
 
