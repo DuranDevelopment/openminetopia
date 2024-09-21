@@ -18,6 +18,7 @@ import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
+import nl.openminetopia.modules.vehicles.VehiclesModule;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -69,7 +70,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new ScoreboardModule(),
-                new TeleporterModule()
+                new TeleporterModule(),
+                new VehiclesModule()
         );
 
         commandManager.enableUnstableAPI("help");
