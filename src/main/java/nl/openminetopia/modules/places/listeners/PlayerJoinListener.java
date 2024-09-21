@@ -18,6 +18,8 @@ public class PlayerJoinListener implements Listener {
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
 
+        if (!minetopiaPlayer.isInPlace() || minetopiaPlayer.getPlace() == null) return;
+
         Title title = Title.title(ChatUtils.format(minetopiaPlayer, "Welkom in"), ChatUtils.format(minetopiaPlayer, minetopiaPlayer.getPlace().getLoadingName()));
         player.showTitle(title);
     }

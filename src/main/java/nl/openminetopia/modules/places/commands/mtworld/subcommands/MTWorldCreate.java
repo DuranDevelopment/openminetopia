@@ -13,8 +13,6 @@ public class MTWorldCreate extends BaseCommand {
     @Subcommand("create")
     public void onCreate(Player player, String loadingName) {
         String title = "<bold>" + loadingName.toUpperCase();
-        MTWorld world = new MTWorld(player.getWorld().getName(), title, "<gold>", 21.64, loadingName);
-        MTWorldManager.getInstance().createWorld(world);
 
         for (MTWorld mtWorld : MTWorldManager.getInstance().getWorlds()) {
             if (mtWorld.getName().equalsIgnoreCase(loadingName)) {
@@ -23,6 +21,8 @@ public class MTWorldCreate extends BaseCommand {
             }
         }
 
+        MTWorld world = new MTWorld(player.getWorld().getName(), title, "<gold>", 21.64, loadingName);
+        MTWorldManager.getInstance().createWorld(world);
         player.sendMessage("<green>World <white>" + loadingName + " <green>has been created!");
     }
 }

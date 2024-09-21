@@ -19,6 +19,8 @@ public class PlayerTeleportListener implements Listener {
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
 
+        if (!minetopiaPlayer.isInPlace() || minetopiaPlayer.getPlace() == null) return;
+
         MTPlace from = MTPlaceManager.getInstance().getPlace(event.getFrom());
         MTPlace to = minetopiaPlayer.getPlace();
 

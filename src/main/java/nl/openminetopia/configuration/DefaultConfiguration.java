@@ -21,79 +21,83 @@ public class DefaultConfiguration extends ConfigurateConfig {
     /**
      * Database configuration
      */
-    private final DatabaseType databaseType;
-    private final String host;
-    private final int port;
-    private final String databaseName;
-    private final String username;
-    private final String password;
+    private DatabaseType databaseType;
+    private String host;
+    private int port;
+    private String databaseName;
+    private String username;
+    private String password;
 
     /**
      * Chat configuration
      */
-    private final String chatFormat;
-    private final boolean chatEnabled;
-    private final boolean chatRadiusEnabled;
-    private final int chatRadiusRange;
-    private final boolean notifyWhenNobodyInRange;
+    private String chatFormat;
+    private boolean chatEnabled;
+    private boolean chatRadiusEnabled;
+    private int chatRadiusRange;
+    private boolean notifyWhenNobodyInRange;
 
     /**
      * Fitness configuration
      */
-    private final int maxFitnessLevel;
-    private final int defaultFitnessLevel;
+    private int maxFitnessLevel;
+    private int defaultFitnessLevel;
 
-    private final int maxFitnessByDrinking;
-    private final double drinkingPointsPerPotion;
-    private final double drinkingPointsPerWaterBottle;
-    private final int drinkingPointsPerFitnessPoint;
-    private final int drinkingCooldown;
+    private int maxFitnessByDrinking;
+    private double drinkingPointsPerPotion;
+    private double drinkingPointsPerWaterBottle;
+    private int drinkingPointsPerFitnessPoint;
+    private int drinkingCooldown;
 
-    private final int maxFitnessByWalking;
-    private final int cmPerWalkingPoint;
+    private int maxFitnessByWalking;
+    private int cmPerWalkingPoint;
 
-    private final int maxFitnessByClimbing;
-    private final int cmPerClimbingPoint;
+    private int maxFitnessByClimbing;
+    private int cmPerClimbingPoint;
 
-    private final int maxFitnessBySprinting;
-    private final int cmPerSprintingPoint;
+    private int maxFitnessBySprinting;
+    private int cmPerSprintingPoint;
 
-    private final int maxFitnessBySwimming;
-    private final int cmPerSwimmingPoint;
+    private int maxFitnessBySwimming;
+    private int cmPerSwimmingPoint;
 
-    private final int maxFitnessByFlying;
-    private final int cmPerFlyingPoint;
+    private int maxFitnessByFlying;
+    private int cmPerFlyingPoint;
 
-    private final int maxFitnessByHealth;
-    private final int pointsAbove9Hearts;
-    private final int pointsBelow5Hearts;
-    private final int pointsBelow2Hearts;
+    private int maxFitnessByHealth;
+    private int pointsAbove9Hearts;
+    private int pointsBelow5Hearts;
+    private int pointsBelow2Hearts;
 
-    private final boolean fitnessDeathPunishmentEnabled;
-    private final int fitnessDeathPunishmentAmount;
-    private final int fitnessDeathPunishmentDuration;
+    private boolean fitnessDeathPunishmentEnabled;
+    private int fitnessDeathPunishmentAmount;
+    private int fitnessDeathPunishmentDuration;
 
     private final Map<String, FitnessLevel> fitnessLevels = new HashMap<>();
 
-    private final boolean rainSlowdownEnabled;
+    private boolean rainSlowdownEnabled;
 
     /**
      * Scoreboard configuration
      */
-    private final boolean scoreboardEnabled;
-    private final List<String> scoreboardLines;
+    private boolean scoreboardEnabled;
+    private List<String> scoreboardLines;
 
     /**
      * Default settings configuration
      */
-    private final String defaultPrefix;
-    private final String defaultPrefixColor;
-    private final int defaultLevel;
+    private String defaultPrefix;
+    private String defaultPrefixColor;
+    private int defaultLevel;
 
     @SneakyThrows
     public DefaultConfiguration(File file) {
         super(file, "config.yml");
+        reload();
+    }
 
+    @SneakyThrows
+    public void reload() {
         /*
          * Database configuration
          */
@@ -214,6 +218,5 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "<world_color>Fitheid:",
                 "<fitness>/<max_fitness>"
         ));
-
     }
 }

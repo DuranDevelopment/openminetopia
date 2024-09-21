@@ -37,10 +37,12 @@ public class ScoreboardManager {
 
         if (!minetopiaPlayer.isInPlace()) {
             if (!sidebar.players().contains(player)) return;
+            System.out.println("a");
             sidebar.removePlayer(player);
             return;
         }
         if (minetopiaPlayer.isInPlace() && !sidebar.players().contains(player) && minetopiaPlayer.isScoreboardVisible()) {
+            System.out.println("b");
             sidebar.addPlayer(player);
         }
 
@@ -58,14 +60,16 @@ public class ScoreboardManager {
     }
 
     public void addScoreboard(Player player) {
-        System.out.println("Adding scoreboard to " + player.getName());
+        if (scoreboards.containsKey(player.getUniqueId())) return;
         Sidebar sidebar = OpenMinetopia.getModuleManager().getModule(ScoreboardModule.class).getScoreboardLibrary().createSidebar();
         sidebar.addPlayer(player);
         scoreboards.put(player.getUniqueId(), sidebar);
     }
 
     public void removeScoreboard(Player player) {
+        System.out.println("c");
         Sidebar sidebar = getScoreboard(player.getUniqueId());
+        if (sidebar == null) return;
         sidebar.removePlayer(player);
         sidebar.close();
         scoreboards.remove(player.getUniqueId());
