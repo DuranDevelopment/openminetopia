@@ -89,6 +89,11 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final String defaultPrefixColor;
     private final int defaultLevel;
 
+    /**
+     * Teleporter configuration
+     */
+    private final List<String> displayLines;
+
     public DefaultConfiguration(File file) throws SerializationException {
         super(file, "config.yml");
 
@@ -206,6 +211,14 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "<gray>Fitheid: <fitness>",
                 "<gray>Level: <level>",
                 "<gray>Prefix: <prefix>"
+        ));
+
+        /*
+         * Teleporter configuration
+         */
+        this.displayLines = rootNode.node("teleporter", "lines").getList(String.class, List.of(
+                "<gold>Teleporter",
+                "<grey><x>;<y>;<z>;<world>"
         ));
 
     }
