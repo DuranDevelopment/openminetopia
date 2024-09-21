@@ -90,8 +90,14 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private String defaultPrefixColor;
     private int defaultLevel;
 
+    /**
+     * Teleporter configuration
+     */
+    private final List<String> displayLines;
+
     @SneakyThrows
     public DefaultConfiguration(File file) {
+
         super(file, "config.yml");
         reload();
     }
@@ -218,5 +224,14 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "<world_color>Fitheid:",
                 "<fitness>/<max_fitness>"
         ));
+
+        /*
+         * Teleporter configuration
+         */
+        this.displayLines = rootNode.node("teleporter", "lines").getList(String.class, List.of(
+                "<gold>Teleporter",
+                "<grey><x>;<y>;<z>;<world>"
+        ));
+
     }
 }
