@@ -7,7 +7,6 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.utils.ChatUtils;
-import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

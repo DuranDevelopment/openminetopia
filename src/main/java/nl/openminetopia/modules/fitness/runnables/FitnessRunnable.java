@@ -1,7 +1,6 @@
 package nl.openminetopia.modules.fitness.runnables;
 
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.FitnessManager;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;

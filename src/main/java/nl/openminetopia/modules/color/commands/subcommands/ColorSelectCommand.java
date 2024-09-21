@@ -7,10 +7,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
-import nl.openminetopia.modules.color.objects.OwnableColor;
 import nl.openminetopia.modules.color.objects.PrefixColor;
-import nl.openminetopia.modules.prefix.objects.Prefix;
-import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

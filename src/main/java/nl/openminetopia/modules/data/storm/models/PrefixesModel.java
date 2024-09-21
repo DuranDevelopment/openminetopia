@@ -6,7 +6,6 @@ import com.craftmend.storm.api.markers.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data

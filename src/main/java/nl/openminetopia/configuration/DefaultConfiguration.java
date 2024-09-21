@@ -1,12 +1,10 @@
 package nl.openminetopia.configuration;
 
-import com.google.common.reflect.TypeToken;
 import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.data.type.DatabaseType;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import nl.openminetopia.utils.ConfigurateConfig;
-import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
