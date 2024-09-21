@@ -30,10 +30,11 @@ public class ScoreboardManager {
 
     public void updateBoard(MinetopiaPlayer minetopiaPlayer) {
         Sidebar sidebar = getScoreboard(minetopiaPlayer.getUuid());
+        if (sidebar == null) return;
+        if (!minetopiaPlayer.isScoreboardVisible()) return;
 
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return;
-
 
         if (!minetopiaPlayer.isInPlace()) {
             if (!sidebar.players().contains(player)) return;
@@ -45,8 +46,6 @@ public class ScoreboardManager {
             System.out.println("b");
             sidebar.addPlayer(player);
         }
-
-        if (sidebar == null) return;
 
         List<String> lines = configuration.getScoreboardLines();
         for (int i = 0; i < lines.size(); i++) {
