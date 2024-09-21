@@ -2,7 +2,7 @@ package nl.openminetopia;
 
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
-import com.sk89q.worldguard.WorldGuard;
+import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
@@ -16,6 +16,7 @@ import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
+import nl.openminetopia.modules.teleporter.TeleporterModule;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,6 +41,15 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         moduleManager = new ModuleManager();
 
+        CustomBlockData.registerListener(this);
+
+        try {
+            defaultConfiguration = new DefaultConfiguration(getDataFolder());
+            defaultConfiguration.saveConfiguration();
+        } catch (Exception e) {
+            this.getLogger().severe("An error occurred while loading the configuration file.");
+            e.printStackTrace();
+        }
         defaultConfiguration = new DefaultConfiguration(getDataFolder());
         defaultConfiguration.saveConfiguration();
 
@@ -55,13 +65,20 @@ public final class OpenMinetopia extends JavaPlugin {
                 new ChatModule(),
                 new ColorModule(),
                 new PlacesModule(),
-                new ScoreboardModule()
+                new ScoreboardModule(),
+                new ScoreboardModule(),
+                new TeleporterModule()
         );
 
         commandManager.enableUnstableAPI("help");
         commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
         commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
         commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
+        commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
+        commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
+        commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
+        commandManager.setFormat(MessageType.INFO, ChatColor.DARK_AQUA, ChatColor.AQUA, ChatColor.GRAY);
+        commandManager.setFormat(MessageType.ERROR, ChatColor.RED);
     }
 
     @Override

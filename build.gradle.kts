@@ -70,6 +70,13 @@ dependencies {
 
     /* WorldGuard */
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.12")
+
+    /* PersistentData addons */
+    implementation("com.jeff-media:custom-block-data:2.2.3")
+    implementation("com.jeff-media:MorePersistentDataTypes:2.4.0")
+
+    /* InventoryLib (JAZZZZ) */
+    implementation("com.github.Jazzkuh.InventoryLib:spigot:d519cdde69")
 }
 
 val targetJavaVersion = 21
@@ -111,6 +118,9 @@ tasks.named<ShadowJar>("shadowJar") {
     relocate("co.aikar.commands", "nl.openminetopia.shaded.acf")
     relocate("co.aikar.locales", "nl.openminetopia.shaded.locales")
     relocate("net.megavex.scoreboardlibrary", "nl.openminetopia.shaded.scoreboard")
+    relocate("com.jeff_media.customblockdata", "nl.openminetopia.shaded.customblockdata")
+    relocate("com.jeff_media.morepersistentdatatypes", "nl.openminetopia.shaded.morepersistentdatatypes")
+    relocate("com.jazzkuh.inventorylib", "nl.openminetopia.shaded.inventorylib")
 }
 
 tasks.build {
