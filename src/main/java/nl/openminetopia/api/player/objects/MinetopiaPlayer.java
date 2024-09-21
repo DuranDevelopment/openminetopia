@@ -1,5 +1,7 @@
 package nl.openminetopia.api.player.objects;
 
+import nl.openminetopia.api.world.objects.MTPlace;
+import nl.openminetopia.api.world.objects.MTWorld;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 import nl.openminetopia.modules.prefix.objects.Prefix;
@@ -15,6 +17,10 @@ public interface MinetopiaPlayer {
     PlayerModel getPlayerModel();
 
     OfflinePlayer getBukkit();
+
+    /* Scoreboard */
+    boolean isScoreboardVisible();
+    void setScoreboardVisible(boolean visible);
 
     /* Playtime */
     void setPlaytime(int playtime, boolean updateDatabase);
@@ -81,4 +87,10 @@ public interface MinetopiaPlayer {
     void addFitnessBooster(FitnessBooster booster);
     void removeFitnessBooster(FitnessBooster booster);
     List<FitnessBooster> getFitnessBoosters();
+
+    /* Places */
+
+    boolean isInPlace();
+    MTPlace getPlace();
+    MTWorld getWorld();
 }

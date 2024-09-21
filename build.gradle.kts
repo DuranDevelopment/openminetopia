@@ -35,6 +35,10 @@ repositories {
         name = "extendedclip"
         url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     }
+    maven {
+        name = "enginehub"
+        url = uri("https://maven.enginehub.org/repo/")
+    }
 }
 
 dependencies {
@@ -63,6 +67,9 @@ dependencies {
 
     /* PlaceholderAPI */
     compileOnly("me.clip:placeholderapi:2.11.6")
+
+    /* WorldGuard */
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.12")
 }
 
 val targetJavaVersion = 21

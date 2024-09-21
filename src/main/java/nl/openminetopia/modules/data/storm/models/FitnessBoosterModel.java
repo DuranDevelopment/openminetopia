@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Table(name = "fitness_boosters")
-public class FitnessBoostersModel extends StormModel {
+public class FitnessBoosterModel extends StormModel {
 
     @Column(name = "uuid")
     private UUID uniqueId;

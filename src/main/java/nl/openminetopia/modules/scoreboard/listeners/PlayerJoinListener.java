@@ -1,14 +1,9 @@
 package nl.openminetopia.modules.scoreboard.listeners;
 
-import net.kyori.adventure.text.Component;
-import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
-import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
-import net.megavex.scoreboardlibrary.api.sidebar.component.SidebarComponent;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.ScoreboardManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
@@ -31,6 +26,7 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
+        minetopiaPlayer.setScoreboardVisible(true);
         ScoreboardManager.getInstance().addScoreboard(player);
 
         Bukkit.getServer().getScheduler().runTaskTimer(OpenMinetopia.getInstance(), task -> {

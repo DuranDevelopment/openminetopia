@@ -2,6 +2,7 @@ package nl.openminetopia.configuration;
 
 import com.google.common.reflect.TypeToken;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.data.type.DatabaseType;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
@@ -91,7 +92,8 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final String defaultPrefixColor;
     private final int defaultLevel;
 
-    public DefaultConfiguration(File file) throws SerializationException {
+    @SneakyThrows
+    public DefaultConfiguration(File file) {
         super(file, "config.yml");
 
         /*
@@ -204,10 +206,15 @@ public class DefaultConfiguration extends ConfigurateConfig {
          */
         this.scoreboardEnabled = rootNode.node("scoreboard", "enabled").getBoolean(true);
         this.scoreboardLines = rootNode.node("scoreboard", "lines").getList(String.class, List.of(
-                "<red>OpenMinetopia",
-                "<gray>Fitheid: <fitness>",
-                "<gray>Level: <level>",
-                "<gray>Prefix: <prefix>"
+                "<world_title>",
+                "<world_color>Temperatuur:",
+                "<temperature>°C",
+                " ",
+                "<world_color>Level:",
+                "<level> -> <CalcLevel> (<LevelUps><white>)",
+                " ",
+                "<world_color>Fitheid:",
+                "<fitness>/<max_fitness>"
         ));
 
     }

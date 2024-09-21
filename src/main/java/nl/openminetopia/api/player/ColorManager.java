@@ -5,7 +5,7 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.ColorsModel;
+import nl.openminetopia.modules.data.storm.models.ColorModel;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 
 import java.util.ArrayList;
@@ -29,16 +29,16 @@ public class ColorManager {
      */
 
     public void addPrefixColor(MinetopiaPlayer player, PrefixColor color) {
-        StormDatabase.getInstance().updateModel(player, ColorsModel.class, colorsModel -> {
-            colorsModel.setUniqueId(player.getUuid());
-            colorsModel.setColor(color.getColor());
-            colorsModel.setType("prefix");
-            colorsModel.setExpiresAt(color.getExpiresAt());
+        StormDatabase.getInstance().updateModel(player, ColorModel.class, colorModel -> {
+            colorModel.setUniqueId(player.getUuid());
+            colorModel.setColor(color.getColor());
+            colorModel.setType("prefix");
+            colorModel.setExpiresAt(color.getExpiresAt());
         });
     }
 
     public void removePrefixColor(MinetopiaPlayer player, PrefixColor color) {
-        StormDatabase.getInstance().deleteModel(player, ColorsModel.class, colorsModel -> colorsModel.getId() == color.getId());
+        StormDatabase.getInstance().deleteModel(player, ColorModel.class, colorModel -> colorModel.getId() == color.getId());
     }
 
     public void setActivePrefixColor(MinetopiaPlayer player, PrefixColor color) {
@@ -50,8 +50,8 @@ public class ColorManager {
 
         findPlayerColors(player, OwnableColorType.PREFIX).thenAccept(prefixColorsModels -> {
             List<PrefixColor> prefixColors = new ArrayList<>();
-            for (ColorsModel colorsModel : prefixColorsModels) {
-                prefixColors.add(new PrefixColor(colorsModel.getId(), colorsModel.getColor(), colorsModel.getExpiresAt()));
+            for (ColorModel colorModel : prefixColorsModels) {
+                prefixColors.add(new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
             }
             completableFuture.complete(prefixColors);
         }).exceptionally(ex -> {
@@ -77,10 +77,10 @@ public class ColorManager {
                     }
 
                     StormDatabase.getInstance().getModelData(player,
-                                    ColorsModel.class,
+                                    ColorModel.class,
                                     query -> query.where("id", Where.EQUAL, activePrefixId).where("type", Where.EQUAL, "prefix"),
-                                    colorsModel -> colorsModel.getExpiresAt() > System.currentTimeMillis() || colorsModel.getExpiresAt() == -1,
-                                    colorsModel -> new PrefixColor(colorsModel.getId(), colorsModel.getColor(), colorsModel.getExpiresAt()),
+                                    colorModel -> colorModel.getExpiresAt() > System.currentTimeMillis() || colorModel.getExpiresAt() == -1,
+                                    colorModel -> new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()),
                                     null)
                             .whenComplete((prefixColor, ex2) -> {
                                 if (ex2 != null) {
@@ -99,17 +99,17 @@ public class ColorManager {
      * Other methods
      */
 
-    private CompletableFuture<List<ColorsModel>> findPlayerColors(MinetopiaPlayer player, OwnableColorType type) {
-        CompletableFuture<List<ColorsModel>> completableFuture = new CompletableFuture<>();
+    private CompletableFuture<List<ColorModel>> findPlayerColors(MinetopiaPlayer player, OwnableColorType type) {
+        CompletableFuture<List<ColorModel>> completableFuture = new CompletableFuture<>();
         StormDatabase.getExecutorService().submit(() -> {
             try {
-                Collection<ColorsModel> colorsModels = StormDatabase.getInstance().getStorm().buildQuery(ColorsModel.class)
+                Collection<ColorModel> colorModels = StormDatabase.getInstance().getStorm().buildQuery(ColorModel.class)
                         .where("uuid", Where.EQUAL, player.getUuid().toString())
                         .where("type", Where.EQUAL, type.name().toLowerCase())
                         .execute()
                         .join();
 
-                completableFuture.complete(new ArrayList<>(colorsModels));
+                completableFuture.complete(new ArrayList<>(colorModels));
             } catch (Exception exception) {
                 exception.printStackTrace();
                 completableFuture.completeExceptionally(exception);
