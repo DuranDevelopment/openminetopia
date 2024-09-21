@@ -66,7 +66,9 @@ public final class OpenMinetopia extends JavaPlugin {
         );
 
         commandManager.enableUnstableAPI("help");
-        commandManager.setFormat(MessageType.HELP, ChatColor.DARK_AQUA);
+        commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
+        commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
+        commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
         commandManager.setFormat(MessageType.INFO, ChatColor.DARK_AQUA, ChatColor.AQUA, ChatColor.GRAY);
         commandManager.setFormat(MessageType.ERROR, ChatColor.RED);
     }
