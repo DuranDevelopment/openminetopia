@@ -1,9 +1,9 @@
 package nl.openminetopia.api.player.objects;
 
+import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 import nl.openminetopia.modules.prefix.objects.Prefix;
-import nl.openminetopia.modules.color.objects.PrefixColor;
 import org.bukkit.OfflinePlayer;
 
 import java.util.List;
