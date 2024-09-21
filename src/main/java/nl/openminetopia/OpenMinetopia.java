@@ -74,11 +74,6 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
         commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
         commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
-        commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
-        commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
-        commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
-        commandManager.setFormat(MessageType.INFO, ChatColor.DARK_AQUA, ChatColor.AQUA, ChatColor.GRAY);
-        commandManager.setFormat(MessageType.ERROR, ChatColor.RED);
     }
 
     @Override
