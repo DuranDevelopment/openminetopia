@@ -93,7 +93,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
     /**
      * Teleporter configuration
      */
-    private final List<String> displayLines;
+    private List<String> displayLines;
 
     @SneakyThrows
     public DefaultConfiguration(File file) {
