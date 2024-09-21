@@ -79,7 +79,7 @@ public final class TeleporterUtil {
 
     public Entity addDisplay(Block block, Location location) {
         Location blockLocation = block.getLocation();
-        blockLocation.add(0.5, 1, 0.5);
+        blockLocation.add(0.5, 1.4, 0.5);
 
         /* Add config support */
         TextDisplay display = block.getWorld().spawn(blockLocation, TextDisplay.class);
