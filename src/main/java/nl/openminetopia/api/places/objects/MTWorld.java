@@ -1,4 +1,4 @@
-package nl.openminetopia.api.world.objects;
+package nl.openminetopia.api.places.objects;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,11 +1,11 @@
-package nl.openminetopia.api.world;
+package nl.openminetopia.api.places;
 
 import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
-import nl.openminetopia.api.world.objects.MTWorld;
+import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.WorldModel;
-import nl.openminetopia.modules.places.commands.mtworld.subcommands.MTWorldCreate;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -96,9 +96,9 @@ public class MTWorldManager {
         });
     }
 
-    public MTWorld getWorld(Player player) {
+    public MTWorld getWorld(Location location) {
         for (MTWorld world : worlds) {
-            if (!world.getName().equals(player.getWorld().getName())) continue;
+            if (!world.getName().equals(location.getWorld().getName())) continue;
             return world;
         }
         return null;

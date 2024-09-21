@@ -86,7 +86,8 @@ public class FitnessRunnable extends BukkitRunnable {
 
         /* Total points */
 
-        int newTotalFitness = minetopiaPlayer.getFitnessGainedByDrinking() +
+        int newTotalFitness = configuration.getDefaultFitnessLevel() +
+                minetopiaPlayer.getFitnessGainedByDrinking() +
                 minetopiaPlayer.getFitnessGainedByHealth() +
                 newWalkingFitness +
                 newClimbingFitness +

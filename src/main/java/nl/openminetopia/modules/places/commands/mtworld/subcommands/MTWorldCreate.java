@@ -3,8 +3,8 @@ package nl.openminetopia.modules.places.commands.mtworld.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
-import nl.openminetopia.api.world.MTWorldManager;
-import nl.openminetopia.api.world.objects.MTWorld;
+import nl.openminetopia.api.places.MTWorldManager;
+import nl.openminetopia.api.places.objects.MTWorld;
 import org.bukkit.entity.Player;
 
 @CommandAlias("mtworld")

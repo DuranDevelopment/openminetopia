@@ -1,4 +1,4 @@
-package nl.openminetopia.api.world.objects;
+package nl.openminetopia.api.places.objects;
 
 public interface MTPlace {
     void setName(String cityName);

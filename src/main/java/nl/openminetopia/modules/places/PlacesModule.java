@@ -1,11 +1,15 @@
 package nl.openminetopia.modules.places;
 
-import nl.openminetopia.api.world.MTCityManager;
-import nl.openminetopia.api.world.MTWorldManager;
+import nl.openminetopia.api.places.MTCityManager;
+import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.places.commands.mtcity.MTCityCommand;
+import nl.openminetopia.modules.places.commands.mtcity.subcommands.MTCityCreateCommand;
 import nl.openminetopia.modules.places.commands.mtworld.MTWorldCommand;
 import nl.openminetopia.modules.places.commands.mtworld.subcommands.MTWorldCreate;
+import nl.openminetopia.modules.places.listeners.PlayerJoinListener;
+import nl.openminetopia.modules.places.listeners.PlayerMoveListener;
+import nl.openminetopia.modules.places.listeners.PlayerTeleportListener;
 
 public class PlacesModule extends Module {
 
@@ -18,6 +22,11 @@ public class PlacesModule extends Module {
         registerCommand(new MTWorldCreate());
 
         registerCommand(new MTCityCommand());
+        registerCommand(new MTCityCreateCommand());
+
+        registerListener(new PlayerJoinListener());
+        registerListener(new PlayerTeleportListener());
+        registerListener(new PlayerMoveListener());
     }
 
     @Override

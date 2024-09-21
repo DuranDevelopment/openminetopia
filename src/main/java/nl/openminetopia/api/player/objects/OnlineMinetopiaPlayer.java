@@ -2,13 +2,12 @@ package nl.openminetopia.api.player.objects;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.*;
-import nl.openminetopia.api.world.MTPlaceManager;
-import nl.openminetopia.api.world.MTWorldManager;
-import nl.openminetopia.api.world.objects.MTPlace;
-import nl.openminetopia.api.world.objects.MTWorld;
+import nl.openminetopia.api.places.MTPlaceManager;
+import nl.openminetopia.api.places.MTWorldManager;
+import nl.openminetopia.api.places.objects.MTPlace;
+import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
@@ -189,11 +188,11 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     }
 
     public MTPlace getPlace() {
-        return MTPlaceManager.getInstance().getPlace(getBukkit());
+        return MTPlaceManager.getInstance().getPlace(getBukkit().getLocation());
     }
 
     public MTWorld getWorld() {
-        return MTWorldManager.getInstance().getWorld(getBukkit());
+        return MTWorldManager.getInstance().getWorld(getBukkit().getLocation());
     }
 
     /* Level */
