@@ -3,9 +3,15 @@ version: '1.0-SNAPSHOT'
 main: nl.openminetopia.OpenMinetopia
 api-version: '1.21'
 loader: nl.openminetopia.OpenMinetopiaLoader
-authors: [ 'KaasPlakje', 'TheBathDuck' ]
+authors: [ 'KaasPlakje', 'TheBathDuck', 'Jazzkuh', 'OmeJan' ]
 dependencies:
   server:
     PlaceholderAPI:
       load: BEFORE
       required: false
+    WorldEdit:
+      load: BEFORE
+      required: true
+    WorldGuard:
+      load: BEFORE
+      required: true

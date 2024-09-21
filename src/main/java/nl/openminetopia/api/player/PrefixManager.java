@@ -4,7 +4,7 @@ import com.craftmend.storm.api.enums.Where;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.storm.models.PrefixesModel;
+import nl.openminetopia.modules.data.storm.models.PrefixModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
 import java.util.ArrayList;
@@ -30,12 +30,12 @@ public class PrefixManager {
     public void addPrefix(MinetopiaPlayer player, Prefix prefix) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
-                PrefixesModel prefixesModel = new PrefixesModel();
-                prefixesModel.setUniqueId(player.getUuid());
-                prefixesModel.setPrefix(prefix.getPrefix());
-                prefixesModel.setExpiresAt(prefix.getExpiresAt());
+                PrefixModel prefixModel = new PrefixModel();
+                prefixModel.setUniqueId(player.getUuid());
+                prefixModel.setPrefix(prefix.getPrefix());
+                prefixModel.setExpiresAt(prefix.getExpiresAt());
 
-                StormDatabase.getInstance().saveStormModel(prefixesModel);
+                StormDatabase.getInstance().saveStormModel(prefixModel);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -47,7 +47,7 @@ public class PrefixManager {
     }
 
     public void removePrefix(MinetopiaPlayer player, Prefix prefix) {
-        StormDatabase.getInstance().deleteModel(player, PrefixesModel.class, prefixesModel -> prefixesModel.getId() == prefix.getId());
+        StormDatabase.getInstance().deleteModel(player, PrefixModel.class, prefixModel -> prefixModel.getId() == prefix.getId());
     }
 
     public CompletableFuture<Prefix> getPlayerActivePrefix(MinetopiaPlayer player) {
@@ -65,10 +65,10 @@ public class PrefixManager {
                     }
 
                     StormDatabase.getInstance().getModelData(player,
-                                    PrefixesModel.class,
+                                    PrefixModel.class,
                                     query -> query.where("id", Where.EQUAL, activePrefixId),
-                                    prefixesModel -> prefixesModel.getExpiresAt() > System.currentTimeMillis() || prefixesModel.getExpiresAt() == -1,
-                                    prefixesModel -> new Prefix(prefixesModel.getId(), prefixesModel.getPrefix(), prefixesModel.getExpiresAt()),
+                                    prefixModel -> prefixModel.getExpiresAt() > System.currentTimeMillis() || prefixModel.getExpiresAt() == -1,
+                                    prefixModel -> new Prefix(prefixModel.getId(), prefixModel.getPrefix(), prefixModel.getExpiresAt()),
                                     null)
                             .whenComplete((prefix, ex2) -> {
                                 if (ex2 != null) {
@@ -88,8 +88,8 @@ public class PrefixManager {
         findPlayerPrefixes(player).thenAccept(prefixesModels -> {
             // Create a list to store the prefixes
             List<Prefix> prefixes = new ArrayList<>();
-            for (PrefixesModel prefixesModel : prefixesModels) {
-                prefixes.add(new Prefix(prefixesModel.getId(), prefixesModel.getPrefix(), prefixesModel.getExpiresAt()));
+            for (PrefixModel prefixModel : prefixesModels) {
+                prefixes.add(new Prefix(prefixModel.getId(), prefixModel.getPrefix(), prefixModel.getExpiresAt()));
             }
             completableFuture.complete(prefixes);
         }).exceptionally(ex -> {
@@ -100,16 +100,16 @@ public class PrefixManager {
         return completableFuture;
     }
 
-    private CompletableFuture<List<PrefixesModel>> findPlayerPrefixes(MinetopiaPlayer player) {
-        CompletableFuture<List<PrefixesModel>> completableFuture = new CompletableFuture<>();
+    private CompletableFuture<List<PrefixModel>> findPlayerPrefixes(MinetopiaPlayer player) {
+        CompletableFuture<List<PrefixModel>> completableFuture = new CompletableFuture<>();
         StormDatabase.getExecutorService().submit(() -> {
             try {
-                Collection<PrefixesModel> prefixesModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixesModel.class)
+                Collection<PrefixModel> prefixModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixModel.class)
                         .where("uuid", Where.EQUAL, player.getUuid().toString())
                         .execute()
                         .join();
 
-                completableFuture.complete(new ArrayList<>(prefixesModel));
+                completableFuture.complete(new ArrayList<>(prefixModel));
             } catch (Exception exception) {
                 exception.printStackTrace();
                 completableFuture.completeExceptionally(exception);
