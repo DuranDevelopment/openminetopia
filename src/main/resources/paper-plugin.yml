@@ -13,5 +13,5 @@ dependencies:
       load: BEFORE
       required: true
     WorldGuard:
-      load: BEFORE
+      load: AFTER
       required: true

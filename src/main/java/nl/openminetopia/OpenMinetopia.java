@@ -15,6 +15,7 @@ import nl.openminetopia.modules.fitness.FitnessModule;
 import nl.openminetopia.modules.mod.ModModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
+import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
@@ -69,7 +70,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new ScoreboardModule(),
-                new TeleporterModule()
+                new TeleporterModule(),
+                new PlotModule()
         );
 
         commandManager.enableUnstableAPI("help");
