@@ -2,11 +2,13 @@ package nl.openminetopia;
 
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
+import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
+import nl.openminetopia.modules.admintool.AdminToolModule;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.config.ConfigModule;
@@ -69,6 +71,7 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new ScoreboardModule(),
+                new AdminToolModule(),
                 new TeleporterModule()
         );
 
@@ -76,6 +79,8 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
         commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
         commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
+
+        Menu.init(this);
     }
 
     @Override
