@@ -5,7 +5,8 @@ import org.bukkit.NamespacedKey;
 
 public enum VehicleKey {
     TYPE_KEY("vehicle.type"),
-    UUIDS_KEY("vehicle.uuids");
+    UUIDS_KEY("vehicle.uuids"),
+    VEHICLE_ID_KEY("vehicle.vehicleId");
 
     private final NamespacedKey key;
 

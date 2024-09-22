@@ -3,17 +3,11 @@ package nl.openminetopia.modules.vehicles.wrappers;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSteerVehicle;
 import lombok.Getter;
-import org.bukkit.entity.Entity;
 
 @Getter
 public class WrappedPlayerInputPacket {
 
-    private final boolean forward;
-    private final boolean backward;
-    private final boolean left;
-    private final boolean right;
-    private final boolean sneak;
-    private final boolean jump;
+    private final boolean forward, backward, left, right, sneak, jump;
 
     public WrappedPlayerInputPacket(PacketReceiveEvent event) {
         WrapperPlayClientSteerVehicle wrappedPacket = new WrapperPlayClientSteerVehicle(event);
