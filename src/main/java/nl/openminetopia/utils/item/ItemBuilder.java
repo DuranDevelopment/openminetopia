@@ -1,6 +1,7 @@
 package nl.openminetopia.utils.item;
 
 import com.jazzkuh.inventorylib.utils.PersistentData;
+import com.jeff_media.morepersistentdatatypes.DataType;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;

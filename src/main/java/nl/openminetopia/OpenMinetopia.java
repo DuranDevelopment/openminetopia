@@ -2,7 +2,9 @@ package nl.openminetopia;
 
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
+import com.github.retrooper.packetevents.PacketEvents;
 import com.jeff_media.customblockdata.CustomBlockData;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
@@ -36,8 +38,13 @@ public final class OpenMinetopia extends JavaPlugin {
     private static MessageConfiguration messageConfiguration;
 
     @Override
+    public void onLoad() {
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().load();
+    }
+
+    @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
 
         commandManager = new PaperCommandManager(this);
@@ -74,6 +81,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new VehiclesModule()
         );
 
+        PacketEvents.getAPI().init();
+
         commandManager.enableUnstableAPI("help");
         commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
         commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
@@ -83,5 +92,6 @@ public final class OpenMinetopia extends JavaPlugin {
     @Override
     public void onDisable() {
         moduleManager.disable();
+        PacketEvents.getAPI().terminate();
     }
 }

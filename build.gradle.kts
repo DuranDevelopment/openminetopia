@@ -39,6 +39,10 @@ repositories {
         name = "enginehub"
         url = uri("https://maven.enginehub.org/repo/")
     }
+    maven {
+        name = "codemc"
+        url = uri("https://repo.codemc.io/repository/maven-releases/")
+    }
 }
 
 dependencies {
@@ -77,6 +81,9 @@ dependencies {
 
     /* InventoryLib (JAZZZZ) */
     implementation("com.github.Jazzkuh.InventoryLib:spigot:d519cdde69")
+
+    /* Packet Events */
+    compileOnly("com.github.retrooper:packetevents-spigot:2.5.0")
 }
 
 val targetJavaVersion = 21
