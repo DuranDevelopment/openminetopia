@@ -1,4 +1,4 @@
-package nl.openminetopia.api.events.player;
+package nl.openminetopia.api.plots.events.player;
 
 import lombok.Getter;
 import lombok.Setter;
