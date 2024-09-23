@@ -71,8 +71,6 @@ public final class OpenMinetopia extends JavaPlugin {
                 new ColorModule(),
                 new PlacesModule(),
                 new ScoreboardModule(),
-                new ScoreboardModule(),
-                new TeleporterModule(),
                 new PlotModule(),
                 new AdminToolModule(),
                 new TeleporterModule()

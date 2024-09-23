@@ -95,7 +95,6 @@ public class DefaultConfiguration extends ConfigurateConfig {
      */
     private List<String> displayLines;
 
-    @SneakyThrows
     public DefaultConfiguration(File file) {
 
         super(file, "config.yml");
