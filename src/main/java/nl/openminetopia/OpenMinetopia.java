@@ -6,6 +6,7 @@ import lombok.Getter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
+import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.data.DataModule;
@@ -52,6 +53,7 @@ public final class OpenMinetopia extends JavaPlugin {
         moduleManager.register(
                 new DataModule(),
                 new PlayerModule(),
+                new BankingModule(),
                 new FitnessModule(),
                 new ModModule(),
                 new PrefixModule(),

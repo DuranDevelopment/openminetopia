@@ -39,6 +39,11 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final boolean notifyWhenNobodyInRange;
 
     /**
+     * Banking configuration
+     */
+    private final String bankingFormat;
+
+    /**
      * Fitness configuration
      */
     private final int maxFitnessLevel;
@@ -110,6 +115,11 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.defaultPrefix = rootNode.node("default", "prefix").getString("Zwerver");
         this.defaultPrefixColor = rootNode.node("default", "prefixColor").getString("<gray>");
         this.defaultLevel = rootNode.node("default", "level").getInt(1);
+
+        /**
+         * Banking configuration
+         */
+        this.bankingFormat = rootNode.node("banking", "economy-format").getString("#,##0.00");
 
         /*
          * Fitness configuration
