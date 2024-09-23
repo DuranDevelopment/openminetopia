@@ -41,6 +41,7 @@ public class DataModule extends Module {
                 storm.registerModel(new FitnessModel());
                 storm.registerModel(new FitnessBoostersModel());
                 storm.registerModel(new BankAccountModel());
+                storm.registerModel(new BankPermissionModel());
                 storm.runMigrations();
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());

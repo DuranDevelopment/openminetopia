@@ -9,13 +9,14 @@ import lombok.RequiredArgsConstructor;
 import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
-@Table(name = "banking")
+@Table(name = "banking_accounts")
 public class BankAccountModel extends StormModel {
 
     @Column(name = "uuid", unique = true)
@@ -30,8 +31,6 @@ public class BankAccountModel extends StormModel {
     @Column(name = "name")
     private String name;
 
-    private Map<UUID, AccountPermission> users;
-
-
+    private Map<UUID, AccountPermission> users = new HashMap<>();
 
 }

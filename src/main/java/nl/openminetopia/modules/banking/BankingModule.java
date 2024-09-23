@@ -1,6 +1,7 @@
 package nl.openminetopia.modules.banking;
 
 import com.craftmend.storm.api.enums.Where;
+import com.mysql.cj.x.protobuf.MysqlxCursor;
 import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
@@ -8,6 +9,8 @@ import nl.openminetopia.modules.banking.commands.BankingCommand;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
+import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,16 +33,28 @@ public class BankingModule extends Module {
 
     @Override
     public void enable() {
-        OpenMinetopia.getInstance().getLogger().info("Loading bank accounts..");
-        loadAccounts().whenComplete((accounts, throwable) -> {
-            if (throwable != null) {
-                OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to load all bank accounts: " + throwable.getMessage());
-                return;
-            }
+        Bukkit.getScheduler().runTaskLater(OpenMinetopia.getInstance(), () -> {
+            OpenMinetopia.getInstance().getLogger().info("Loading bank accounts..");
+            loadAccounts().whenComplete((accounts, accountThrowable) -> {
+                if (accountThrowable != null) {
+                    OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to load all bank accounts: " + accountThrowable.getMessage());
+                    return;
+                }
 
-            bankAccountModels = accounts;
-            OpenMinetopia.getInstance().getLogger().info("Loaded a total of " + bankAccountModels.size() + " accounts.");
-        });
+                bankAccountModels = accounts;
+                OpenMinetopia.getInstance().getLogger().info("Loaded a total of " + bankAccountModels.size() + " accounts.");
+
+                loadPermissions().whenComplete((amount, permissionThrowable) -> {
+                    if (permissionThrowable != null) {
+                        OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to bank permission: " + permissionThrowable.getMessage());
+                        return;
+                    }
+
+                    OpenMinetopia.getInstance().getLogger().info("Applied " + amount + " permissions.");
+                });
+
+            });
+        }, 20 * 5L);
 
         registerCommand(new BankingCommand());
     }
@@ -78,6 +93,31 @@ public class BankingModule extends Module {
                 completableFuture.complete(new ArrayList<>(models));
             });
 
+        } catch (Exception e) {
+            completableFuture.completeExceptionally(e);
+        }
+        return completableFuture;
+    }
+
+    public CompletableFuture<Integer> loadPermissions() {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
+        try {
+            CompletableFuture<Collection<BankPermissionModel>> permissionsFuture = StormDatabase.getInstance().getStorm().buildQuery(BankPermissionModel.class)
+                    .execute();
+
+            permissionsFuture.whenComplete((permissions, throwable) -> {
+                for (BankPermissionModel permission : permissions) {
+                    BankAccountModel accountModel = getAccountById(permission.getAccount());
+                    if(accountModel == null) {
+                        // todo: remove from db, account isn't valid?
+                        continue;
+                    }
+                    accountModel.getUsers().put(permission.getUuid(), permission.getPermission());
+                    OpenMinetopia.getInstance().getLogger().info(" -> " + permission.getUuid().toString() + ": " + permission.getPermission().toString());
+                }
+
+                completableFuture.complete(permissions.size());
+            });
         } catch (Exception e) {
             completableFuture.completeExceptionally(e);
         }
