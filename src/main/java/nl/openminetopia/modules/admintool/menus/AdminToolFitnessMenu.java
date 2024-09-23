@@ -103,6 +103,39 @@ public class AdminToolFitnessMenu extends Menu {
         Icon targetFlyingIcon = new Icon(13, flyingItemBuilder.toItemStack(), event -> event.setCancelled(true));
         this.addItem(targetFlyingIcon);
 
+        ItemBuilder walkingItemBuilder = new ItemBuilder(Material.LEATHER_BOOTS)
+                .setName("<gold>Lopen " + minetopiaPlayer.getFitnessGainedByWalking() + "/" + configuration.getMaxFitnessByWalking())
+                .addLoreLine(" ")
+                .addLoreLine("<gold>Kilometers gelopen: <yellow>" + (minetopiaPlayer.getBukkit().getStatistic(Statistic.WALK_ONE_CM) / 1000))
+                .addLoreLine(" ")
+                .addLoreLine("<dark_purple>Spelers krijgen <light_purple>1 <dark_purple>punt per <light_purple>" + (configuration.getCmPerWalkingPoint() / 1000) + " <dark_purple>kilometer lopen.")
+                .addLoreLine(" ");
+
+        Icon targetWalkingIcon = new Icon(14, walkingItemBuilder.toItemStack(), event -> event.setCancelled(true));
+        this.addItem(targetWalkingIcon);
+
+        ItemBuilder swimmingItemBuilder = new ItemBuilder(Material.OAK_BOAT)
+                .setName("<gold>Zwemmen " + minetopiaPlayer.getFitnessGainedBySwimming() + "/" + configuration.getMaxFitnessBySwimming())
+                .addLoreLine(" ")
+                .addLoreLine("<gold>Kilometers gezwommen: <yellow>" + (minetopiaPlayer.getBukkit().getStatistic(Statistic.SWIM_ONE_CM) / 1000))
+                .addLoreLine(" ")
+                .addLoreLine("<dark_purple>Spelers krijgen <light_purple>1 <dark_purple>punt per <light_purple>" + (configuration.getCmPerWalkingPoint() / 1000) + " <dark_purple>kilometer zwemmen.")
+                .addLoreLine(" ");
+
+        Icon targetSwimmingIcon = new Icon(15, swimmingItemBuilder.toItemStack(), event -> event.setCancelled(true));
+        this.addItem(targetSwimmingIcon);
+
+        ItemBuilder sprintingItemBuilder = new ItemBuilder(Material.DIAMOND_BOOTS)
+                .setName("<gold>Rennen " + minetopiaPlayer.getFitnessGainedBySprinting() + "/" + configuration.getMaxFitnessBySprinting())
+                .addLoreLine(" ")
+                .addLoreLine("<gold>Kilometers gerend: <yellow>" + (minetopiaPlayer.getBukkit().getStatistic(Statistic.SPRINT_ONE_CM) / 1000))
+                .addLoreLine(" ")
+                .addLoreLine("<dark_purple>Spelers krijgen <light_purple>1 <dark_purple>punt per <light_purple>" + (configuration.getCmPerSprintingPoint() / 1000) + " <dark_purple>kilometer rennen.")
+                .addLoreLine(" ");
+
+        Icon targetSprintingIcon = new Icon(16, sprintingItemBuilder.toItemStack(), event -> event.setCancelled(true));
+        this.addItem(targetSprintingIcon);
+
         ItemBuilder totalItemBuilder = new ItemBuilder(Material.PAPER)
                 .setName("<gold>Totaal: <yellow>" + minetopiaPlayer.getFitness() + "<gold>/<yellow>" + configuration.getMaxFitnessLevel());
 

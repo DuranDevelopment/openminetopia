@@ -8,6 +8,7 @@ import nl.openminetopia.api.places.MTPlaceManager;
 import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.api.player.fitness.FitnessManager;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.StormDatabase;

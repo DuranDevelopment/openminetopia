@@ -33,7 +33,7 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine(" ")
                 .addLoreLine("<gold>UUID: <yellow>" + offlinePlayer.getUniqueId())
                 .addLoreLine("<gold>Naam: <yellow>" + offlinePlayer.getName()) // TODO: Set name color
-                .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActivePrefixColor().getColor() + minetopiaPlayer.getActivePrefix().getPrefix() + "]")
+                .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActivePrefixColor().getColor() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
                 .addLoreLine("<gold>Online tijd: <yellow>" + PlaytimeUtil.formatPlaytime(minetopiaPlayer.getPlaytime()))
                 .addLoreLine(" ")
                 .setSkullOwner(offlinePlayer);

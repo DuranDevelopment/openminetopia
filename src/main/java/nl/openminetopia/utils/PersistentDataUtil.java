@@ -26,6 +26,7 @@ public class PersistentDataUtil {
 
         data.set(namespacedKey, dataType, value);
         itemStack.setItemMeta(itemMeta);
+
         return itemStack;
     }
 
