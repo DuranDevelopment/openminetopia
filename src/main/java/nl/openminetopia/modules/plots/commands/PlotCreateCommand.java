@@ -29,12 +29,14 @@ public class PlotCreateCommand extends BaseCommand {
     @Subcommand("create")
     @CommandPermission("openminetopia.plot.create")
     @Description("Maak een plot aan.")
-    public void plotCreate(Player player, String name, @Optional boolean topToDown) {
+    public void plotCreate(Player player, String name, @Optional Boolean topToDown) {
         BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
         World bukkitWorld = player.getWorld();
 
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
+
+        if (topToDown == null) topToDown = true;
 
         try {
             Region region = WorldEdit.getInstance().getSessionManager().get(bukkitPlayer).getSelection(bukkitPlayer.getWorld());

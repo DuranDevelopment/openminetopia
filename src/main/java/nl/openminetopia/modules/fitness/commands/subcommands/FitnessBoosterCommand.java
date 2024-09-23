@@ -17,12 +17,12 @@ public class FitnessBoosterCommand extends BaseCommand {
     @Subcommand("booster")
     @Syntax("<player> <amount> [expiresAt]")
     @CommandCompletion("@players")
-    public void onBooster(Player player, OfflinePlayer offlinePlayer, int amount, @Optional int expiresAt) {
+    public void onBooster(Player player, OfflinePlayer offlinePlayer, int amount, @Optional Integer expiresAt) {
         if (offlinePlayer.getPlayer() == null) return;
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
 
-        if (expiresAt == 0) expiresAt = -1;
+        if (expiresAt == null || expiresAt <= 0) expiresAt = -1;
 
         int nextId = StormDatabase.getInstance().getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId);
         FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, System.currentTimeMillis() + expiresAt);
