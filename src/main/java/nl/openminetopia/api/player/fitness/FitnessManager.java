@@ -1,4 +1,4 @@
-package nl.openminetopia.api.player;
+package nl.openminetopia.api.player.fitness;
 
 import com.craftmend.storm.api.enums.Where;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;

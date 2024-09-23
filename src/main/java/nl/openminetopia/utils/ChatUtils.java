@@ -1,6 +1,7 @@
 package nl.openminetopia.utils;
 
 import lombok.experimental.UtilityClass;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import nl.openminetopia.OpenMinetopia;
@@ -19,7 +20,7 @@ public class ChatUtils {
     public static Component format(MinetopiaPlayer minetopiaPlayer, String message) {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
-        message = message
+        message = PlaceholderAPI.setPlaceholders(minetopiaPlayer.getBukkit(), message
                 .replace("<fitness>", minetopiaPlayer.getFitness() + "")
                 .replace("<levelcolor>", "<white>")
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
@@ -33,7 +34,7 @@ public class ChatUtils {
                 .replace("<city_title>", Objects.requireNonNullElse(minetopiaPlayer.getPlace().getTitle(), "null")) // Defaults to the world name if the player is not in a city
                 .replace("<city_color>", Objects.requireNonNullElse(minetopiaPlayer.getPlace().getColor(), "null")) // Defaults to the world color if the player is not in a city
                 .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "")
-                .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + "");
+                .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + ""));
         return MiniMessage.miniMessage().deserialize(message);
     }
 
