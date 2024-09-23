@@ -12,6 +12,7 @@ import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
 import org.bukkit.Bukkit;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -124,5 +125,14 @@ public class BankingModule extends Module {
         return completableFuture;
     }
 
+    public int createAccount(BankAccountModel accountModel) throws SQLException {
+        this.getBankAccountModels().add(accountModel);
+        return StormDatabase.getInstance().getStorm().save(accountModel);
+    }
+
+    public int createPermissions() throws SQLException {
+        this.getBankAccountModels().add(accountModel);
+        return StormDatabase.getInstance().getStorm().save(accountModel);
+    }
 
 }
