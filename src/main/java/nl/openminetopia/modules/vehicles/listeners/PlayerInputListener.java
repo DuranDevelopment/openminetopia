@@ -4,6 +4,7 @@ import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.player.User;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.vehicles.VehiclesModule;
 import nl.openminetopia.modules.vehicles.enums.VehicleEntityType;
 import nl.openminetopia.modules.vehicles.objects.Vehicle;
@@ -25,7 +26,9 @@ public class PlayerInputListener implements PacketListener {
         Entity entity = player.getVehicle();
 
         Vehicle vehicle = VehiclesModule.vehicleBySeat((ArmorStand) entity);
-        vehicle.tick(packet);
+        Bukkit.getScheduler().runTask(OpenMinetopia.getInstance(), () -> {
+            vehicle.tick(packet);
+        });
     }
 
 }

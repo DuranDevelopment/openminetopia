@@ -1,8 +1,10 @@
 package nl.openminetopia.modules.vehicles.objects;
 
 import lombok.Getter;
+import net.minecraft.world.entity.Entity;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.util.Vector;
 import org.joml.Vector3f;
@@ -10,46 +12,66 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Vehicle {
 
     private final ArmorStand entity;
+    private final Entity internalEntity;
 
-    @Getter
     private final List<Seat> seats = new ArrayList<>();
+    private final List<Part> parts = new ArrayList<>();
 
     public Vehicle(Location location) {
         this.entity = location.getWorld().spawn(location, ArmorStand.class);
-    }
-
-    public Vehicle(ArmorStand entity) {
-        this.entity = entity;
+        this.internalEntity = ((CraftEntity)entity).getHandle();
     }
 
     public void tick(WrappedPlayerInputPacket packet) {
-        Vector vector = new Vector(0,0,0);
-        if (packet.isForward()) vector.setX(1);
-        else if (packet.isBackward()) vector.setX(-1);
+        /* Movement is temporary */
+        double speed = 0;
+        if (packet.isForward()) speed = 1.25;
+        else if (packet.isBackward()) speed = -1.25;
+        entity.setVelocity(vector(speed));
 
-        if (packet.isLeft()) vector.setZ(1);
-        else if (packet.isRight()) vector.setZ(-1);
+        if (packet.isLeft()) internalEntity.setRot(internalEntity.yRotO - 5, 0);
+        else if (packet.isRight()) internalEntity.setRot(internalEntity.yRotO + 5, 0);
 
-        entity.setVelocity(vector);
         seats.forEach(Seat::tick);
+        parts.forEach(Part::tick);
     }
 
-    public Seat seat(Vector3f relativePosition) {
-        Seat seat = new Seat(this, relativePosition, true);
+    public Seat seat(Vector3f relativePosition, boolean isDriver) {
+        Seat seat = new Seat(this, relativePosition, isDriver);
         seats.add(seat);
 
         return seat;
+    }
+
+    public Part part() {
+        Part part = new Part(this);
+        parts.add(part);
+
+        return part;
+    }
+
+    private Vector vector(double speed) {
+        Vector vector = entity.getLocation().getDirection();
+        vector.multiply(speed);
+        vector.setY(-1);
+
+        return vector;
     }
 
     public Location location() {
         return entity.getLocation();
     }
 
-    public double degrees() {
-        return Math.toDegrees(entity.getBodyYaw());
+    public float radians() {
+        return (float) Math.toRadians(entity.getBodyYaw());
+    }
+
+    public float degrees() {
+        return entity.getBodyYaw();
     }
 
 }
