@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.admintool.menus;
+package nl.openminetopia.modules.staff.admintool.menus;
 
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
@@ -8,7 +8,6 @@ import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 
 @Getter
 public class AdminToolMenu extends Menu {

@@ -48,7 +48,6 @@ public interface MinetopiaPlayer {
     void setFitness(Fitness fitness);
 
     /* Places */
-
     boolean isInPlace();
     MTPlace getPlace();
     MTWorld getWorld();

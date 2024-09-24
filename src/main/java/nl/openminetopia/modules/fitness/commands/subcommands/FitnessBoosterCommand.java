@@ -23,9 +23,10 @@ public class FitnessBoosterCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
 
         if (expiresAt == null || expiresAt <= 0) expiresAt = -1;
+        long expiresAtMillis = expiresAt == -1 ? System.currentTimeMillis() + expiresAt : -1;
 
         int nextId = StormDatabase.getInstance().getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId);
-        FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, System.currentTimeMillis() + expiresAt);
+        FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, expiresAtMillis);
         minetopiaPlayer.getFitness().addFitnessBooster(fitnessBooster);
 
         if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitnessRunnable().run();

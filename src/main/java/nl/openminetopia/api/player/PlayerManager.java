@@ -67,4 +67,8 @@ public class PlayerManager {
     public CompletableFuture<Integer> getPlaytime(@NotNull MinetopiaPlayer player) {
         return StormDatabase.getInstance().getModelData(player, PlayerModel.class, query -> {}, model -> true, PlayerModel::getPlaytime, 0);
     }
+
+    public void setStaffchatEnabled(@NotNull MinetopiaPlayer player, boolean staffchatEnabled) {
+        StormDatabase.getInstance().updateModel(player, PlayerModel.class, playerModel -> playerModel.setStaffchatEnabled(staffchatEnabled));
+    }
 }

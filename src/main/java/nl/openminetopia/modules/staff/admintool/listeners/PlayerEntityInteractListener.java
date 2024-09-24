@@ -1,13 +1,12 @@
-package nl.openminetopia.modules.admintool.listeners;
+package nl.openminetopia.modules.staff.admintool.listeners;
 
-import nl.openminetopia.modules.admintool.menus.AdminToolMenu;
+import nl.openminetopia.modules.staff.admintool.menus.AdminToolMenu;
 import nl.openminetopia.utils.PersistentDataUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class PlayerEntityInteractListener implements Listener {

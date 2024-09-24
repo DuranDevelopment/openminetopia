@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.admintool.commands.subcommands;
+package nl.openminetopia.modules.staff.admintool.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;

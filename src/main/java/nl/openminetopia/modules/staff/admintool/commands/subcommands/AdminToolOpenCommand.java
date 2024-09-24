@@ -1,10 +1,10 @@
-package nl.openminetopia.modules.admintool.commands.subcommands;
+package nl.openminetopia.modules.staff.admintool.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import com.destroystokyo.paper.profile.PlayerProfile;
-import nl.openminetopia.modules.admintool.menus.AdminToolMenu;
+import nl.openminetopia.modules.staff.admintool.menus.AdminToolMenu;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.mod.commands;
+package nl.openminetopia.modules.staff.mod.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;

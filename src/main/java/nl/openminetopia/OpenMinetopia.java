@@ -8,13 +8,12 @@ import lombok.Getter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
-import nl.openminetopia.modules.admintool.AdminToolModule;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.config.ConfigModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
-import nl.openminetopia.modules.mod.ModModule;
+import nl.openminetopia.modules.staff.StaffModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.plots.PlotModule;
@@ -65,14 +64,13 @@ public final class OpenMinetopia extends JavaPlugin {
                 new DataModule(),
                 new PlayerModule(),
                 new FitnessModule(),
-                new ModModule(),
+                new StaffModule(),
                 new PrefixModule(),
                 new ChatModule(),
                 new ColorModule(),
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new PlotModule(),
-                new AdminToolModule(),
                 new TeleporterModule()
         );
 

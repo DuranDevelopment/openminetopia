@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.admintool.menus;
+package nl.openminetopia.modules.staff.admintool.menus;
 
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
@@ -6,7 +6,7 @@ import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.modules.admintool.menus.colors.AdminToolColorMenu;
+import nl.openminetopia.modules.staff.admintool.menus.colors.AdminToolColorMenu;
 import nl.openminetopia.modules.player.utils.PlaytimeUtil;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;

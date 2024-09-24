@@ -4,6 +4,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
@@ -21,11 +22,13 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncChatEvent event) {
-
         Player source = event.getPlayer();
+        OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(source);
+        if (minetopiaPlayer == null) return;
         List<Player> recipients = new ArrayList<>();
 
         event.setCancelled(true);
+        if (minetopiaPlayer.isStaffchatEnabled()) return;
 
         Bukkit.getServer().getOnlinePlayers().forEach(target -> {
             if (target.getWorld().equals(source.getWorld())
@@ -38,10 +41,7 @@ public class PlayerChatListener implements Listener {
             event.getPlayer().sendMessage(ChatUtils.color("<red>Er zijn geen spelers in de buurt om je bericht te horen."));
             return;
         }
-
         recipients.add(source);
-        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(source);
-        if (minetopiaPlayer == null) return;
 
         // Format the message
         String originalMessage = ChatUtils.stripMiniMessage(event.message());

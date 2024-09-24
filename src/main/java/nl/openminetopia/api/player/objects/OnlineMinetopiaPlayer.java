@@ -38,6 +38,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     private int level;
 
+    private boolean staffchatEnabled;
+
     private List<Prefix> prefixes;
     private Prefix activePrefix;
 
@@ -123,6 +125,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             playerModel.setActivePrefixId(activePrefix.getId());
             playerModel.setActivePrefixColorId(activePrefixColor.getId());
             playerModel.setPlaytime(playtime);
+            playerModel.setStaffchatEnabled(staffchatEnabled);
         });
     }
 
@@ -165,6 +168,13 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     public void setLevel(int level) {
         this.level = level;
         LevelManager.getInstance().setLevel(this, level);
+    }
+
+    /* Staffchat */
+
+    public void setStaffchatEnabled(boolean staffchatEnabled) {
+        this.staffchatEnabled = staffchatEnabled;
+        PlayerManager.getInstance().setStaffchatEnabled(this, staffchatEnabled);
     }
 
     /* Prefix */

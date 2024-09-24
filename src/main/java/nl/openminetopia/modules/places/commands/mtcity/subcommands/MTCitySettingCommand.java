@@ -21,11 +21,11 @@ public class MTCitySettingCommand extends BaseCommand {
         }
 
         MTCityManager.getInstance().setColor(MTCity, color);
-        player.sendMessage(ChatUtils.color("<red>City color of <" + color +  ">" + cityName + " <red>has been changed!"));
+        player.sendMessage(ChatUtils.color("<red>City color of " + color + cityName + " <red>has been changed!"));
     }
 
     @Subcommand("settemperature")
-    public void onSetTemperature(Player player, String cityName, Double temperatuur) {
+    public void onSetTemperature(Player player, String cityName, Double temperature) {
         // Remove the city from the database
         MTCity MTCity = MTCityManager.getInstance().getCity(cityName);
         if (MTCity == null) {
@@ -33,8 +33,8 @@ public class MTCitySettingCommand extends BaseCommand {
             return;
         }
 
-        MTCityManager.getInstance().setTemperature(MTCity, temperatuur);
-        player.sendMessage(ChatUtils.color("<red>City temperatuur of <" + temperatuur +  ">" + cityName + " <red>has been changed!"));
+        MTCityManager.getInstance().setTemperature(MTCity, temperature);
+        player.sendMessage(ChatUtils.color("<red>City temperatuur of " + cityName + " <red>has been changed!"));
     }
 
     @Subcommand("setloadingname")
@@ -47,7 +47,7 @@ public class MTCitySettingCommand extends BaseCommand {
         }
 
         MTCityManager.getInstance().setLoadingName(MTCity, loadingName);
-        player.sendMessage(ChatUtils.color("<red>City loadingName of <" + loadingName +  ">" + cityName + " <red>has been changed!"));
+        player.sendMessage(ChatUtils.color("<red>City loadingName of " + cityName + " <red>has been changed!"));
     }
 
     @Subcommand("settitle")
@@ -60,6 +60,6 @@ public class MTCitySettingCommand extends BaseCommand {
         }
 
         MTCityManager.getInstance().setTitle(MTCity, title);
-        player.sendMessage(ChatUtils.color("<red>City title of <" + title +  ">" + cityName + " <red>has been changed!"));
+        player.sendMessage(ChatUtils.color("<red>City title of " + cityName + " <red>has been changed!"));
     }
 }

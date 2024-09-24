@@ -21,11 +21,11 @@ public class MTWorldSettingCommand extends BaseCommand {
         }
 
         MTWorldManager.getInstance().setColor(mtWorld, color);
-        player.sendMessage(ChatUtils.color("<red>World color of <" + color +  ">" + worldName + " <red>has been changed!"));
+        player.sendMessage(ChatUtils.color("<red>World color of " + color + worldName + " <red>has been changed!"));
     }
 
     @Subcommand("settemperature")
-    public void onSetTemperature(Player player, String worldName, Double temperatuur) {
+    public void onSetTemperature(Player player, String worldName, Double temperature) {
         // Remove the world from the database
         MTWorld mtWorld = MTWorldManager.getInstance().getWorld(worldName);
         if (mtWorld == null) {
@@ -33,8 +33,8 @@ public class MTWorldSettingCommand extends BaseCommand {
             return;
         }
 
-        MTWorldManager.getInstance().setTemperature(mtWorld, temperatuur);
-        player.sendMessage(ChatUtils.color("<red>World temperatuur of <" + temperatuur +  ">" + worldName + " <red>has been changed!"));
+        MTWorldManager.getInstance().setTemperature(mtWorld, temperature);
+        player.sendMessage(ChatUtils.color("<red>World temperatuur of " + worldName + " <red>has been changed!"));
     }
 
     @Subcommand("setloadingname")
@@ -47,7 +47,7 @@ public class MTWorldSettingCommand extends BaseCommand {
         }
 
         MTWorldManager.getInstance().setLoadingName(mtWorld, loadingName);
-        player.sendMessage(ChatUtils.color("<red>World loadingName of <" + loadingName +  ">" + worldName + " <red>has been changed!"));
+        player.sendMessage(ChatUtils.color("<red>World loadingName of " + worldName + " <red>has been changed!"));
     }
 
     @Subcommand("settitle")
@@ -60,6 +60,6 @@ public class MTWorldSettingCommand extends BaseCommand {
         }
 
         MTWorldManager.getInstance().setTitle(mtWorld, title);
-        player.sendMessage(ChatUtils.color("<red>World title of <" + title +  ">" + worldName + " <red>has been changed!"));
+        player.sendMessage(ChatUtils.color("<red>World title of " + worldName + " <red>has been changed!"));
     }
 }
