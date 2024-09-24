@@ -5,6 +5,7 @@ import co.aikar.commands.PaperCommandManager;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
+import lombok.Setter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
@@ -32,6 +33,7 @@ public final class OpenMinetopia extends JavaPlugin {
     @Getter
     private static PaperCommandManager commandManager;
     @Getter
+    @Setter
     private static DefaultConfiguration defaultConfiguration;
     @Getter
     private static MessageConfiguration messageConfiguration;

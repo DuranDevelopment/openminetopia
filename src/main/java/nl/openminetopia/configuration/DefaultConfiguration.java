@@ -21,87 +21,83 @@ public class DefaultConfiguration extends ConfigurateConfig {
     /**
      * Database configuration
      */
-    private DatabaseType databaseType;
-    private String host;
-    private int port;
-    private String databaseName;
-    private String username;
-    private String password;
+    private final DatabaseType databaseType;
+    private final String host;
+    private final int port;
+    private final String databaseName;
+    private final String username;
+    private final String password;
 
     /**
      * Chat configuration
      */
-    private String chatFormat;
-    private boolean chatEnabled;
-    private boolean chatRadiusEnabled;
-    private int chatRadiusRange;
-    private boolean notifyWhenNobodyInRange;
+    private final String chatFormat;
+    private final boolean chatEnabled;
+    private final boolean chatRadiusEnabled;
+    private final int chatRadiusRange;
+    private final boolean notifyWhenNobodyInRange;
 
     /**
      * Fitness configuration
      */
-    private int maxFitnessLevel;
-    private int defaultFitnessLevel;
+    private final int maxFitnessLevel;
+    private final int defaultFitnessLevel;
 
-    private int maxFitnessByDrinking;
-    private double drinkingPointsPerPotion;
-    private double drinkingPointsPerWaterBottle;
-    private int drinkingPointsPerFitnessPoint;
-    private int drinkingCooldown;
+    private final int maxFitnessByDrinking;
+    private final double drinkingPointsPerPotion;
+    private final double drinkingPointsPerWaterBottle;
+    private final int drinkingPointsPerFitnessPoint;
+    private final int drinkingCooldown;
 
-    private int maxFitnessByWalking;
-    private int cmPerWalkingPoint;
+    private final int maxFitnessByWalking;
+    private final int cmPerWalkingPoint;
 
-    private int maxFitnessByClimbing;
-    private int cmPerClimbingPoint;
+    private final int maxFitnessByClimbing;
+    private final int cmPerClimbingPoint;
 
-    private int maxFitnessBySprinting;
-    private int cmPerSprintingPoint;
+    private final int maxFitnessBySprinting;
+    private final int cmPerSprintingPoint;
 
-    private int maxFitnessBySwimming;
-    private int cmPerSwimmingPoint;
+    private final int maxFitnessBySwimming;
+    private final int cmPerSwimmingPoint;
 
-    private int maxFitnessByFlying;
-    private int cmPerFlyingPoint;
+    private final int maxFitnessByFlying;
+    private final int cmPerFlyingPoint;
 
-    private int maxFitnessByHealth;
-    private int pointsAbove9Hearts;
-    private int pointsBelow5Hearts;
-    private int pointsBelow2Hearts;
+    private final int maxFitnessByHealth;
+    private final int pointsAbove9Hearts;
+    private final int pointsBelow5Hearts;
+    private final int pointsBelow2Hearts;
 
-    private boolean fitnessDeathPunishmentEnabled;
-    private int fitnessDeathPunishmentAmount;
-    private int fitnessDeathPunishmentDuration;
+    private final boolean fitnessDeathPunishmentEnabled;
+    private final int fitnessDeathPunishmentAmount;
+    private final int fitnessDeathPunishmentDuration;
 
     private final Map<String, FitnessLevel> fitnessLevels = new HashMap<>();
 
-    private boolean rainSlowdownEnabled;
+    private final boolean rainSlowdownEnabled;
 
     /**
      * Scoreboard configuration
      */
-    private boolean scoreboardEnabled;
-    private List<String> scoreboardLines;
+    private final boolean scoreboardEnabled;
+    private final List<String> scoreboardLines;
 
     /**
      * Default settings configuration
      */
-    private String defaultPrefix;
-    private String defaultPrefixColor;
-    private int defaultLevel;
+    private final String defaultPrefix;
+    private final String defaultPrefixColor;
+    private final int defaultLevel;
 
     /**
      * Teleporter configuration
      */
-    private List<String> displayLines;
-
-    public DefaultConfiguration(File file) {
-        super(file, "config.yml");
-        reload();
-    }
+    private final List<String> displayLines;
 
     @SneakyThrows
-    public void reload() {
+    public DefaultConfiguration(File file) {
+        super(file, "config.yml");
         /*
          * Database configuration
          */
@@ -230,6 +226,5 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "<gold>Teleporter",
                 "<grey><x>;<y>;<z>;<world>"
         ));
-
     }
 }

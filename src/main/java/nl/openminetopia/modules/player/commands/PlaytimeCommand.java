@@ -9,7 +9,7 @@ import nl.openminetopia.modules.player.utils.PlaytimeUtil;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 
-@CommandAlias("playtime")
+@CommandAlias("time|playtime")
 public class PlaytimeCommand extends BaseCommand {
 
     @Default
