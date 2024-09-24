@@ -2,6 +2,8 @@ package nl.openminetopia;
 
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
+import com.jazzkuh.inventorylib.formatter.InventoryFormattingProvider;
+import com.jazzkuh.inventorylib.loader.InventoryLoader;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
@@ -21,6 +23,7 @@ import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
+import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -82,6 +85,7 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
 
         Menu.init(this);
+        InventoryLoader.setFormattingProvider(message -> ChatUtils.color("<red>" + message));
     }
 
     @Override
