@@ -27,7 +27,7 @@ public class FitnessUtils {
 
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
-        int totalFitness = minetopiaPlayer.getFitness();
+        int totalFitness = minetopiaPlayer.getFitness().getTotalFitness();
         double walkSpeed = 0.2;
 
         List<PotionEffectType> possibleEffects = new ArrayList<>();

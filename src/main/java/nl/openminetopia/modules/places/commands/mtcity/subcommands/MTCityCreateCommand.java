@@ -9,10 +9,11 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.places.MTCityManager;
 import nl.openminetopia.api.places.objects.MTCity;
 import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.WorldGuardUtils;
 import org.bukkit.entity.Player;
 
-@CommandAlias("mtcity")
+@CommandAlias("mtstad|mtcity")
 public class MTCityCreateCommand extends BaseCommand {
 
     @Subcommand("create")
@@ -23,13 +24,13 @@ public class MTCityCreateCommand extends BaseCommand {
 
         MTWorld world = minetopiaPlayer.getWorld();
         if (world == null) {
-            player.sendMessage("<red>You are not in a world!");
+            player.sendMessage(ChatUtils.color("<red>You are not in a world!"));
             return;
         }
 
         for (MTCity city : MTCityManager.getInstance().getCities()) {
             if (city.getName().equalsIgnoreCase(name)) {
-                player.sendMessage("<red>City <white>" + name + " <red>already exists!");
+                player.sendMessage(ChatUtils.color("<red>City <white>" + name + " <red>already exists!"));
                 return;
             }
         }
@@ -42,10 +43,10 @@ public class MTCityCreateCommand extends BaseCommand {
             MTCity city = new MTCity(world.getId(), name, title, "<gold>", 21.64, loadingName);
             MTCityManager.getInstance().createCity(city);
 
-            player.sendMessage("<green>City <white>" + loadingName + " <green>has been created!");
+            player.sendMessage(ChatUtils.color("<green>City <white>" + loadingName + " <green>has been created!"));
             return;
         }
 
-        player.sendMessage("<red>Region <white>" + name + " <red>does not exist!");
+        player.sendMessage(ChatUtils.color("<red>Region <white>" + name + " <red>does not exist!"));
     }
 }

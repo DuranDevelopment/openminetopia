@@ -1,10 +1,10 @@
 package nl.openminetopia.api.player.objects;
 
+import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import org.bukkit.OfflinePlayer;
 
@@ -17,10 +17,6 @@ public interface MinetopiaPlayer {
     PlayerModel getPlayerModel();
 
     OfflinePlayer getBukkit();
-
-    /* Scoreboard */
-    boolean isScoreboardVisible();
-    void setScoreboardVisible(boolean visible);
 
     /* Playtime */
     void setPlaytime(int playtime, boolean updateDatabase);
@@ -47,46 +43,9 @@ public interface MinetopiaPlayer {
     PrefixColor getActivePrefixColor();
     void setActivePrefixColor(PrefixColor color);
 
-
     /* Fitness */
-    void setLastDrinkingTime(long time);
-    long getLastDrinkingTime();
-
-    void setFitness(int amount);
-    int getFitness();
-
-    void setHealthPoints(int points);
-    int getHealthPoints();
-
-    void setDrinkingPoints(double points);
-    double getDrinkingPoints();
-
-    void setFitnessGainedByHealth(int points);
-    int getFitnessGainedByHealth();
-
-    void setFitnessGainedByDrinking(int points);
-    int getFitnessGainedByDrinking();
-
-    void setFitnessGainedByClimbing(int points);
-    int getFitnessGainedByClimbing();
-
-    void setFitnessGainedByWalking(int points);
-    int getFitnessGainedByWalking();
-
-    void setFitnessGainedBySprinting(int points);
-    int getFitnessGainedBySprinting();
-
-    void setFitnessGainedBySwimming(int points);
-    int getFitnessGainedBySwimming();
-
-    void setFitnessGainedByFlying(int points);
-    int getFitnessGainedByFlying();
-
-    /* Fitness Boosters */
-
-    void addFitnessBooster(FitnessBooster booster);
-    void removeFitnessBooster(FitnessBooster booster);
-    List<FitnessBooster> getFitnessBoosters();
+    Fitness getFitness();
+    void setFitness(Fitness fitness);
 
     /* Places */
 

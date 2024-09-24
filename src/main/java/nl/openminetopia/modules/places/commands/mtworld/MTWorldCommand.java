@@ -5,7 +5,7 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.HelpCommand;
 
-@CommandAlias("mtworld")
+@CommandAlias("mtwereld|mtworld")
 public class MTWorldCommand extends BaseCommand {
 
     @HelpCommand

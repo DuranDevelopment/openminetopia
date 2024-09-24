@@ -47,7 +47,7 @@ public class AdminToolMenu extends Menu {
             player.openInventory(targetPlayer.getEnderChest());
         });
 
-        this.addItem(targetEnderchestIcon);
+        if (offlinePlayer.isOnline()) this.addItem(targetEnderchestIcon);
 
         this.open(player);
     }

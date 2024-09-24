@@ -60,6 +60,10 @@ public class PlayerManager {
         return minetopiaPlayer;
     }
 
+    public void setPlaytime(@NotNull MinetopiaPlayer player, int playtime) {
+        StormDatabase.getInstance().updateModel(player, PlayerModel.class, playerModel -> playerModel.setPlaytime(playtime));
+    }
+
     public CompletableFuture<Integer> getPlaytime(@NotNull MinetopiaPlayer player) {
         return StormDatabase.getInstance().getModelData(player, PlayerModel.class, query -> {}, model -> true, PlayerModel::getPlaytime, 0);
     }

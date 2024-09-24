@@ -73,7 +73,7 @@ public class AdminToolInfoMenu extends Menu {
 
         ItemBuilder fitnessItemBuilder = new ItemBuilder(Material.MUSHROOM_STEW)
                 .setName("<gold>Fitheid")
-                .addLoreLine("<gold>Fitheid: " + minetopiaPlayer.getFitness() + " / " + OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel())
+                .addLoreLine("<gold>Fitheid: " + minetopiaPlayer.getFitness().getTotalFitness() + " / " + OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel())
                 .addLoreLine("")
                 .addLoreLine("<gold>Klik <yellow>hier <gold>om de <yellow>fitheid <gold>van de speler te bekijken.");
 

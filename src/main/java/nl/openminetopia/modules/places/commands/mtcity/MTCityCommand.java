@@ -5,7 +5,7 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.HelpCommand;
 
-@CommandAlias("mtcity")
+@CommandAlias("mtstad|mtcity")
 public class MTCityCommand extends BaseCommand {
 
     @HelpCommand

@@ -60,8 +60,95 @@ public class MTWorldManager {
         return completableFuture;
     }
 
+    public void setTitle(MTWorld world, String title) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setTitle(title);
+        });
+
+        getWorldModel(world).whenComplete((model, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            StormDatabase.getExecutorService().submit(() -> {
+                try {
+                    model.setTitle(title);
+                    StormDatabase.getInstance().saveStormModel(model);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
+        });
+    }
+
+    public void setTemperature(MTWorld world, double temperature) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setTemperature(temperature);
+        });
+
+        getWorldModel(world).whenComplete((model, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            StormDatabase.getExecutorService().submit(() -> {
+                try {
+                    model.setTemperature(temperature);
+                    StormDatabase.getInstance().saveStormModel(model);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
+        });
+    }
+
+    public void setLoadingName(MTWorld world, String loadingName) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setLoadingName(loadingName);
+        });
+
+        getWorldModel(world).whenComplete((model, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            StormDatabase.getExecutorService().submit(() -> {
+                try {
+                    model.setLoadingName(loadingName);
+                    StormDatabase.getInstance().saveStormModel(model);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
+        });
+    }
+
+    public void setColor(MTWorld world, String color) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setColor(color);
+        });
+
+        getWorldModel(world).whenComplete((model, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            StormDatabase.getExecutorService().submit(() -> {
+                try {
+                    model.setColor(color);
+                    StormDatabase.getInstance().saveStormModel(model);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            });
+        });
+    }
+
     public void createWorld(MTWorld world) {
-        worlds.add(world);
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 WorldModel worldModel = new WorldModel();
@@ -76,11 +163,10 @@ public class MTWorldManager {
                 exception.printStackTrace();
             }
         });
+        worlds.add(world);
     }
 
     public void deleteWorld(MTWorld world) {
-        worlds.remove(world);
-
         getWorldModel(world).whenComplete((model, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
@@ -94,6 +180,15 @@ public class MTWorldManager {
                 }
             });
         });
+        worlds.remove(world);
+    }
+
+    public MTWorld getWorld(String worldName) {
+        for (MTWorld world : worlds) {
+            if (!world.getName().equals(worldName)) continue;
+            return world;
+        }
+        return null;
     }
 
     public MTWorld getWorld(Location location) {

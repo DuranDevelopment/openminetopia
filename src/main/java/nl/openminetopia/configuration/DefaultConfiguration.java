@@ -96,7 +96,6 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private List<String> displayLines;
 
     public DefaultConfiguration(File file) {
-
         super(file, "config.yml");
         reload();
     }

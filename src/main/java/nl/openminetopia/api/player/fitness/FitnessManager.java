@@ -1,15 +1,13 @@
 package nl.openminetopia.api.player.fitness;
 
-import com.craftmend.storm.api.enums.Where;
+import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OfflineMinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
-import nl.openminetopia.modules.fitness.objects.FitnessBooster;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class FitnessManager {
@@ -23,7 +21,24 @@ public class FitnessManager {
         return instance;
     }
 
-    public void setFitness(MinetopiaPlayer player, int amount) {
+    private final Map<UUID, Fitness> fitnesses = new HashMap<>();
+
+    public Fitness getFitness(MinetopiaPlayer minetopiaPlayer) {
+        Fitness fitness = fitnesses.get(minetopiaPlayer.getUuid());
+        if (!fitnesses.containsKey(minetopiaPlayer.getUuid())) {
+            fitness = new Fitness(minetopiaPlayer);
+            fitness.load();
+            fitnesses.put(minetopiaPlayer.getUuid(), fitness);
+        }
+        return fitness;
+    }
+
+    public CompletableFuture<Integer> getTotalFitness(MinetopiaPlayer player) {
+        return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
+        }, model -> true, FitnessModel::getTotal, 0);
+    }
+
+    public void setTotalFitness(MinetopiaPlayer player, int amount) {
         StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setTotal(amount));
     }
 
@@ -80,64 +95,4 @@ public class FitnessManager {
     public void setFitnessGainedByWalking(MinetopiaPlayer player, int amount) {
         StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByWalking(amount));
     }
-
-    /**
-     * Add fitness booster
-     */
-
-    public void addFitnessBooster(MinetopiaPlayer player, FitnessBooster booster) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                FitnessBoosterModel fitnessBoosterModel = new FitnessBoosterModel();
-                fitnessBoosterModel.setUniqueId(player.getUuid());
-                fitnessBoosterModel.setFitness(booster.getAmount());
-                fitnessBoosterModel.setExpiresAt(booster.getExpiresAt());
-
-                StormDatabase.getInstance().saveStormModel(fitnessBoosterModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-    }
-
-    public void removeFitnessBooster(MinetopiaPlayer player, FitnessBooster booster) {
-        StormDatabase.getInstance().deleteModel(player, FitnessBoosterModel.class, model -> model.getId() == booster.getId());
-    }
-
-    public CompletableFuture<List<FitnessBooster>> getFitnessBoosters(MinetopiaPlayer player) {
-        CompletableFuture<List<FitnessBooster>> completableFuture = new CompletableFuture<>();
-
-        findPlayerFitnessBoosts(player).thenAccept(fitnessBoosters -> {
-            List<FitnessBooster> prefixes = new ArrayList<>();
-            for (FitnessBoosterModel fitnessBoosterModel : fitnessBoosters) {
-                prefixes.add(new FitnessBooster(fitnessBoosterModel.getId(), fitnessBoosterModel.getFitness(), fitnessBoosterModel.getExpiresAt()));
-            }
-            completableFuture.complete(prefixes);
-        }).exceptionally(ex -> {
-            completableFuture.completeExceptionally(ex);
-            return null;
-        });
-
-        return completableFuture;
-    }
-
-    private CompletableFuture<List<FitnessBoosterModel>> findPlayerFitnessBoosts(MinetopiaPlayer player) {
-        CompletableFuture<List<FitnessBoosterModel>> completableFuture = new CompletableFuture<>();
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<FitnessBoosterModel> prefixesModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessBoosterModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join();
-
-                completableFuture.complete(new ArrayList<>(prefixesModel));
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
-    }
-
-
 }
