@@ -23,7 +23,7 @@ public class VehicleSpawnCommand extends BaseCommand {
         Vehicle vehicle = new Vehicle(player.getLocation());
         VehiclesModule.vehicles.add(vehicle);
 
-        Seat seat = vehicle.seat(new Vector3f(1, 0, 1), true);
+        Seat seat = vehicle.seat(new Vector3f(0, -0.5F, -0.65F), true);
         seat.getEntity().setPassenger(player);
 
         vehicle.part();

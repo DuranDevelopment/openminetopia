@@ -33,6 +33,8 @@ public class Seat {
 
         this.entity = vehicle.location().getWorld().spawn(vehicle.location(), ArmorStand.class); /* Temp */
         this.internalEntity = ((CraftEntity)entity).getHandle();
+
+        entity.setInvisible(true);
     }
 
     public void tick() {

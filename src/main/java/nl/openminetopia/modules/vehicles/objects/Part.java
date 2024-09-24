@@ -43,13 +43,14 @@ public class Part {
         location.setPitch(0); location.setYaw(0);
 
         ItemDisplay entity = vehicle.location().getWorld().spawn(location, ItemDisplay.class);
-        entity.setItemStack(new ItemStack(Material.LEATHER_BOOTS));
+        entity.setItemStack(new ItemStack(Material.IRON_HOE));
         entity.setViewRange(0.595F);
-        entity.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.NONE);
+        entity.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.HEAD);
 
-//        Transformation transformation = entity.getTransformation();
-//        transformation.getScale().set(0.5);
-//        entity.setTransformation(transformation);
+        Transformation transformation = entity.getTransformation();
+        transformation.getScale().set(0.62); /* Could be more precise */
+        transformation.getTranslation().set(0, -0.3, 0); /* Could be more precise */
+        entity.setTransformation(transformation);
 
         return entity;
     }

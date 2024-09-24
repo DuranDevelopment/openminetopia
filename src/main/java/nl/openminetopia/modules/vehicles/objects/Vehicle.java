@@ -4,8 +4,10 @@ import lombok.Getter;
 import net.minecraft.world.entity.Entity;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.joml.Vector3f;
 
@@ -24,6 +26,8 @@ public class Vehicle {
     public Vehicle(Location location) {
         this.entity = location.getWorld().spawn(location, ArmorStand.class);
         this.internalEntity = ((CraftEntity)entity).getHandle();
+
+        entity.setInvisible(true);
     }
 
     public void tick(WrappedPlayerInputPacket packet) {
