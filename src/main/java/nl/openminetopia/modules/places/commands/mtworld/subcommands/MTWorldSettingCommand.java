@@ -2,6 +2,7 @@ package nl.openminetopia.modules.places.commands.mtworld.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTWorld;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 public class MTWorldSettingCommand extends BaseCommand {
 
     @Subcommand("setcolor")
+    @CommandPermission("openminetopia.world.setcolor")
     public void onSetColor(Player player, String worldName, String color) {
         // Remove the world from the database
         MTWorld mtWorld = MTWorldManager.getInstance().getWorld(worldName);
@@ -25,6 +27,7 @@ public class MTWorldSettingCommand extends BaseCommand {
     }
 
     @Subcommand("settemperature")
+    @CommandPermission("openminetopia.world.settemperature")
     public void onSetTemperature(Player player, String worldName, Double temperature) {
         // Remove the world from the database
         MTWorld mtWorld = MTWorldManager.getInstance().getWorld(worldName);
@@ -38,6 +41,7 @@ public class MTWorldSettingCommand extends BaseCommand {
     }
 
     @Subcommand("setloadingname")
+    @CommandPermission("openminetopia.world.setloadingname")
     public void onSetLoadingname(Player player, String worldName, String loadingName) {
         // Remove the world from the database
         MTWorld mtWorld = MTWorldManager.getInstance().getWorld(worldName);
@@ -51,6 +55,7 @@ public class MTWorldSettingCommand extends BaseCommand {
     }
 
     @Subcommand("settitle")
+    @CommandPermission("openminetopia.world.settitle")
     public void onSetTitle(Player player, String worldName, String title) {
         // Remove the world from the database
         MTWorld mtWorld = MTWorldManager.getInstance().getWorld(worldName);

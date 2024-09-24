@@ -19,6 +19,7 @@ public class ColorAddCommand extends BaseCommand {
     @Subcommand("add")
     @Syntax("<player> <type> <color>")
     @CommandCompletion("@players")
+    @CommandPermission("openminetopia.color.add")
     @Description("Add a color to a player.")
     public void onPrefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String color) {
         if (offlinePlayer.getPlayer() == null) {

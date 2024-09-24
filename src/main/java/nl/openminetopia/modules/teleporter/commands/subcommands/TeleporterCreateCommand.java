@@ -1,10 +1,7 @@
 package nl.openminetopia.modules.teleporter.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
+import co.aikar.commands.annotation.*;
 import nl.openminetopia.modules.teleporter.utils.TeleporterUtil;
 import nl.openminetopia.modules.teleporter.utils.enums.PressurePlate;
 import nl.openminetopia.utils.ChatUtils;
@@ -16,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 public final class TeleporterCreateCommand extends BaseCommand {
 
     @Subcommand("create")
+    @CommandPermission("openminetopia.teleporter.create")
     @Syntax("[plate] [addDisplay] [roundYaw]")
     public void create(Player player, @Optional PressurePlate plate, @Optional Boolean addDisplay, @Optional Boolean roundYaw) {
         if (plate == null) plate = PressurePlate.STONE_PRESSURE_PLATE;

@@ -17,6 +17,7 @@ public class FitnessInfoCommand extends BaseCommand {
     @Subcommand("info")
     @Syntax("<player>")
     @CommandCompletion("@players")
+    @CommandPermission("openminetopia.fitness.info")
     @Description("Get the fitness info of a player.")
     public void onInfoCommand(Player player, OfflinePlayer offlinePlayer) {
         if (offlinePlayer == null) {

@@ -16,6 +16,7 @@ public class FitnessBoosterCommand extends BaseCommand {
 
     @Subcommand("booster")
     @Syntax("<player> <amount> [expiresAt]")
+    @CommandPermission("openminetopia.fitness.booster")
     @CommandCompletion("@players")
     public void onBooster(Player player, OfflinePlayer offlinePlayer, int amount, @Optional Integer expiresAt) {
         if (offlinePlayer.getPlayer() == null) return;

@@ -2,6 +2,7 @@ package nl.openminetopia.modules.places.commands.mtworld.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTWorld;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 public class MTWorldRemoveCommand extends BaseCommand {
 
     @Subcommand("remove")
+    @CommandPermission("openminetopia.world.remove")
     public void onRemove(Player player, String worldName) {
         // Remove the world from the database
         MTWorld mtWorld = MTWorldManager.getInstance().getWorld(worldName);

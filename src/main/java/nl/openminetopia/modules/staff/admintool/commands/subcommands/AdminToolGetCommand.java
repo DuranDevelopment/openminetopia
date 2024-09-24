@@ -2,6 +2,7 @@ package nl.openminetopia.modules.staff.admintool.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.utils.PersistentDataUtil;
 import nl.openminetopia.utils.item.ItemBuilder;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 public class AdminToolGetCommand extends BaseCommand {
 
     @Subcommand("krijg")
+    @CommandPermission("openminetopia.admintool.get")
     public void onGet(Player player) {
         ItemBuilder item = new ItemBuilder(Material.NETHER_STAR)
                 .setName("<dark_red>Admin<red>Tool")

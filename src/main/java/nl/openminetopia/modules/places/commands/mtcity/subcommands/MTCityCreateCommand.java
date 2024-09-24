@@ -2,6 +2,7 @@ package nl.openminetopia.modules.places.commands.mtcity.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import nl.openminetopia.api.player.PlayerManager;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 public class MTCityCreateCommand extends BaseCommand {
 
     @Subcommand("create")
+    @CommandPermission("openminetopia.city.create")
     public void onCreate(Player player, String name, String loadingName) {
 
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);

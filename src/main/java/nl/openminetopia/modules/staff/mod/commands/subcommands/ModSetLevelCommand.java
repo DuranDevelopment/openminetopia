@@ -14,6 +14,7 @@ public class ModSetLevelCommand extends BaseCommand {
 
     @Subcommand("setlevel")
     @Syntax("<player> <level>")
+    @CommandPermission("openminetopia.mod.setlevel")
     @CommandCompletion("@players")
     @Description("Set the level of a player.")
     public static void setLevelCommand(Player player, OfflinePlayer offlinePlayer, int newLevel) {
