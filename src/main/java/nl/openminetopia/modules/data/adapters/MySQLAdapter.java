@@ -53,7 +53,7 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public void disconnect() {
-        StormDatabase.getInstance().getStorm().getDriver().close();
+        // Do nothing, Storm handles this for us
     }
 
     /* Player related database queries */
