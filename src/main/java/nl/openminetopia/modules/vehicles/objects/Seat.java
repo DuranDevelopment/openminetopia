@@ -35,9 +35,12 @@ public class Seat {
         this.internalEntity = ((CraftEntity)entity).getHandle();
 
         entity.setInvisible(true);
+        entity.setInvulnerable(true);
+        entity.setAI(false);
     }
 
     public void tick() {
+        internalEntity.setDeltaMovement(vehicle.getInternalEntity().getDeltaMovement());
         internalEntity.moveTo(globalLocation(), vehicle.degrees(), 0);
     }
 

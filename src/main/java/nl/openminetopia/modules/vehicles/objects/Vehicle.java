@@ -2,6 +2,8 @@ package nl.openminetopia.modules.vehicles.objects;
 
 import lombok.Getter;
 import net.minecraft.world.entity.Entity;
+import nl.openminetopia.modules.vehicles.objects.movement.CarMovement;
+import nl.openminetopia.modules.vehicles.objects.movement.Movement;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +21,7 @@ public class Vehicle {
 
     private final ArmorStand entity;
     private final Entity internalEntity;
+    private final Movement movement;
 
     private final List<Seat> seats = new ArrayList<>();
     private final List<Part> parts = new ArrayList<>();
@@ -26,20 +29,15 @@ public class Vehicle {
     public Vehicle(Location location) {
         this.entity = location.getWorld().spawn(location, ArmorStand.class);
         this.internalEntity = ((CraftEntity)entity).getHandle();
+        this.movement = CarMovement.movement(this);
 
         entity.setInvisible(true);
+        entity.setInvulnerable(true);
+        entity.setAI(false);
     }
 
     public void tick(WrappedPlayerInputPacket packet) {
-        /* Movement is temporary */
-        double speed = 0;
-        if (packet.isForward()) speed = 1.25;
-        else if (packet.isBackward()) speed = -1.25;
-        entity.setVelocity(vector(speed));
-
-        if (packet.isLeft()) internalEntity.setRot(internalEntity.yRotO - 5, 0);
-        else if (packet.isRight()) internalEntity.setRot(internalEntity.yRotO + 5, 0);
-
+        movement.move(packet);
         seats.forEach(Seat::tick);
         parts.forEach(Part::tick);
     }
@@ -56,14 +54,6 @@ public class Vehicle {
         parts.add(part);
 
         return part;
-    }
-
-    private Vector vector(double speed) {
-        Vector vector = entity.getLocation().getDirection();
-        vector.multiply(speed);
-        vector.setY(-1);
-
-        return vector;
     }
 
     public Location location() {
