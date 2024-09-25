@@ -40,7 +40,7 @@ public class FitnessBoosterManager {
     }
 
     public void removeFitnessBooster(MinetopiaPlayer player, FitnessBooster booster) {
-        StormDatabase.getInstance().deleteModel(player, FitnessBoosterModel.class, model -> model.getId() == booster.getId());
+        StormDatabase.getInstance().deletePlayerRelatedModel(player, FitnessBoosterModel.class, model -> model.getId() == booster.getId());
     }
 
     public CompletableFuture<List<FitnessBooster>> getFitnessBoosters(MinetopiaPlayer player) {

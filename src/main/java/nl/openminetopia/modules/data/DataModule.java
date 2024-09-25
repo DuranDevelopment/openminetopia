@@ -1,15 +1,17 @@
 package nl.openminetopia.modules.data;
 
 import com.craftmend.storm.Storm;
+import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
-import nl.openminetopia.modules.data.adapter.DatabaseAdapter;
-import nl.openminetopia.modules.data.adapter.utils.AdapterUtil;
+import nl.openminetopia.modules.data.adapters.DatabaseAdapter;
+import nl.openminetopia.modules.data.adapters.utils.AdapterUtil;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.*;
-import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.data.types.DatabaseType;
 
+@Getter
 public class DataModule extends Module {
 
     private DatabaseAdapter adapter;

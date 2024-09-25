@@ -29,15 +29,11 @@ public class ColorSelectCommand extends BaseCommand {
         switch (ownableColorType) {
             case PREFIX:
                 if (id == -1) {
-                    minetopiaPlayer.setActivePrefixColor(new PrefixColor(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor(), -1));
+                    minetopiaPlayer.setActiveColor(new PrefixColor(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor(), -1), OwnableColorType.PREFIX);
                     player.sendMessage("You selected the default prefix color!");
                     return;
                 }
-                List<PrefixColor> prefixColors = minetopiaPlayer.getPrefixColors();
-                if (prefixColors == null) {
-                    player.sendMessage("An error occurred while trying to get your prefix colors.");
-                    return;
-                }
+                List<PrefixColor> prefixColors = minetopiaPlayer.getColors().stream().filter(color -> color instanceof PrefixColor).map(color -> (PrefixColor) color).toList();
                 if (prefixColors.stream().noneMatch(color -> color.getId() == id)) {
                     player.sendMessage("You don't have a prefix color with id " + id + "!");
                     // send available prefixes:
@@ -48,7 +44,7 @@ public class ColorSelectCommand extends BaseCommand {
                 }
 
                 PrefixColor prefixColor = prefixColors.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
-                minetopiaPlayer.setActivePrefixColor(prefixColor);
+                minetopiaPlayer.setActiveColor(prefixColor, OwnableColorType.PREFIX);
                 player.sendMessage("You selected prefix color with id " + id + "!");
                 break;
             case CHAT:

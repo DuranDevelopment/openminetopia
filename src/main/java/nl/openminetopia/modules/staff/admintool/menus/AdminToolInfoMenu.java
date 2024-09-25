@@ -6,6 +6,7 @@ import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.staff.admintool.menus.colors.AdminToolColorMenu;
 import nl.openminetopia.modules.player.utils.PlaytimeUtil;
 import nl.openminetopia.utils.ChatUtils;
@@ -33,7 +34,7 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine(" ")
                 .addLoreLine("<gold>UUID: <yellow>" + offlinePlayer.getUniqueId())
                 .addLoreLine("<gold>Naam: <yellow>" + offlinePlayer.getName()) // TODO: Set name color
-                .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActivePrefixColor().getColor() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
+                .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
                 .addLoreLine("<gold>Online tijd: <yellow>" + PlaytimeUtil.formatPlaytime(minetopiaPlayer.getPlaytime()))
                 .addLoreLine(" ")
                 .setSkullOwner(offlinePlayer);

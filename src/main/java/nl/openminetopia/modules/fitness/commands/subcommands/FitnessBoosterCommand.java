@@ -8,6 +8,7 @@ import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
+import nl.openminetopia.modules.data.utils.StormUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -26,9 +27,14 @@ public class FitnessBoosterCommand extends BaseCommand {
         if (expiresAt == null || expiresAt <= 0) expiresAt = -1;
         long expiresAtMillis = expiresAt == -1 ? System.currentTimeMillis() + expiresAt : -1;
 
-        int nextId = StormDatabase.getInstance().getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId);
-        FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, expiresAtMillis);
-        minetopiaPlayer.getFitness().addFitnessBooster(fitnessBooster);
+        StormUtils.getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId).whenComplete((nextId, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, expiresAtMillis);
+            minetopiaPlayer.getFitness().addFitnessBooster(fitnessBooster);
+        });
 
         if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitnessRunnable().run();
 

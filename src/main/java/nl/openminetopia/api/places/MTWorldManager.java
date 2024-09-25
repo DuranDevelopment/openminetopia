@@ -2,7 +2,9 @@ package nl.openminetopia.api.places;
 
 import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.WorldModel;
 import org.bukkit.Location;
@@ -22,6 +24,8 @@ public class MTWorldManager {
         }
         return instance;
     }
+
+    private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
     public List<MTWorld> worlds = new ArrayList<>();
 
@@ -65,21 +69,7 @@ public class MTWorldManager {
             if (!mtWorld.getName().equals(world.getName())) return;
             mtWorld.setTitle(title);
         });
-
-        getWorldModel(world).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setTitle(title);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setTitle(world, title);
     }
 
     public void setTemperature(MTWorld world, double temperature) {
@@ -87,21 +77,7 @@ public class MTWorldManager {
             if (!mtWorld.getName().equals(world.getName())) return;
             mtWorld.setTemperature(temperature);
         });
-
-        getWorldModel(world).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setTemperature(temperature);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setTemperature(world, temperature);
     }
 
     public void setLoadingName(MTWorld world, String loadingName) {
@@ -109,21 +85,7 @@ public class MTWorldManager {
             if (!mtWorld.getName().equals(world.getName())) return;
             mtWorld.setLoadingName(loadingName);
         });
-
-        getWorldModel(world).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setLoadingName(loadingName);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setLoadingName(world, loadingName);
     }
 
     public void setColor(MTWorld world, String color) {
@@ -131,55 +93,16 @@ public class MTWorldManager {
             if (!mtWorld.getName().equals(world.getName())) return;
             mtWorld.setColor(color);
         });
-
-        getWorldModel(world).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setColor(color);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setColor(world, color);
     }
 
     public void createWorld(MTWorld world) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                WorldModel worldModel = new WorldModel();
-                worldModel.setWorldName(world.getName());
-                worldModel.setTitle(world.getTitle());
-                worldModel.setColor(world.getColor());
-                worldModel.setTemperature(world.getTemperature());
-                worldModel.setLoadingName(world.getLoadingName());
-
-                StormDatabase.getInstance().saveStormModel(worldModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
+        dataModule.getAdapter().createWorld(world);
         worlds.add(world);
     }
 
     public void deleteWorld(MTWorld world) {
-        getWorldModel(world).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    StormDatabase.getInstance().getStorm().delete(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().deleteWorld(world);
         worlds.remove(world);
     }
 
@@ -197,27 +120,5 @@ public class MTWorldManager {
             return world;
         }
         return null;
-    }
-
-    public CompletableFuture<WorldModel> getWorldModel(MTWorld world) {
-        CompletableFuture<WorldModel> completableFuture = new CompletableFuture<>();
-
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                WorldModel model = StormDatabase.getInstance().getStorm().buildQuery(WorldModel.class)
-                        .where("world_name", Where.EQUAL, world.getName())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                completableFuture.complete(model);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
     }
 }

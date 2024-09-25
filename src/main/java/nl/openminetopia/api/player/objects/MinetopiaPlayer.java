@@ -1,6 +1,8 @@
 package nl.openminetopia.api.player.objects;
 
 import nl.openminetopia.api.player.fitness.objects.Fitness;
+import nl.openminetopia.modules.color.enums.OwnableColorType;
+import nl.openminetopia.modules.color.objects.OwnableColor;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
@@ -35,13 +37,12 @@ public interface MinetopiaPlayer {
     Prefix getActivePrefix();
     void setActivePrefix(Prefix prefix);
 
-    /* Prefix Colors */
-    List<PrefixColor> getPrefixColors();
-    void addPrefixColor(PrefixColor color);
-    void removePrefixColor(PrefixColor color);
-
-    PrefixColor getActivePrefixColor();
-    void setActivePrefixColor(PrefixColor color);
+    /* Colors */
+    List<OwnableColor> getColors();
+    void setActiveColor(OwnableColor color, OwnableColorType type);
+    OwnableColor getActiveColor(OwnableColorType type);
+    void addColor(OwnableColor color);
+    void removeColor(OwnableColor color);
 
     /* Fitness */
     Fitness getFitness();

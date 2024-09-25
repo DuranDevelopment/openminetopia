@@ -2,7 +2,6 @@ package nl.openminetopia;
 
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
-import com.jazzkuh.inventorylib.formatter.InventoryFormattingProvider;
 import com.jazzkuh.inventorylib.loader.InventoryLoader;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;

@@ -6,6 +6,8 @@ import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.api.player.fitness.FitnessManager;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
+import nl.openminetopia.modules.color.enums.OwnableColorType;
+import nl.openminetopia.modules.color.objects.OwnableColor;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
@@ -17,8 +19,6 @@ import java.util.UUID;
 
 @Getter
 public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
-
-
     private final UUID uuid;
 
     private @Setter Fitness fitness;
@@ -88,27 +88,27 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
     }
 
     @Override
-    public List<PrefixColor> getPrefixColors() {
+    public List<OwnableColor> getColors() {
         return List.of();
     }
 
     @Override
-    public void addPrefixColor(PrefixColor color) {
+    public void setActiveColor(OwnableColor color, OwnableColorType type) {
 
     }
 
     @Override
-    public void removePrefixColor(PrefixColor color) {
-
-    }
-
-    @Override
-    public PrefixColor getActivePrefixColor() {
+    public OwnableColor getActiveColor(OwnableColorType type) {
         return null;
     }
 
     @Override
-    public void setActivePrefixColor(PrefixColor color) {
+    public void addColor(OwnableColor color) {
+
+    }
+
+    @Override
+    public void removeColor(OwnableColor color) {
 
     }
 
@@ -126,4 +126,6 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
     public MTWorld getWorld() {
         return null;
     }
+
+
 }

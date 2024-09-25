@@ -1,6 +1,6 @@
 package nl.openminetopia.configuration;
 
-import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.data.types.DatabaseType;
 import nl.openminetopia.utils.ConfigurateConfig;
 
 import java.io.File;

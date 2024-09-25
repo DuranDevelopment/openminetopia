@@ -9,6 +9,7 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.ColorModel;
+import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -38,12 +39,20 @@ public class ColorAddCommand extends BaseCommand {
 
         switch (type) {
             case PREFIX:
-                if (minetopiaPlayer.getPrefixColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color))) {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
-                minetopiaPlayer.addPrefixColor(new PrefixColor(StormDatabase.getInstance().getNextId(ColorModel.class, ColorModel::getId), color, -1L));
-                player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color).append(Component.text(color).append(ChatUtils.color(" kleur <dark_aqua>toegevoegd."))));
+
+                StormUtils.getNextId(ColorModel.class, ColorModel::getId).whenComplete((integer, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
+                    PrefixColor prefixColor = new PrefixColor(integer, color, -1L);
+                    minetopiaPlayer.addColor(prefixColor);
+                    player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de ").append(Component.text(color).append(ChatUtils.color(" kleur <dark_aqua>toegevoegd."))));
+                });
                 break;
             case CHAT:
                 break;
