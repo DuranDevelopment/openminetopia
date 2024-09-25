@@ -2,6 +2,7 @@ package nl.openminetopia.modules.vehicles.objects;
 
 import lombok.Getter;
 import net.minecraft.world.entity.Entity;
+import nl.openminetopia.modules.vehicles.objects.movement.BoatMovement;
 import nl.openminetopia.modules.vehicles.objects.movement.CarMovement;
 import nl.openminetopia.modules.vehicles.objects.movement.Movement;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
@@ -29,7 +30,7 @@ public class Vehicle {
     public Vehicle(Location location) {
         this.entity = location.getWorld().spawn(location, ArmorStand.class);
         this.internalEntity = ((CraftEntity)entity).getHandle();
-        this.movement = CarMovement.movement(this);
+        this.movement = BoatMovement.movement(this);
 
         entity.setInvisible(true);
         entity.setInvulnerable(true);
