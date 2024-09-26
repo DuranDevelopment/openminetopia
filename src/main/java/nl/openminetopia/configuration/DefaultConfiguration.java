@@ -3,7 +3,7 @@ package nl.openminetopia.configuration;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.data.types.DatabaseType;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import nl.openminetopia.utils.ConfigurateConfig;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -89,6 +89,10 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final String defaultPrefix;
     private final String defaultPrefixColor;
     private final int defaultLevel;
+    private final String defaultLevelColor;
+
+    private final String defaultNameColor;
+    private final String defaultChatColor;
 
     /**
      * Teleporter configuration
@@ -114,6 +118,10 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.defaultPrefix = rootNode.node("default", "prefix").getString("Zwerver");
         this.defaultPrefixColor = rootNode.node("default", "prefixColor").getString("<gray>");
         this.defaultLevel = rootNode.node("default", "level").getInt(1);
+        this.defaultLevelColor = rootNode.node("default", "levelColor").getString("<gray>");
+
+        this.defaultNameColor = rootNode.node("default", "nameColor").getString("<white>");
+        this.defaultChatColor = rootNode.node("default", "chatColor").getString("<white>");
 
         /*
          * Fitness configuration

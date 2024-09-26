@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.data.adapter;
+package nl.openminetopia.modules.data.adapters;
 
 import com.craftmend.storm.Storm;
 import com.craftmend.storm.connection.sqlite.SqliteFileDriver;
@@ -17,10 +17,5 @@ public class SQLiteAdapter extends MySQLAdapter {
         } catch (Exception e) {
             OpenMinetopia.getInstance().getLogger().severe("Failed to connect to SQLite database: " + e.getMessage());
         }
-    }
-
-    @Override
-    public void disconnect() {
-        // Disconnect from SQLite database
     }
 }

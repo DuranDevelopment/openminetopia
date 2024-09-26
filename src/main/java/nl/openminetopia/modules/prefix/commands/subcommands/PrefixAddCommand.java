@@ -6,6 +6,7 @@ import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PrefixModel;
+import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -28,7 +29,13 @@ public class PrefixAddCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
         player.sendMessage("Added the prefix to the player.");
 
-        Prefix prefix1 = new Prefix(StormDatabase.getInstance().getNextId(PrefixModel.class, PrefixModel::getId), prefix, expiresAt);
-        minetopiaPlayer.addPrefix(prefix1);
+        StormUtils.getNextId(PrefixModel.class, PrefixModel::getId).whenComplete((id, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            Prefix prefix1 = new Prefix(id, prefix, expiresAt);
+            minetopiaPlayer.addPrefix(prefix1);
+        });
     }
 }

@@ -1,9 +1,11 @@
 package nl.openminetopia.api.player;
 
 import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OfflineMinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
+import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import org.bukkit.OfflinePlayer;
@@ -25,6 +27,8 @@ public class PlayerManager {
         }
         return instance;
     }
+
+    private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
     public HashMap<UUID, PlayerModel> playerModels = new HashMap<>();
     public HashMap<UUID, MinetopiaPlayer> minetopiaPlayers = new HashMap<>();
@@ -61,14 +65,14 @@ public class PlayerManager {
     }
 
     public void setPlaytime(@NotNull MinetopiaPlayer player, int playtime) {
-        StormDatabase.getInstance().updateModel(player, PlayerModel.class, playerModel -> playerModel.setPlaytime(playtime));
+        dataModule.getAdapter().setPlaytime(player, playtime);
     }
 
     public CompletableFuture<Integer> getPlaytime(@NotNull MinetopiaPlayer player) {
-        return StormDatabase.getInstance().getModelData(player, PlayerModel.class, query -> {}, model -> true, PlayerModel::getPlaytime, 0);
+        return dataModule.getAdapter().getPlaytime(player);
     }
 
     public void setStaffchatEnabled(@NotNull MinetopiaPlayer player, boolean staffchatEnabled) {
-        StormDatabase.getInstance().updateModel(player, PlayerModel.class, playerModel -> playerModel.setStaffchatEnabled(staffchatEnabled));
+        dataModule.getAdapter().setStaffchatEnabled(player, staffchatEnabled);
     }
 }

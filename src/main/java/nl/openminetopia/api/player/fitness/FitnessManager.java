@@ -2,8 +2,6 @@ package nl.openminetopia.api.player.fitness;
 
 import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.api.player.objects.OfflineMinetopiaPlayer;
-import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
@@ -34,65 +32,65 @@ public class FitnessManager {
     }
 
     public CompletableFuture<Integer> getTotalFitness(MinetopiaPlayer player) {
-        return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
+        return StormDatabase.getInstance().getPlayerRelatedModelData(player, FitnessModel.class, query -> {
         }, model -> true, FitnessModel::getTotal, 0);
     }
 
     public void setTotalFitness(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setTotal(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setTotal(amount));
     }
 
     public CompletableFuture<Integer> getFitnessGainedByDrinking(MinetopiaPlayer player) {
-        return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
+        return StormDatabase.getInstance().getPlayerRelatedModelData(player, FitnessModel.class, query -> {
         }, model -> true, FitnessModel::getFitnessGainedByDrinking, 0);
     }
 
     public CompletableFuture<Integer> getFitnessGainedByHealth(MinetopiaPlayer player) {
-        return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
+        return StormDatabase.getInstance().getPlayerRelatedModelData(player, FitnessModel.class, query -> {
         }, model -> true, FitnessModel::getFitnessGainedByHealth, 0);
     }
 
     public CompletableFuture<Double> getDrinkingPoints(MinetopiaPlayer player) {
-        return StormDatabase.getInstance().getModelData(player, FitnessModel.class, query -> {
+        return StormDatabase.getInstance().getPlayerRelatedModelData(player, FitnessModel.class, query -> {
         }, model -> true, FitnessModel::getDrinkingPoints, 0.0);
     }
 
     public void setDrinkingPoints(MinetopiaPlayer player, double amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setDrinkingPoints(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setDrinkingPoints(amount));
     }
 
     public void setHealthPoints(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setHealthPoints(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setHealthPoints(amount));
     }
 
     /**
      * Set fitness gained
      */
     public void setFitnessGainedByHealth(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByHealth(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByHealth(amount));
     }
 
     public void setFitnessGainedByDrinking(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByDrinking(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByDrinking(amount));
     }
 
     public void setFitnessGainedByClimbing(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByClimbing(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByClimbing(amount));
     }
 
     public void setFitnessGainedBySprinting(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedBySprinting(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedBySprinting(amount));
     }
 
     public void setFitnessGainedByFlying(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByFlying(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByFlying(amount));
     }
 
     public void setFitnessGainedBySwimming(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedBySwimming(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedBySwimming(amount));
     }
 
     public void setFitnessGainedByWalking(MinetopiaPlayer player, int amount) {
-        StormDatabase.getInstance().updateModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByWalking(amount));
+        StormDatabase.getInstance().updatePlayerRelatedModel(player, FitnessModel.class, fitnessModel -> fitnessModel.setFitnessGainedByWalking(amount));
     }
 }

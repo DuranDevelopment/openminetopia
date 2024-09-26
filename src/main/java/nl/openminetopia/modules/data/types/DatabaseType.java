@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.data.type;
+package nl.openminetopia.modules.data.types;
 
 public enum DatabaseType {
 

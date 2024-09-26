@@ -1,13 +1,12 @@
 package nl.openminetopia.api.places;
 
-import com.craftmend.storm.api.enums.Where;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTCity;
-import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.CityModel;
-import nl.openminetopia.modules.data.storm.models.WorldModel;
 import nl.openminetopia.utils.WorldGuardUtils;
 import org.bukkit.Location;
 
@@ -27,6 +26,8 @@ public class MTCityManager {
         return instance;
     }
 
+    private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
+
     private final List<MTCity> cities = new ArrayList<>();
 
     public MTCity getCity(String name) {
@@ -35,6 +36,16 @@ public class MTCityManager {
             return city;
         }
         return null;
+    }
+
+    public void createCity(MTCity city) {
+        dataModule.getAdapter().createCity(city);
+        cities.add(city);
+    }
+
+    public void deleteCity(MTCity city) {
+        dataModule.getAdapter().deleteCity(city);
+        cities.remove(city);
     }
 
     public MTCity getCity(Location location) {
@@ -89,21 +100,7 @@ public class MTCityManager {
             if (!mtCity.getName().equals(city.getName())) return;
             mtCity.setColor(color);
         });
-
-        getCityModel(city).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setColor(color);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setColor(city, color);
     }
 
     public void setTemperature(MTCity city, Double temperature) {
@@ -111,21 +108,7 @@ public class MTCityManager {
             if (!mtCity.getName().equals(city.getName())) return;
             mtCity.setTemperature(temperature);
         });
-
-        getCityModel(city).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setTemperature(temperature);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setTemperature(city, temperature);
     }
 
     public void setLoadingName(MTCity city, String loadingName) {
@@ -133,21 +116,7 @@ public class MTCityManager {
             if (!mtCity.getName().equals(city.getName())) return;
             mtCity.setLoadingName(loadingName);
         });
-
-        getCityModel(city).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setLoadingName(loadingName);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setLoadingName(city, loadingName);
     }
 
     public void setTitle(MTCity city, String title) {
@@ -155,78 +124,7 @@ public class MTCityManager {
             if (!mtCity.getName().equals(city.getName())) return;
             mtCity.setTitle(title);
         });
-
-        getCityModel(city).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    model.setTitle(title);
-                    StormDatabase.getInstance().saveStormModel(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+        dataModule.getAdapter().setTitle(city, title);
     }
 
-    public void createCity(MTCity city) {
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                CityModel cityModel = new CityModel();
-                cityModel.setWorldId(city.getWorldId());
-                cityModel.setCityName(city.getName());
-                cityModel.setTitle(city.getTitle());
-                cityModel.setColor(city.getColor());
-                cityModel.setTemperature(city.getTemperature());
-                cityModel.setLoadingName(city.getLoadingName());
-
-                StormDatabase.getInstance().saveStormModel(cityModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-        });
-        cities.add(city);
-    }
-
-    public void deleteCity(MTCity city) {
-        getCityModel(city).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    StormDatabase.getInstance().getStorm().delete(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
-        cities.remove(city);
-    }
-
-    public CompletableFuture<CityModel> getCityModel(MTCity city) {
-        CompletableFuture<CityModel> completableFuture = new CompletableFuture<>();
-
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                CityModel model = StormDatabase.getInstance().getStorm().buildQuery(CityModel.class)
-                        .where("city_name", Where.EQUAL, city.getName())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                completableFuture.complete(model);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
-    }
 }

@@ -3,7 +3,6 @@ package nl.openminetopia.modules.chat.listeners;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.utils.ChatUtils;
@@ -45,14 +44,7 @@ public class PlayerChatListener implements Listener {
 
         // Format the message
         String originalMessage = ChatUtils.stripMiniMessage(event.message());
-        String formattedMessage = configuration.getChatFormat()
-                .replace("<levelcolor>", "<white>")
-                .replace("<level>", minetopiaPlayer.getLevel() + "")
-                .replace("<prefixcolor>", minetopiaPlayer.getActivePrefixColor().getColor())
-                .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
-                .replace("<namecolor>", "<white>")
-                .replace("<name>", source.getName())
-                .replace("<chatcolor>", "<white>");
+        String formattedMessage = configuration.getChatFormat();
 
         // Iterate over recipients
         recipients.forEach(player -> {
@@ -69,7 +61,7 @@ public class PlayerChatListener implements Listener {
             }
 
             // Send the formatted message to the player
-            player.sendMessage(ChatUtils.color(finalMessage));
+            player.sendMessage(ChatUtils.format(minetopiaPlayer, finalMessage));
         });
     }
 }
