@@ -38,6 +38,16 @@ public class MTCityManager {
         return null;
     }
 
+    public void createCity(MTCity city) {
+        dataModule.getAdapter().createCity(city);
+        cities.add(city);
+    }
+
+    public void deleteCity(MTCity city) {
+        dataModule.getAdapter().deleteCity(city);
+        cities.remove(city);
+    }
+
     public MTCity getCity(Location location) {
         ProtectedRegion region = WorldGuardUtils.getProtectedRegion(location, priority -> priority >= 0);
 
@@ -115,16 +125,6 @@ public class MTCityManager {
             mtCity.setTitle(title);
         });
         dataModule.getAdapter().setTitle(city, title);
-    }
-
-    public void createCity(MTCity city) {
-        dataModule.getAdapter().createCity(city);
-        cities.add(city);
-    }
-
-    public void deleteCity(MTCity city) {
-        dataModule.getAdapter().deleteCity(city);
-        cities.remove(city);
     }
 
 }

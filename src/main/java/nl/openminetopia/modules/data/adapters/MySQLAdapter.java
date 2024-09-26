@@ -81,19 +81,22 @@ public class MySQLAdapter implements DatabaseAdapter {
     @Override
     public CompletableFuture<Void> savePlayer(MinetopiaPlayer player) {
         CompletableFuture<Void> future = new CompletableFuture<>();
-        StormUtils.updateModelData(PlayerModel.class, query -> query.where("uuid", Where.EQUAL, player.getUuid()), model -> {
-            model.setLevel(player.getLevel());
-            model.setActivePrefixId(player.getActivePrefix().getId());
-            model.setActivePrefixColorId(player.getActiveColor(OwnableColorType.PREFIX).getId());
-            model.setActiveChatColorId(player.getActiveColor(OwnableColorType.CHAT).getId());
-            model.setActiveNameColorId(player.getActiveColor(OwnableColorType.NAME).getId());
-            model.setActiveLevelColorId(player.getActiveColor(OwnableColorType.LEVEL).getId());
-            model.setPlaytime(player.getPlaytime());
+        StormUtils.updateModelData(PlayerModel.class,
+                query -> query.where("uuid", Where.EQUAL, player.getUuid().toString()),
+                model -> {
+                    model.setLevel(player.getLevel());
+                    model.setActivePrefixId(player.getActivePrefix().getId());
+                    model.setActivePrefixColorId(player.getActiveColor(OwnableColorType.PREFIX).getId());
+                    model.setActiveChatColorId(player.getActiveColor(OwnableColorType.CHAT).getId());
+                    model.setActiveNameColorId(player.getActiveColor(OwnableColorType.NAME).getId());
+                    model.setActiveLevelColorId(player.getActiveColor(OwnableColorType.LEVEL).getId());
+                    model.setPlaytime(player.getPlaytime());
 
-            if (player instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) {
-                model.setStaffchatEnabled(onlineMinetopiaPlayer.isStaffchatEnabled());
-            }
-        });
+                    if (player instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) {
+                        model.setStaffchatEnabled(onlineMinetopiaPlayer.isStaffchatEnabled());
+                    }
+                }
+        );
         future.complete(null);
         return future;
     }
@@ -454,8 +457,8 @@ public class MySQLAdapter implements DatabaseAdapter {
     /* World related database queries */
 
     @Override
-    public CompletableFuture<Void> createWorld(MTWorld world) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<WorldModel> createWorld(MTWorld world) {
+        CompletableFuture<WorldModel> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
             WorldModel worldModel = new WorldModel();
@@ -466,7 +469,7 @@ public class MySQLAdapter implements DatabaseAdapter {
             worldModel.setLoadingName(world.getLoadingName());
 
             StormDatabase.getInstance().saveStormModel(worldModel);
-            completableFuture.complete(null);
+            completableFuture.complete(worldModel);
         });
 
         return completableFuture;
@@ -534,8 +537,8 @@ public class MySQLAdapter implements DatabaseAdapter {
     /* City related database queries */
 
     @Override
-    public CompletableFuture<Void> createCity(MTCity city) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<CityModel> createCity(MTCity city) {
+        CompletableFuture<CityModel> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
             CityModel cityModel = new CityModel();
@@ -547,7 +550,7 @@ public class MySQLAdapter implements DatabaseAdapter {
             cityModel.setLoadingName(city.getLoadingName());
 
             StormDatabase.getInstance().saveStormModel(cityModel);
-            completableFuture.complete(null);
+            completableFuture.complete(cityModel);
         });
 
         return completableFuture;

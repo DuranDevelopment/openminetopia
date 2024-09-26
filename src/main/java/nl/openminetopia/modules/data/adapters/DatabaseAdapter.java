@@ -6,7 +6,9 @@ import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
+import nl.openminetopia.modules.data.storm.models.CityModel;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
+import nl.openminetopia.modules.data.storm.models.WorldModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
 import java.util.List;
@@ -65,7 +67,7 @@ public interface DatabaseAdapter {
 
     /* World related database queries */
 
-    CompletableFuture<Void> createWorld(MTWorld world);
+    CompletableFuture<WorldModel> createWorld(MTWorld world);
     CompletableFuture<Void> deleteWorld(MTWorld world);
 
     CompletableFuture<Void> setTemperature(MTWorld world, double temperature);
@@ -75,7 +77,7 @@ public interface DatabaseAdapter {
 
     /* City related database queries */
 
-    CompletableFuture<Void> createCity(MTCity city);
+    CompletableFuture<CityModel> createCity(MTCity city);
     CompletableFuture<Void> deleteCity(MTCity city);
 
     CompletableFuture<Void> setTemperature(MTCity city, double temperature);

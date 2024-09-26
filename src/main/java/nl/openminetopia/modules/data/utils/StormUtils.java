@@ -18,19 +18,19 @@ public class StormUtils {
     // Create model
 
     // Read model
+
     /**
      * This method is used to fetch data from a model in the database.
      * It will return a CompletableFuture that will be completed with the data from the model.
      *
-     * @param modelClass The class of the model to fetch
-     * @param filterBuilder A consumer that can be used to apply additional filters to the query
-     *                      (e.g. query -> query.where("some_column", Where.EQUAL, someValue))
+     * @param modelClass      The class of the model to fetch
+     * @param filterBuilder   A consumer that can be used to apply additional filters to the query
+     *                        (e.g. query -> query.where("some_column", Where.EQUAL, someValue))
      * @param postQueryFilter (Optional) A predicate to filter the stream of results after the query execution.
      *                        If null, no filtering will be applied.
-     * @param dataExtractor A function that extracts the data from the model
-     *                      (e.g. model -> model.getSomeData())
-     * @param defaultValue The default value to return if the model is not found
-     *
+     * @param dataExtractor   A function that extracts the data from the model
+     *                        (e.g. model -> model.getSomeData())
+     * @param defaultValue    The default value to return if the model is not found
      */
     public <T, M extends StormModel> CompletableFuture<T> getModelData(
             Class<M> modelClass,
@@ -69,16 +69,16 @@ public class StormUtils {
     }
 
     // Update model
+
     /**
      * This method is used to update data in a model in the database.
      * It will return a CompletableFuture that will be completed when the update is done.
      *
-     * @param modelClass The class of the model to update
+     * @param modelClass    The class of the model to update
      * @param filterBuilder A consumer that applies filters to identify which models to update
      *                      (e.g. query -> query.where("some_column", Where.EQUAL, someValue))
-     * @param updateAction A consumer that defines how the model should be updated
+     * @param updateAction  A consumer that defines how the model should be updated
      *                      (e.g. model -> model.setSomeField(newValue))
-     *
      */
     public <M extends StormModel> CompletableFuture<Void> updateModelData(
             Class<M> modelClass,
@@ -94,13 +94,22 @@ public class StormUtils {
                 filterBuilder.accept(query);
 
                 // Fetch the models that match the query
-                Collection<M> models = query.execute().join();
+                query.execute().whenComplete((models, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
 
-                // Apply updates to each model
-                for (M model : models) {
-                    updateAction.accept(model);  // Apply the update logic
-                    StormDatabase.getInstance().saveStormModel(model).join();  // Save the updated model back to the database
-                }
+                    // Apply updates to each model
+                    for (M model : models) {
+                        updateAction.accept(model);  // Apply the update logic
+                        StormDatabase.getInstance().saveStormModel(model).whenComplete((integer, throwable2) -> {
+                            if (throwable2 != null) {
+                                throwable2.printStackTrace();
+                            }
+                        });  // Save the updated model back to the database
+                    }
+                });
 
                 completableFuture.complete(null);  // Mark the future as complete
             } catch (Exception exception) {
@@ -113,11 +122,12 @@ public class StormUtils {
     }
 
     // Delete model
+
     /**
      * This method is used to delete models from the database based on the provided filter.
      * It will return a CompletableFuture that will be completed when the deletion is done.
      *
-     * @param modelClass The class of the model to delete
+     * @param modelClass    The class of the model to delete
      * @param filterBuilder A consumer that applies filters to identify which models to delete
      *                      (e.g. query -> query.where("some_column", Where.EQUAL, someValue))
      */
