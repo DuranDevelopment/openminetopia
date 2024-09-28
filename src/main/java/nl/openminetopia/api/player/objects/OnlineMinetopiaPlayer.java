@@ -14,6 +14,7 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
+import nl.openminetopia.modules.fitness.runnables.HealthStatisticRunnable;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
@@ -35,6 +36,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     private int playtime;
     private PlaytimeRunnable playtimeRunnable;
+
+    private HealthStatisticRunnable healthStatisticRunnable;
 
     private int level;
 
@@ -153,6 +156,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+
+        this.healthStatisticRunnable = new HealthStatisticRunnable(this);
+        healthStatisticRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
 
         loadFuture.complete(null);
         return loadFuture;

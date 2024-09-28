@@ -99,10 +99,6 @@ public class FitnessRunnable extends BukkitRunnable {
         int fitnessBoost = 0;
         for (int i = 0; i < fitness.getBoosters().size(); i++) {
             FitnessBooster fitnessBooster = fitness.getBoosters().get(i);
-            if (fitnessBooster.isExpired()) {
-                fitness.removeBooster(fitnessBooster);
-                continue;
-            }
             fitnessBoost += fitnessBooster.getAmount();
         }
 
