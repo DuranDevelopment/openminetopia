@@ -4,10 +4,10 @@ import lombok.Getter;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.utils.ChatUtils;
-import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -32,6 +32,19 @@ public class ScoreboardManager {
     public void updateBoard(MinetopiaPlayer minetopiaPlayer) {
         Sidebar sidebar = getScoreboard(minetopiaPlayer.getUuid());
         if (sidebar == null) return;
+        if (!((OnlineMinetopiaPlayer) minetopiaPlayer).isScoreboardVisible()) return;
+
+        Player player = minetopiaPlayer.getBukkit().getPlayer();
+        if (player == null) return;
+
+        if (!minetopiaPlayer.isInPlace()) {
+            if (!sidebar.players().contains(player)) return;
+            sidebar.removePlayer(player);
+            return;
+        }
+        if (minetopiaPlayer.isInPlace() && !sidebar.players().contains(player) && ((OnlineMinetopiaPlayer) minetopiaPlayer).isScoreboardVisible()) {
+            sidebar.addPlayer(player);
+        }
 
         List<String> lines = configuration.getScoreboardLines();
         for (int i = 0; i < lines.size(); i++) {
@@ -45,6 +58,7 @@ public class ScoreboardManager {
     }
 
     public void addScoreboard(Player player) {
+        if (scoreboards.containsKey(player.getUniqueId())) return;
         Sidebar sidebar = OpenMinetopia.getModuleManager().getModule(ScoreboardModule.class).getScoreboardLibrary().createSidebar();
         sidebar.addPlayer(player);
         scoreboards.put(player.getUniqueId(), sidebar);
@@ -52,6 +66,7 @@ public class ScoreboardManager {
 
     public void removeScoreboard(Player player) {
         Sidebar sidebar = getScoreboard(player.getUniqueId());
+        if (sidebar == null) return;
         sidebar.removePlayer(player);
         sidebar.close();
         scoreboards.remove(player.getUniqueId());

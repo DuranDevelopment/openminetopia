@@ -19,4 +19,8 @@ public abstract class OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
+
+    public boolean isExpired() {
+        return expiresAt != -1 && System.currentTimeMillis() > expiresAt;
+    }
 }

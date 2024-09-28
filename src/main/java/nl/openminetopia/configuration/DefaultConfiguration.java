@@ -1,12 +1,11 @@
 package nl.openminetopia.configuration;
 
-import com.google.common.reflect.TypeToken;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.data.types.DatabaseType;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import nl.openminetopia.utils.ConfigurateConfig;
-import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -95,10 +94,19 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final String defaultPrefix;
     private final String defaultPrefixColor;
     private final int defaultLevel;
+    private final String defaultLevelColor;
 
-    public DefaultConfiguration(File file) throws SerializationException {
+    private final String defaultNameColor;
+    private final String defaultChatColor;
+
+    /**
+     * Teleporter configuration
+     */
+    private final List<String> displayLines;
+
+    @SneakyThrows
+    public DefaultConfiguration(File file) {
         super(file, "config.yml");
-
         /*
          * Database configuration
          */
@@ -115,6 +123,10 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.defaultPrefix = rootNode.node("default", "prefix").getString("Zwerver");
         this.defaultPrefixColor = rootNode.node("default", "prefixColor").getString("<gray>");
         this.defaultLevel = rootNode.node("default", "level").getInt(1);
+        this.defaultLevelColor = rootNode.node("default", "levelColor").getString("<gray>");
+
+        this.defaultNameColor = rootNode.node("default", "nameColor").getString("<white>");
+        this.defaultChatColor = rootNode.node("default", "chatColor").getString("<white>");
 
         /**
          * Banking configuration
@@ -124,7 +136,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Fitness configuration
          */
-        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(255);
+        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(225);
         this.defaultFitnessLevel = rootNode.node("fitness", "defaultFitnessLevel").getInt(20);
 
         this.maxFitnessByDrinking = rootNode.node("fitness", "drinking", "maxFitnessByDrinking").getInt(20);
@@ -214,11 +226,23 @@ public class DefaultConfiguration extends ConfigurateConfig {
          */
         this.scoreboardEnabled = rootNode.node("scoreboard", "enabled").getBoolean(true);
         this.scoreboardLines = rootNode.node("scoreboard", "lines").getList(String.class, List.of(
-                "<red>OpenMinetopia",
-                "<gray>Fitheid: <fitness>",
-                "<gray>Level: <level>",
-                "<gray>Prefix: <prefix>"
+                "<world_title>",
+                "<world_color>Temperatuur:",
+                "<temperature>°C",
+                " ",
+                "<world_color>Level:",
+                "<level> -> <CalcLevel> (<LevelUps><white>)",
+                " ",
+                "<world_color>Fitheid:",
+                "<fitness>/<max_fitness>"
         ));
 
+        /*
+         * Teleporter configuration
+         */
+        this.displayLines = rootNode.node("teleporter", "lines").getList(String.class, List.of(
+                "<gold>Teleporter",
+                "<grey><x>;<y>;<z>;<world>"
+        ));
     }
 }

@@ -4,7 +4,6 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
@@ -15,6 +14,7 @@ public class PrefixRemoveCommand extends BaseCommand {
 
     @Subcommand("remove")
     @Syntax("<player> <id>")
+    @CommandPermission("openminetopia.prefix.remove")
     @CommandCompletion("@players")
     @Description("Remove a prefix from a player.")
     public static void addPrefixCommand(Player player, OfflinePlayer offlinePlayer, Integer id) {

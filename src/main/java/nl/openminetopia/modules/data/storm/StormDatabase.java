@@ -7,9 +7,9 @@ import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.data.storm.models.*;
-import nl.openminetopia.api.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,7 +96,7 @@ public class StormDatabase {
     /**
      * Doing something very ugly here, but it's for the greater good. TM
      */
-    public <T extends StormModel> void updateModel(MinetopiaPlayer player, Class<T> modelClass, Consumer<T> updateAction) {
+    public <T extends StormModel> void updatePlayerRelatedModel(MinetopiaPlayer player, Class<T> modelClass, Consumer<T> updateAction) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 T model = StormDatabase.getInstance().getStorm().buildQuery(modelClass).where("uuid", Where.EQUAL, player.getUuid().toString()).execute().join().stream().findFirst().orElse(null);
@@ -113,15 +113,15 @@ public class StormDatabase {
                     } else if (modelClass == PlayerModel.class) {
                         model = modelClass.cast(new PlayerModel());
                         ((PlayerModel) model).setUniqueId(player.getUuid());
-                    } else if (modelClass == PrefixesModel.class) {
-                        model = modelClass.cast(new PrefixesModel());
-                        ((PrefixesModel) model).setUniqueId(player.getUuid());
-                    } else if (modelClass == ColorsModel.class) {
-                        model = modelClass.cast(new ColorsModel());
-                        ((ColorsModel) model).setUniqueId(player.getUuid());
-                    } else if (modelClass == FitnessBoostersModel.class) {
-                        model = modelClass.cast(new PrefixesModel());
-                        ((PrefixesModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == PrefixModel.class) {
+                        model = modelClass.cast(new PrefixModel());
+                        ((PrefixModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == ColorModel.class) {
+                        model = modelClass.cast(new ColorModel());
+                        ((ColorModel) model).setUniqueId(player.getUuid());
+                    } else if (modelClass == FitnessBoosterModel.class) {
+                        model = modelClass.cast(new PrefixModel());
+                        ((PrefixModel) model).setUniqueId(player.getUuid());
                     }
                 }
 
@@ -150,12 +150,12 @@ public class StormDatabase {
      * @param defaultValue The default value to return if the model is not found
      *
      */
-    public <T, M extends StormModel> CompletableFuture<T> getModelData(MinetopiaPlayer player,
-                                                                       Class<M> modelClass,
-                                                                       Consumer<QueryBuilder<M>> filterBuilder,
-                                                                       Predicate<M> postQueryFilter,  // New parameter to filter the stream
-                                                                       Function<M, T> dataExtractor,
-                                                                       T defaultValue) {
+    public <T, M extends StormModel> CompletableFuture<T> getPlayerRelatedModelData(MinetopiaPlayer player,
+                                                                                    Class<M> modelClass,
+                                                                                    Consumer<QueryBuilder<M>> filterBuilder,
+                                                                                    Predicate<M> postQueryFilter,  // New parameter to filter the stream
+                                                                                    Function<M, T> dataExtractor,
+                                                                                    T defaultValue) {
         CompletableFuture<T> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
@@ -188,7 +188,7 @@ public class StormDatabase {
     }
 
 
-    public <M extends StormModel> void deleteModel(MinetopiaPlayer player, Class<M> modelClass, Predicate<M> deleteCondition) {
+    public <M extends StormModel> void deletePlayerRelatedModel(MinetopiaPlayer player, Class<M> modelClass, Predicate<M> deleteCondition) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 M model = StormDatabase.getInstance().getStorm().buildQuery(modelClass).where("uuid", Where.EQUAL, player.getUuid().toString()).execute().join().stream().filter(deleteCondition).findFirst().orElse(null);
@@ -200,31 +200,5 @@ public class StormDatabase {
                 exception.printStackTrace();
             }
         });
-    }
-
-    public <M extends StormModel> int getNextId(Class<M> modelClass, Function<M, Integer> idGetter) {
-        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
-
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                // Fetch all models of the given class
-                Collection<M> models = StormDatabase.getInstance().getStorm().buildQuery(modelClass)
-                        .execute()
-                        .join();
-
-                // Use the stream to find the maximum ID using the idGetter function
-                int nextId = models.stream()
-                        .mapToInt(idGetter::apply) // Use the idGetter to get the ID
-                        .max()
-                        .orElse(0) + 1;
-
-                completableFuture.complete(nextId);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-
-        return completableFuture.join();
     }
 }

@@ -2,6 +2,7 @@ package nl.openminetopia.modules.fitness;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.fitness.commands.FitnessCommand;
 import nl.openminetopia.modules.fitness.commands.subcommands.FitnessBoosterCommand;
@@ -27,14 +28,21 @@ public class FitnessModule extends Module {
 
             int newHealthPoints;
             if (player.getFoodLevel() >= 18) {
-                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
-                minetopiaPlayer.setHealthPoints(newHealthPoints);
+                newHealthPoints = minetopiaPlayer.getFitness().getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
+                minetopiaPlayer.getFitness().setHealthPoints(newHealthPoints);
             } else if (player.getFoodLevel() <= 4) {
-                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow2Hearts();
-                minetopiaPlayer.setHealthPoints(newHealthPoints);
+                newHealthPoints = minetopiaPlayer.getFitness().getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow2Hearts();
+                minetopiaPlayer.getFitness().setHealthPoints(newHealthPoints);
             } else if (player.getFoodLevel() <= 10) {
-                newHealthPoints = minetopiaPlayer.getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow5Hearts();
-                minetopiaPlayer.setHealthPoints(newHealthPoints);
+                newHealthPoints = minetopiaPlayer.getFitness().getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow5Hearts();
+                minetopiaPlayer.getFitness().setHealthPoints(newHealthPoints);
+            }
+
+            DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+
+            if (minetopiaPlayer.getFitness().getHealthPoints() >= 1 && minetopiaPlayer.getFitness().getHealthPoints() <= configuration.getMaxFitnessByHealth()) {
+                minetopiaPlayer.getFitness().setFitnessGainedByHealth(minetopiaPlayer.getFitness().getFitnessGainedByHealth() + 1);
+                minetopiaPlayer.getFitness().setHealthPoints(0);
             }
         }), 0, 4 * 60 * 20); // Run timer every 4 minutes
     }

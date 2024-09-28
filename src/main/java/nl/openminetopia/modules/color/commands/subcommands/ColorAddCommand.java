@@ -3,13 +3,16 @@ package nl.openminetopia.modules.color.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.kyori.adventure.text.Component;
-import nl.openminetopia.api.player.ColorManager;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
+import nl.openminetopia.modules.color.objects.ChatColor;
+import nl.openminetopia.modules.color.objects.LevelColor;
+import nl.openminetopia.modules.color.objects.NameColor;
 import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.ColorsModel;
+import nl.openminetopia.modules.data.storm.models.ColorModel;
+import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -20,6 +23,7 @@ public class ColorAddCommand extends BaseCommand {
     @Subcommand("add")
     @Syntax("<player> <type> <color>")
     @CommandCompletion("@players")
+    @CommandPermission("openminetopia.color.add")
     @Description("Add a color to a player.")
     public void onPrefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String color) {
         if (offlinePlayer.getPlayer() == null) {
@@ -38,21 +42,75 @@ public class ColorAddCommand extends BaseCommand {
 
         switch (type) {
             case PREFIX:
-                if (minetopiaPlayer.getPrefixColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color))) {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
-                minetopiaPlayer.addPrefixColor(new PrefixColor(StormDatabase.getInstance().getNextId(ColorsModel.class, ColorsModel::getId), color, -1L));
-                player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de " + color).append(Component.text(color).append(ChatUtils.color(" kleur <dark_aqua>toegevoegd."))));
+
+                StormUtils.getNextId(ColorModel.class, ColorModel::getId).whenComplete((integer, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
+                    PrefixColor prefixColor = new PrefixColor(integer, color, -1L);
+                    minetopiaPlayer.addColor(prefixColor);
+                    player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de ").append(Component.text(color).append(ChatUtils.color(" kleur <dark_aqua>toegevoegd."))));
+                });
                 break;
+
             case CHAT:
+                if (minetopiaPlayer.getColors().stream().anyMatch(chatColor -> chatColor.getColor().equalsIgnoreCase(color))) {
+                    player.sendMessage(ChatUtils.color("<red>Deze chatkleur bestaat al."));
+                    return;
+                }
+
+                StormUtils.getNextId(ColorModel.class, ColorModel::getId).whenComplete((integer, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
+                    ChatColor chatColor = new ChatColor(integer, color, -1L);
+                    minetopiaPlayer.addColor(chatColor);
+                    player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de ").append(Component.text(color).append(ChatUtils.color(" chatkleur <dark_aqua>toegevoegd."))));
+                });
                 break;
+
             case NAME:
+                if (minetopiaPlayer.getColors().stream().anyMatch(nameColor -> nameColor.getColor().equalsIgnoreCase(color))) {
+                    player.sendMessage(ChatUtils.color("<red>Deze naamkleur bestaat al."));
+                    return;
+                }
+
+                StormUtils.getNextId(ColorModel.class, ColorModel::getId).whenComplete((integer, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
+                    NameColor nameColor = new NameColor(integer, color, -1L);
+                    minetopiaPlayer.addColor(nameColor);
+                    player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de ").append(Component.text(color).append(ChatUtils.color(" naamkleur <dark_aqua>toegevoegd."))));
+                });
                 break;
+
             case LEVEL:
+                if (minetopiaPlayer.getColors().stream().anyMatch(levelColor -> levelColor.getColor().equalsIgnoreCase(color))) {
+                    player.sendMessage(ChatUtils.color("<red>Deze levelkleur bestaat al."));
+                    return;
+                }
+
+                StormUtils.getNextId(ColorModel.class, ColorModel::getId).whenComplete((integer, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
+                    LevelColor levelColor = new LevelColor(integer, color, -1L);
+                    minetopiaPlayer.addColor(levelColor);
+                    player.sendMessage(ChatUtils.color("<dark_aqua>Je hebt de ").append(Component.text(color).append(ChatUtils.color(" levelkleur <dark_aqua>toegevoegd."))));
+                });
                 break;
         }
     }
+
 
     // Helper method to validate the color
     private boolean isValidColor(String color) {

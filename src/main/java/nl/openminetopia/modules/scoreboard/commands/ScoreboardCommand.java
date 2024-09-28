@@ -6,7 +6,7 @@ import co.aikar.commands.annotation.Default;
 import nl.openminetopia.api.player.ScoreboardManager;
 import org.bukkit.entity.Player;
 
-@CommandAlias("sb")
+@CommandAlias("scoreboard|sb")
 public class ScoreboardCommand extends BaseCommand {
 
     @Default

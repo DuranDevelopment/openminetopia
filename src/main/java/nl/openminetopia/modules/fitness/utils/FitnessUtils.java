@@ -7,7 +7,6 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.entity.Player;
@@ -28,7 +27,7 @@ public class FitnessUtils {
 
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
-        int totalFitness = minetopiaPlayer.getFitness();
+        int totalFitness = minetopiaPlayer.getFitness().getTotalFitness();
         double walkSpeed = 0.2;
 
         List<PotionEffectType> possibleEffects = new ArrayList<>();

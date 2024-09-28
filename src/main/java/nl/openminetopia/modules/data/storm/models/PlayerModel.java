@@ -28,4 +28,15 @@ public class PlayerModel extends StormModel {
     @Column(name = "active_prefixcolor_id")
     private Integer activePrefixColorId;
 
+    @Column(name = "active_namecolor_id")
+    private Integer activeNameColorId;
+
+    @Column(name = "active_chatcolor_id")
+    private Integer activeChatColorId;
+
+    @Column(name = "active_levelcolor_id")
+    private Integer activeLevelColorId;
+
+    @Column(name = "staffchat")
+    private Boolean staffchatEnabled;
 }

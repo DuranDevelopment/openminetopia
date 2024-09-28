@@ -1,20 +1,19 @@
 package nl.openminetopia.modules.data;
 
 import com.craftmend.storm.Storm;
-import com.craftmend.storm.parser.types.TypeRegistry;
+import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
-import nl.openminetopia.modules.banking.enums.AccountPermission;
-import nl.openminetopia.modules.banking.enums.AccountType;
-import nl.openminetopia.modules.data.adapter.DatabaseAdapter;
-import nl.openminetopia.modules.data.adapter.utils.AdapterUtil;
+import nl.openminetopia.modules.data.adapters.DatabaseAdapter;
+import nl.openminetopia.modules.data.adapters.utils.AdapterUtil;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.adapters.AccountPermissionAdapter;
 import nl.openminetopia.modules.data.storm.adapters.AccountTypeAdapter;
 import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.data.type.DatabaseType;
 
+@Getter
 public class DataModule extends Module {
 
     private DatabaseAdapter adapter;
@@ -39,9 +38,9 @@ public class DataModule extends Module {
                 storm.registerModel(new PrefixesModel());
                 storm.registerModel(new ColorsModel());
                 storm.registerModel(new FitnessModel());
-                storm.registerModel(new FitnessBoostersModel());
-                storm.registerModel(new BankAccountModel());
-                storm.registerModel(new BankPermissionModel());
+                storm.registerModel(new FitnessBoosterModel());
+                storm.registerModel(new WorldModel());
+                storm.registerModel(new CityModel());
                 storm.runMigrations();
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());
