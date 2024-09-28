@@ -36,6 +36,9 @@ public class FitnessInfoCommand extends BaseCommand {
         player.sendMessage(ChatUtils.color("<dark_aqua>Fitness info of <aqua>" + offlinePlayer.getName() + "<dark_aqua>:"));
         player.sendMessage("");
 
+        minetopiaPlayer.getFitness().getBoosters().forEach(fitnessBooster -> player.sendMessage(ChatUtils.color("<dark_aqua>Booster: <aqua>" + fitnessBooster.getAmount() + " - " + fitnessBooster.getExpiresAt())));
+        player.sendMessage("");
+
         DrinkingStatistic drinkingStatistic = (DrinkingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.DRINKING);
         player.sendMessage(ChatUtils.color("<dark_aqua>Drinking points: <aqua>" + drinkingStatistic.getPoints()));
         player.sendMessage(ChatUtils.color("<dark_aqua>Fitness gained by drinking: <aqua>" + drinkingStatistic.getFitnessGained() + "<dark_aqua>/<aqua>" + drinkingStatistic.getMaxFitnessGainable()));

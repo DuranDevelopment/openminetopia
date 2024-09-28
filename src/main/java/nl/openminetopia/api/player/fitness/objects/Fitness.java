@@ -8,7 +8,6 @@ import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.modules.data.DataModule;
-import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
 import java.util.List;
@@ -20,6 +19,8 @@ public class Fitness {
 
     private final UUID uuid;
 
+    private @Setter FitnessModel fitnessModel;
+
     private List<FitnessStatistic> statistics;
     private @Setter long lastDrinkingTime;
     private List<FitnessBooster> boosters;
@@ -28,10 +29,19 @@ public class Fitness {
 
     public Fitness(UUID uuid) {
         this.uuid = uuid;
+        this.fitnessModel = new FitnessModel();
     }
 
     public CompletableFuture<Void> load() {
         CompletableFuture<Void> future = new CompletableFuture<>();
+
+        dataModule.getAdapter().getFitness(this).whenComplete((fitnessModel, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            this.fitnessModel = fitnessModel;
+        });
 
         dataModule.getAdapter().getStatistics(this).whenComplete((statistics, throwable) -> {
             if (throwable != null) {
@@ -40,33 +50,6 @@ public class Fitness {
             }
             this.statistics = statistics;
         });
-
-        if (this.statistics == null) {
-            this.statistics = List.of(
-                    new WalkingStatistic(0),
-                    new ClimbingStatistic(0),
-                    new DrinkingStatistic(0, 0),
-                    new EatingStatistic(0, 0, 0),
-                    new FlyingStatistic(0),
-                    new WalkingStatistic(0),
-                    new SprintingStatistic(0),
-                    new SwimmingStatistic(0),
-                    new HealthStatistic(0, 0),
-                    new TotalStatistic(0)
-            );
-
-            StormDatabase.getExecutorService().execute(() -> {
-                FitnessModel model = new FitnessModel();
-                model.setUniqueId(uuid);
-                StormDatabase.getInstance().saveStormModel(model).whenComplete((unused, throwable) -> {
-                    if (throwable != null) {
-                        throwable.printStackTrace();
-                        return;
-                    }
-                    dataModule.getAdapter().saveStatistics(this);
-                });
-            });
-        }
 
         dataModule.getAdapter().getFitnessBoosters(this).whenComplete((boosters, throwable) -> {
             if (throwable != null) {
@@ -80,8 +63,24 @@ public class Fitness {
         return future;
     }
 
-    public void save() {
-        dataModule.getAdapter().saveStatistics(this);
+    public CompletableFuture<Void> save() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        dataModule.getAdapter().saveFitnessBoosters(this).whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+        });
+        dataModule.getAdapter().saveStatistics(this).whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+        });
+
+        future.complete(null);
+        return future;
     }
 
     public FitnessStatistic getStatistic(FitnessStatisticType type) {
@@ -95,6 +94,7 @@ public class Fitness {
     }
 
     public void removeBooster(FitnessBooster booster) {
+        System.out.println("removing booster " + booster.getAmount() + " - " + booster.getId());
         boosters.remove(booster);
         dataModule.getAdapter().removeFitnessBooster(this, booster);
     }

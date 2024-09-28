@@ -1,6 +1,7 @@
 package nl.openminetopia.modules.data.adapters;
 
 import com.craftmend.storm.Storm;
+import com.craftmend.storm.api.builders.QueryBuilder;
 import com.craftmend.storm.api.enums.Where;
 import com.craftmend.storm.connection.hikaricp.HikariDriver;
 import com.zaxxer.hikari.HikariConfig;
@@ -136,6 +137,26 @@ public class MySQLAdapter implements DatabaseAdapter {
                 playerModel -> playerModel.setPlaytime(playtime)
         );
         completableFuture.complete(null);
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> getStaffchatEnabled(MinetopiaPlayer player) {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+        StormUtils.getModelData(PlayerModel.class,
+                query -> query.where("uuid", Where.EQUAL, player.getUuid().toString()),
+                null,
+                PlayerModel::getStaffchatEnabled,
+                false
+        ).whenComplete((staffchatEnabled, ex) -> {
+            if (ex != null) {
+                ex.printStackTrace();
+                completableFuture.completeExceptionally(ex);
+                return;
+            }
+            completableFuture.complete(staffchatEnabled);
+        });
         return completableFuture;
     }
 
@@ -548,34 +569,75 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     /* Fitness related database queries */
 
+    public CompletableFuture<FitnessModel> getFitness(Fitness fitness) {
+        CompletableFuture<FitnessModel> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            QueryBuilder<FitnessModel> query = StormDatabase.getInstance().getStorm().buildQuery(FitnessModel.class);
+
+            try {
+                CompletableFuture<Collection<FitnessModel>> models = query.where("uuid", Where.EQUAL, fitness.getUuid().toString()).execute();
+
+                models.whenComplete((fitnessModels, throwable) -> {
+                    FitnessModel model = fitnessModels.stream().findFirst().orElse(null);
+                    if (model == null) {
+                        model = new FitnessModel();
+                        model.setUniqueId(fitness.getUuid());
+                        model.setTotal(0);
+                        model.setFitnessGainedByWalking(0);
+                        model.setFitnessGainedByDrinking(0);
+                        model.setDrinkingPoints(0.0);
+                        model.setFitnessGainedBySprinting(0);
+                        model.setFitnessGainedByClimbing(0);
+                        model.setFitnessGainedBySwimming(0);
+                        model.setFitnessGainedByFlying(0);
+                        model.setFitnessGainedByHealth(0);
+                        model.setHealthPoints(0);
+                        model.setFitnessGainedByEating(0);
+                        model.setLuxuryFood(0);
+                        model.setCheapFood(0);
+                        StormDatabase.getInstance().saveStormModel(model);
+                    }
+                    completableFuture.complete(model);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                completableFuture.completeExceptionally(e);
+            }
+        });
+        return completableFuture;
+    }
+
     @Override
     public CompletableFuture<Void> saveStatistics(Fitness fitness) {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
 
-        StormUtils.updateModelData(FitnessModel.class,
-                query -> query.where("uuid", Where.EQUAL, fitness.getUuid().toString()),
-                model -> {
-                    model.setTotal((fitness.getStatistic(FitnessStatisticType.TOTAL).getFitnessGained()));
-                    model.setFitnessGainedByWalking(fitness.getStatistic(FitnessStatisticType.WALKING).getFitnessGained());
-                    model.setFitnessGainedBySprinting(fitness.getStatistic(FitnessStatisticType.SPRINTING).getFitnessGained());
-                    model.setFitnessGainedByClimbing(fitness.getStatistic(FitnessStatisticType.CLIMBING).getFitnessGained());
-                    model.setFitnessGainedBySwimming(fitness.getStatistic(FitnessStatisticType.SWIMMING).getFitnessGained());
-                    model.setFitnessGainedByFlying(fitness.getStatistic(FitnessStatisticType.FLYING).getFitnessGained());
+        StormDatabase.getExecutorService().submit(() -> {
+            getFitness(fitness).thenAccept(model -> {
+                        model.setTotal((fitness.getStatistic(FitnessStatisticType.TOTAL).getFitnessGained()));
+                        model.setFitnessGainedByWalking(fitness.getStatistic(FitnessStatisticType.WALKING).getFitnessGained());
+                        model.setFitnessGainedBySprinting(fitness.getStatistic(FitnessStatisticType.SPRINTING).getFitnessGained());
+                        model.setFitnessGainedByClimbing(fitness.getStatistic(FitnessStatisticType.CLIMBING).getFitnessGained());
+                        model.setFitnessGainedBySwimming(fitness.getStatistic(FitnessStatisticType.SWIMMING).getFitnessGained());
+                        model.setFitnessGainedByFlying(fitness.getStatistic(FitnessStatisticType.FLYING).getFitnessGained());
 
-                    DrinkingStatistic drinkingStatistic = (DrinkingStatistic) fitness.getStatistic(FitnessStatisticType.DRINKING);
-                    model.setFitnessGainedByDrinking(drinkingStatistic.getFitnessGained());
-                    model.setDrinkingPoints(drinkingStatistic.getPoints());
+                        DrinkingStatistic drinkingStatistic = (DrinkingStatistic) fitness.getStatistic(FitnessStatisticType.DRINKING);
+                        model.setFitnessGainedByDrinking(drinkingStatistic.getFitnessGained());
+                        model.setDrinkingPoints(drinkingStatistic.getPoints());
 
-                    HealthStatistic healthStatistic = (HealthStatistic) fitness.getStatistic(FitnessStatisticType.HEALTH);
-                    model.setFitnessGainedByHealth(healthStatistic.getFitnessGained());
-                    model.setHealthPoints(healthStatistic.getPoints());
+                        HealthStatistic healthStatistic = (HealthStatistic) fitness.getStatistic(FitnessStatisticType.HEALTH);
+                        model.setFitnessGainedByHealth(healthStatistic.getFitnessGained());
+                        model.setHealthPoints(healthStatistic.getPoints());
 
-                    EatingStatistic eatingStatistic = (EatingStatistic) fitness.getStatistic(FitnessStatisticType.EATING);
-                    model.setFitnessGainedByEating(eatingStatistic.getFitnessGained());
-                    model.setLuxuryFood(eatingStatistic.getLuxuryFood());
-                    model.setCheapFood(eatingStatistic.getCheapFood());
-                }
-        );
+                        EatingStatistic eatingStatistic = (EatingStatistic) fitness.getStatistic(FitnessStatisticType.EATING);
+                        model.setFitnessGainedByEating(eatingStatistic.getFitnessGained());
+                        model.setLuxuryFood(eatingStatistic.getLuxuryFood());
+                        model.setCheapFood(eatingStatistic.getCheapFood());
+                        StormDatabase.getInstance().saveStormModel(model);
+                    }
+            );
+        });
+
         completableFuture.complete(null);
         return completableFuture;
     }
@@ -601,7 +663,7 @@ public class MySQLAdapter implements DatabaseAdapter {
                     completableFuture.complete(stats);
                     return completableFuture;
                 },
-                null
+                List.of()
         );
 
         return completableFuture;
@@ -623,17 +685,50 @@ public class MySQLAdapter implements DatabaseAdapter {
                     case SWIMMING -> new SwimmingStatistic(model.getFitnessGainedBySwimming());
                     case FLYING -> new FlyingStatistic(model.getFitnessGainedByFlying());
                     case HEALTH -> new HealthStatistic(model.getFitnessGainedByHealth(), model.getHealthPoints());
-                    case EATING -> new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
+                    case EATING ->
+                            new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
                 },
                 null
         ).whenComplete((statistic, ex) -> {
             if (ex != null) {
                 ex.printStackTrace();
                 completableFuture.completeExceptionally(ex);
-            } else {
-                completableFuture.complete(statistic);
+                return;
             }
+            completableFuture.complete(statistic);
         });
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Void> saveFitnessBoosters(Fitness fitness) {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            fitness.getBoosters().forEach(booster -> {
+                FitnessBoosterModel model = new FitnessBoosterModel();
+                model.setFitnessId(fitness.getFitnessModel().getId());
+                model.setFitness(booster.getAmount());
+                model.setExpiresAt(booster.getExpiresAt());
+
+                StormDatabase.getInstance().saveStormModel(model);
+            });
+            completableFuture.complete(null);
+        });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness) {
+        CompletableFuture<List<FitnessBooster>> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            List<FitnessBooster> fitnessBoosters = fitness.getFitnessModel().getBoosters().stream().map(model -> new FitnessBooster(model.getId(), model.getFitness(), model.getExpiresAt())).collect(Collectors.toList());
+
+            completableFuture.complete(fitnessBoosters);
+        });
+
         return completableFuture;
     }
 
@@ -643,12 +738,12 @@ public class MySQLAdapter implements DatabaseAdapter {
 
         StormDatabase.getExecutorService().submit(() -> {
             FitnessBoosterModel fitnessBoosterModel = new FitnessBoosterModel();
-            fitnessBoosterModel.setUniqueId(fitness.getUuid());
+            fitnessBoosterModel.setFitnessId(fitness.getFitnessModel().getId());
             fitnessBoosterModel.setFitness(booster.getAmount());
             fitnessBoosterModel.setExpiresAt(booster.getExpiresAt());
 
             StormDatabase.getInstance().saveStormModel(fitnessBoosterModel);
-            completableFuture.complete(null);
+            completableFuture.complete(fitnessBoosterModel);
         });
 
         return completableFuture;
@@ -662,42 +757,6 @@ public class MySQLAdapter implements DatabaseAdapter {
                 query -> query.where("id", Where.EQUAL, booster.getId())
         );
         completableFuture.complete(null);
-        return completableFuture;
-    }
-
-    @Override
-    public CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness) {
-        CompletableFuture<List<FitnessBooster>> completableFuture = new CompletableFuture<>();
-
-        findFitnessBoosts(fitness).thenAccept(fitnessBoosters -> {
-            List<FitnessBooster> boosters = new ArrayList<>();
-            for (FitnessBoosterModel fitnessBoosterModel : fitnessBoosters) {
-                boosters.add(new FitnessBooster(fitnessBoosterModel.getId(), fitnessBoosterModel.getFitness(), fitnessBoosterModel.getExpiresAt()));
-            }
-            completableFuture.complete(boosters);
-        }).exceptionally(ex -> {
-            completableFuture.completeExceptionally(ex);
-            return null;
-        });
-
-        return completableFuture;
-    }
-
-    private CompletableFuture<List<FitnessBoosterModel>> findFitnessBoosts(Fitness fitness) {
-        CompletableFuture<List<FitnessBoosterModel>> completableFuture = new CompletableFuture<>();
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<FitnessBoosterModel> fitnessBoosterModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessBoosterModel.class)
-                        .where("uuid", Where.EQUAL, fitness.getUuid().toString())
-                        .execute()
-                        .join();
-
-                completableFuture.complete(new ArrayList<>(fitnessBoosterModel));
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
         return completableFuture;
     }
 }

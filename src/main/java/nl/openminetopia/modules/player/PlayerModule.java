@@ -25,7 +25,9 @@ public class PlayerModule extends Module {
         Bukkit.getScheduler().runTaskTimerAsynchronously(OpenMinetopia.getInstance(), () -> {
             for (MinetopiaPlayer minetopiaPlayer : PlayerManager.getInstance().getMinetopiaPlayers().values()) {
                 if (!(minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer)) continue;
-                onlineMinetopiaPlayer.save();
+                onlineMinetopiaPlayer.save().whenComplete((unused, throwable) -> {
+                    if (throwable != null) throwable.printStackTrace();
+                });
             }
         }, 0, 20 * 60 * 5); // Save every 5 minutes
     }
@@ -35,7 +37,9 @@ public class PlayerModule extends Module {
         for (Player player : Bukkit.getOnlinePlayers()) {
             OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(player);
             if (minetopiaPlayer == null) continue;
-            minetopiaPlayer.save();
+            minetopiaPlayer.save().whenComplete((unused, throwable) -> {
+                if (throwable != null) throwable.printStackTrace();
+            });
         }
     }
 }

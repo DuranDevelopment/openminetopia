@@ -9,10 +9,7 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
-import nl.openminetopia.modules.data.storm.models.CityModel;
-import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
-import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.storm.models.WorldModel;
+import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
 import java.util.List;
@@ -35,6 +32,7 @@ public interface DatabaseAdapter {
 
     CompletableFuture<Integer> getPlaytime(MinetopiaPlayer player);
 
+    CompletableFuture<Boolean> getStaffchatEnabled(MinetopiaPlayer player);
     CompletableFuture<Boolean> setStaffchatEnabled(MinetopiaPlayer player, boolean enabled);
 
     /* Prefix related database queries */
@@ -89,10 +87,14 @@ public interface DatabaseAdapter {
 
     /* Fitness related database queries */
 
+    CompletableFuture<FitnessModel> getFitness(Fitness fitness);
+
     CompletableFuture<Void> saveStatistics(Fitness fitness);
 
     CompletableFuture<List<FitnessStatistic>> getStatistics(Fitness fitness);
     CompletableFuture<FitnessStatistic> getStatistic(Fitness fitness, FitnessStatisticType type);
+
+    CompletableFuture<Void> saveFitnessBoosters(Fitness fitness);
 
     CompletableFuture<FitnessBoosterModel> addFitnessBooster(Fitness fitness, FitnessBooster booster);
     CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster);

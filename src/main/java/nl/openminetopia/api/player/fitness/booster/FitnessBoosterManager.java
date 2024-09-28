@@ -29,11 +29,11 @@ public class FitnessBoosterManager {
 
     private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
-    public void addFitnessBooster(MinetopiaPlayer player, FitnessBooster booster) {
+    public void addFitnessBooster(Fitness fitness, FitnessBooster booster) {
         StormDatabase.getExecutorService().submit(() -> {
             try {
                 FitnessBoosterModel fitnessBoosterModel = new FitnessBoosterModel();
-                fitnessBoosterModel.setUniqueId(player.getUuid());
+                fitnessBoosterModel.setFitnessId(fitness.getFitnessModel().getId());
                 fitnessBoosterModel.setFitness(booster.getAmount());
                 fitnessBoosterModel.setExpiresAt(booster.getExpiresAt());
 

@@ -21,6 +21,11 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
-        minetopiaPlayer.load();
+        minetopiaPlayer.load().whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                player.kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
+            }
+        });
     }
 }

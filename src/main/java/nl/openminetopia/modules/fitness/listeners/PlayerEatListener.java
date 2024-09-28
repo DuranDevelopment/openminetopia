@@ -23,12 +23,19 @@ public class PlayerEatListener implements Listener {
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(event.getPlayer());
         if (minetopiaPlayer == null) return;
 
+
+
         EatingStatistic eatingStatistic = (EatingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.EATING);
 
+        if (configuration.getCheapFood().contains(event.getItem().getType().name())) {
+            eatingStatistic.setPoints(eatingStatistic.getPoints() + configuration.getPointsForCheapFood());
+            eatingStatistic.setCheapFood(eatingStatistic.getCheapFood() + 1);
+        } else {
+            eatingStatistic.setPoints(eatingStatistic.getPoints() + configuration.getPointsForLuxuryFood());
+            eatingStatistic.setLuxuryFood(eatingStatistic.getLuxuryFood() + 1);
+        }
+
         double currentEatingPoints = eatingStatistic.getPoints();
-
-
-
 
         if (eatingStatistic.getPoints() >= 1 && eatingStatistic.getFitnessGained() <= configuration.getMaxFitnessByDrinking()) {
             if (currentEatingPoints % (eatingStatistic.getCheapFood() + eatingStatistic.getLuxuryFood()) == 0) return;

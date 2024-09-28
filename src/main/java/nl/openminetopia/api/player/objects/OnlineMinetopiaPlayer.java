@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
@@ -62,7 +63,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         this.playerModel = playerModel;
     }
 
-    public void load() {
+    public CompletableFuture<Void> load() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
         try {
             this.fitness = FitnessManager.getInstance().getFitness(uuid);
             fitness.load().whenComplete((unused, throwable) -> {
@@ -72,7 +75,14 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                 this.fitnessRunnable = new FitnessRunnable(getBukkit());
                 fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
                 FitnessUtils.applyFitness(getBukkit());
+            });
 
+            dataModule.getAdapter().getStaffchatEnabled(this).whenComplete((staffchatEnabled, throwable) -> {
+                if (staffchatEnabled == null) {
+                    this.staffchatEnabled = false;
+                    return;
+                }
+                this.staffchatEnabled = staffchatEnabled;
             });
 
             dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
@@ -142,19 +152,35 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                     return;
                 }
                 this.playtime = playtime;
-                this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
-                playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
             });
         } catch (Exception exception) {
             getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();
         }
 
+        this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
+        playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+
+        future.complete(null);
+        return future;
     }
 
-    public void save() {
-        dataModule.getAdapter().savePlayer(this);
-        fitness.save();
+    public CompletableFuture<Void> save() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        dataModule.getAdapter().savePlayer(this).whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
+        });
+        fitness.save().whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
+        });
+
+        future.complete(null);
+        return future;
     }
 
     @Override

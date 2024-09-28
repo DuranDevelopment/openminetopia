@@ -22,8 +22,8 @@ public class ChatUtils {
     public static Component format(MinetopiaPlayer minetopiaPlayer, String message) {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
-        message = PlaceholderAPI.setPlaceholders(minetopiaPlayer.getBukkit(), message
-                .replace("<fitness>", minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained() + "")
+
+        message = message.replace("<fitness>", minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained() + "")
                 .replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
                 .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor())
@@ -31,17 +31,18 @@ public class ChatUtils {
                 .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColor())
                 .replace("<name>", player.getName())
                 .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).getColor())
+                .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + "")
                 .replace("<world_title>", minetopiaPlayer.getWorld().getTitle())
                 .replace("<world_loadingname>", minetopiaPlayer.getWorld().getLoadingName())
                 .replace("<world_name>", minetopiaPlayer.getWorld().getName())
-                .replace("<world_color>", minetopiaPlayer.getWorld().getColor()))
+                .replace("<world_color>", minetopiaPlayer.getWorld().getColor())
                 .replace("<city_title>", minetopiaPlayer.getPlace().getTitle()) // Defaults to the world name if the player is not in a city
                 .replace("<city_loadingname>", minetopiaPlayer.getPlace().getLoadingName()) // Defaults to the world loading name if the player is not in a city
                 .replace("<city_name>", minetopiaPlayer.getPlace().getName()) // Defaults to the world name if the player is not in a city
-                .replace("<city_color>", minetopiaPlayer.getPlace().getColor()) // Defaults to the world color if the player is not in a city
                 .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "")
-                .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + "");
-        return MiniMessage.miniMessage().deserialize(message);
+                .replace("<city_color>", minetopiaPlayer.getPlace().getColor()); // Defaults to the world color if the player is not in a city
+
+        return MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(minetopiaPlayer.getBukkit(), message));
     }
 
     public static String stripMiniMessage(Component component) {

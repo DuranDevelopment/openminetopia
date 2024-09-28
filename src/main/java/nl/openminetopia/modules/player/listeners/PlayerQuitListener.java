@@ -17,7 +17,9 @@ public class PlayerQuitListener implements Listener {
         OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
 
-        minetopiaPlayer.save();
+        minetopiaPlayer.save().whenComplete((unused, throwable) -> {
+            if (throwable != null) throwable.printStackTrace();
+        });
 //        PlayerModel playerModel = minetopiaPlayer.getPlayerModel();
 //        StormDatabase.getInstance().saveStormModel(playerModel);
 
