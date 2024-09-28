@@ -34,7 +34,7 @@ public class FitnessBoosterCommand extends BaseCommand {
             minetopiaPlayer.getFitness().addBooster(fitnessBooster);
         });
 
-        if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitnessRunnable().run();
+        if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitness().getRunnable().run();
 
         player.sendMessage("Added fitness booster to " + offlinePlayer.getName());
     }

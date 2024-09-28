@@ -29,7 +29,7 @@ public class PlayerDeathListener implements Listener {
             }
             var fitnessBooster = new FitnessBooster(nextId, configuration.getFitnessDeathPunishmentAmount(), System.currentTimeMillis() + punishmentInMillis);
             minetopiaPlayer.getFitness().addBooster(fitnessBooster);
-            minetopiaPlayer.getFitnessRunnable().run();
+            minetopiaPlayer.getFitness().getRunnable().run();
         });
     }
 }

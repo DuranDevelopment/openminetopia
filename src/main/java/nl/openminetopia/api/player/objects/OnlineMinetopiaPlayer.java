@@ -14,8 +14,6 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
-import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
@@ -53,8 +51,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     private @Setter Fitness fitness;
 
-    private FitnessRunnable fitnessRunnable;
-
     private final DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
     private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
@@ -63,106 +59,103 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         this.playerModel = playerModel;
     }
 
+
     public CompletableFuture<Void> load() {
-        CompletableFuture<Void> future = new CompletableFuture<>();
+        CompletableFuture<Void> loadFuture = new CompletableFuture<>();
 
-        try {
-            this.fitness = FitnessManager.getInstance().getFitness(uuid);
-            fitness.load().whenComplete((unused, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                }
-                this.fitnessRunnable = new FitnessRunnable(getBukkit());
-                fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
-                FitnessUtils.applyFitness(getBukkit());
-            });
+        this.fitness = FitnessManager.getInstance().getFitness(uuid);
+        fitness.load().whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            fitness.getRunnable().runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
+            fitness.apply();
+        });
 
-            dataModule.getAdapter().getStaffchatEnabled(this).whenComplete((staffchatEnabled, throwable) -> {
-                if (staffchatEnabled == null) {
-                    this.staffchatEnabled = false;
-                    return;
-                }
-                this.staffchatEnabled = staffchatEnabled;
-            });
+        dataModule.getAdapter().getStaffchatEnabled(this).whenComplete((staffchatEnabled, throwable) -> {
+            if (staffchatEnabled == null) {
+                this.staffchatEnabled = false;
+                return;
+            }
+            this.staffchatEnabled = staffchatEnabled;
+        });
 
-            dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
-                if (prefixes == null) {
-                    this.prefixes = new ArrayList<>();
-                    return;
-                }
-                this.prefixes = prefixes;
-            });
+        dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
+            if (prefixes == null) {
+                this.prefixes = new ArrayList<>();
+                return;
+            }
+            this.prefixes = prefixes;
+        });
 
-            dataModule.getAdapter().getColors(this).whenComplete((colors, throwable) -> {
-                if (colors == null) {
-                    this.colors = new ArrayList<>();
-                    return;
-                }
-                this.colors = colors;
-            });
+        dataModule.getAdapter().getColors(this).whenComplete((colors, throwable) -> {
+            if (colors == null) {
+                this.colors = new ArrayList<>();
+                return;
+            }
+            this.colors = colors;
+        });
 
-            dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
-                if (level == null) {
-                    this.level = 0;
-                    return;
-                }
-                this.level = level;
-            });
+        dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
+            if (level == null) {
+                this.level = 0;
+                return;
+            }
+            this.level = level;
+        });
 
-            dataModule.getAdapter().getActivePrefix(this).whenComplete((prefix, throwable) -> {
-                if (prefix == null) {
-                    this.activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
-                    return;
-                }
-                this.activePrefix = prefix;
-            });
+        dataModule.getAdapter().getActivePrefix(this).whenComplete((prefix, throwable) -> {
+            if (prefix == null) {
+                this.activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
+                return;
+            }
+            this.activePrefix = prefix;
+        });
 
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activeNameColor = (NameColor) getDefaultColor(OwnableColorType.NAME);
-                    return;
-                }
-                this.activeNameColor = (NameColor) color;
-            });
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activeChatColor = (ChatColor) getDefaultColor(OwnableColorType.CHAT);
-                    return;
-                }
-                this.activeChatColor = (ChatColor) color;
-            });
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.PREFIX).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activePrefixColor = (PrefixColor) getDefaultColor(OwnableColorType.PREFIX);
-                    return;
-                }
-                this.activePrefixColor = (PrefixColor) color;
-            });
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.LEVEL).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activeLevelColor = (LevelColor) getDefaultColor(OwnableColorType.LEVEL);
-                    return;
-                }
-                this.activeLevelColor = (LevelColor) color;
-            });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activeNameColor = (NameColor) getDefaultColor(OwnableColorType.NAME);
+                return;
+            }
+            this.activeNameColor = (NameColor) color;
+        });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activeChatColor = (ChatColor) getDefaultColor(OwnableColorType.CHAT);
+                return;
+            }
+            this.activeChatColor = (ChatColor) color;
+        });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.PREFIX).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activePrefixColor = (PrefixColor) getDefaultColor(OwnableColorType.PREFIX);
+                return;
+            }
+            this.activePrefixColor = (PrefixColor) color;
+        });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.LEVEL).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activeLevelColor = (LevelColor) getDefaultColor(OwnableColorType.LEVEL);
+                return;
+            }
+            this.activeLevelColor = (LevelColor) color;
+        });
 
-            dataModule.getAdapter().getPlaytime(this).whenComplete((playtime, throwable) -> {
-                if (playtime == null) {
-                    this.playtime = 0;
-                    return;
-                }
-                this.playtime = playtime;
-            });
-        } catch (Exception exception) {
-            getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
-            exception.printStackTrace();
-        }
+        dataModule.getAdapter().getPlaytime(this).whenComplete((playtime, throwable) -> {
+            if (playtime == null) {
+                this.playtime = 0;
+                return;
+            }
+            this.playtime = playtime;
+        });
+
 
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
 
-        future.complete(null);
-        return future;
+        loadFuture.complete(null);
+        return loadFuture;
     }
 
     public CompletableFuture<Void> save() {

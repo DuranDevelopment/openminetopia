@@ -1,5 +1,6 @@
 package nl.openminetopia.modules.player.listeners;
 
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import org.bukkit.entity.Player;
@@ -18,12 +19,16 @@ public class PlayerQuitListener implements Listener {
         if (minetopiaPlayer == null) return;
 
         minetopiaPlayer.save().whenComplete((unused, throwable) -> {
-            if (throwable != null) throwable.printStackTrace();
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            OpenMinetopia.getInstance().getLogger().info("Saved player data for " + player.getName());
         });
 //        PlayerModel playerModel = minetopiaPlayer.getPlayerModel();
 //        StormDatabase.getInstance().saveStormModel(playerModel);
 
-        minetopiaPlayer.getFitnessRunnable().cancel();
+        minetopiaPlayer.getFitness().getRunnable().cancel();
         minetopiaPlayer.getPlaytimeRunnable().cancel();
 
         PlayerManager.getInstance().getMinetopiaPlayers().remove(player.getUniqueId());

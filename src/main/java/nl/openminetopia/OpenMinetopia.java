@@ -50,13 +50,6 @@ public final class OpenMinetopia extends JavaPlugin {
 
         CustomBlockData.registerListener(this);
 
-        try {
-            defaultConfiguration = new DefaultConfiguration(getDataFolder());
-            defaultConfiguration.saveConfiguration();
-        } catch (Exception e) {
-            this.getLogger().severe("An error occurred while loading the configuration file.");
-            e.printStackTrace();
-        }
         defaultConfiguration = new DefaultConfiguration(getDataFolder());
         defaultConfiguration.saveConfiguration();
 

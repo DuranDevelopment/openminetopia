@@ -48,6 +48,7 @@ public class MySQLAdapter implements DatabaseAdapter {
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + name);
             config.setUsername(username);
             config.setPassword(password);
+            config.setMaximumPoolSize(16);
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -248,18 +249,6 @@ public class MySQLAdapter implements DatabaseAdapter {
 
             completableFuture.complete(prefixes);
         });
-
-//        findPrefixes(player).thenAccept(prefixesModels -> {
-//            // Create a list to store the prefixes
-//            List<Prefix> prefixes = new ArrayList<>();
-//            for (PrefixModel prefixModel : prefixesModels) {
-//                prefixes.add(new Prefix(prefixModel.getId(), prefixModel.getPrefix(), prefixModel.getExpiresAt()));
-//            }
-//            completableFuture.complete(prefixes);
-//        }).exceptionally(ex -> {
-//            completableFuture.completeExceptionally(ex);
-//            return null;
-//        });
 
         return completableFuture;
     }
@@ -598,6 +587,7 @@ public class MySQLAdapter implements DatabaseAdapter {
                         model.setCheapFood(0);
                         StormDatabase.getInstance().saveStormModel(model);
                     }
+                    saveStatistics(fitness);
                     completableFuture.complete(model);
                 });
             } catch (Exception e) {
