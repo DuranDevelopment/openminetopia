@@ -3,7 +3,6 @@ package nl.openminetopia.api.player.objects;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.OwnableColor;
-import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;

@@ -42,7 +42,7 @@ public class ColorAddCommand extends BaseCommand {
 
         switch (type) {
             case PREFIX:
-                if (minetopiaPlayer.getColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color) && prefixColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
@@ -59,7 +59,7 @@ public class ColorAddCommand extends BaseCommand {
                 break;
 
             case CHAT:
-                if (minetopiaPlayer.getColors().stream().anyMatch(chatColor -> chatColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(chatColor -> chatColor.getColor().equalsIgnoreCase(color) && chatColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze chatkleur bestaat al."));
                     return;
                 }
@@ -76,7 +76,7 @@ public class ColorAddCommand extends BaseCommand {
                 break;
 
             case NAME:
-                if (minetopiaPlayer.getColors().stream().anyMatch(nameColor -> nameColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(nameColor -> nameColor.getColor().equalsIgnoreCase(color) && nameColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze naamkleur bestaat al."));
                     return;
                 }
@@ -93,7 +93,7 @@ public class ColorAddCommand extends BaseCommand {
                 break;
 
             case LEVEL:
-                if (minetopiaPlayer.getColors().stream().anyMatch(levelColor -> levelColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(levelColor -> levelColor.getColor().equalsIgnoreCase(color) && levelColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze levelkleur bestaat al."));
                     return;
                 }

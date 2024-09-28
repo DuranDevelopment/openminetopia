@@ -5,7 +5,6 @@ import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.modules.data.utils.StormUtils;
@@ -33,12 +32,12 @@ public class FitnessBoosterCommand extends BaseCommand {
                 return;
             }
             FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, expiresAtMillis);
-            minetopiaPlayer.getFitness().addFitnessBooster(fitnessBooster);
+            minetopiaPlayer.getFitness().addBooster(fitnessBooster);
         });
 
         if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitnessRunnable().run();
 
         player.sendMessage("Added fitness booster to " + offlinePlayer.getName());
-        minetopiaPlayer.getFitness().getFitnessBoosters().forEach(fitnessBooster1 -> player.sendMessage("Booster: " + fitnessBooster1.getAmount() + " - " + fitnessBooster1.getExpiresAt()));
+        minetopiaPlayer.getFitness().getBoosters().forEach(fitnessBooster1 -> player.sendMessage("Booster: " + fitnessBooster1.getAmount() + " - " + fitnessBooster1.getExpiresAt()));
     }
 }

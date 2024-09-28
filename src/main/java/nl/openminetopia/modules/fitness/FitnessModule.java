@@ -2,6 +2,8 @@ package nl.openminetopia.modules.fitness;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
+import nl.openminetopia.api.player.fitness.statistics.types.HealthStatistic;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.fitness.commands.FitnessCommand;
@@ -26,23 +28,24 @@ public class FitnessModule extends Module {
             var minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
             if (minetopiaPlayer == null) return;
 
+            HealthStatistic healthStatistic = (HealthStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.HEALTH);
+
             int newHealthPoints;
+
             if (player.getFoodLevel() >= 18) {
-                newHealthPoints = minetopiaPlayer.getFitness().getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
-                minetopiaPlayer.getFitness().setHealthPoints(newHealthPoints);
+                newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
+                healthStatistic.setPoints(newHealthPoints);
             } else if (player.getFoodLevel() <= 4) {
-                newHealthPoints = minetopiaPlayer.getFitness().getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow2Hearts();
-                minetopiaPlayer.getFitness().setHealthPoints(newHealthPoints);
+                newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow2Hearts();
+                healthStatistic.setPoints(newHealthPoints);
             } else if (player.getFoodLevel() <= 10) {
-                newHealthPoints = minetopiaPlayer.getFitness().getHealthPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow5Hearts();
-                minetopiaPlayer.getFitness().setHealthPoints(newHealthPoints);
+                newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow5Hearts();
+                healthStatistic.setPoints(newHealthPoints);
             }
 
-            DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
-
-            if (minetopiaPlayer.getFitness().getHealthPoints() >= 1 && minetopiaPlayer.getFitness().getHealthPoints() <= configuration.getMaxFitnessByHealth()) {
-                minetopiaPlayer.getFitness().setFitnessGainedByHealth(minetopiaPlayer.getFitness().getFitnessGainedByHealth() + 1);
-                minetopiaPlayer.getFitness().setHealthPoints(0);
+            if (healthStatistic.getPoints() >= 1 && healthStatistic.getPoints() <= healthStatistic.getMaxFitnessGainable()) {
+                healthStatistic.setFitnessGained(healthStatistic.getFitnessGained() + 1);
+                healthStatistic.setPoints(0);
             }
         }), 0, 4 * 60 * 20); // Run timer every 4 minutes
     }

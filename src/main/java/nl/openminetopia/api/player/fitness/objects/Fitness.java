@@ -2,138 +2,100 @@ package nl.openminetopia.api.player.fitness.objects;
 
 import lombok.Getter;
 import lombok.Setter;
-import nl.openminetopia.api.player.fitness.FitnessManager;
-import nl.openminetopia.api.player.fitness.booster.FitnessBoosterManager;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
-import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
+import nl.openminetopia.api.player.fitness.statistics.types.*;
+import nl.openminetopia.modules.data.DataModule;
+import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class Fitness {
 
-    private final MinetopiaPlayer minetopiaPlayer;
+    private final UUID uuid;
 
-    private int totalFitness;
-    private double drinkingPoints;
-    private int healthPoints;
+    private List<FitnessStatistic> statistics;
     private @Setter long lastDrinkingTime;
+    private List<FitnessBooster> boosters;
 
-    private int fitnessGainedByHealth;
-    private int fitnessGainedByDrinking;
-    private int fitnessGainedByClimbing;
-    private int fitnessGainedByWalking;
-    private int fitnessGainedBySprinting;
-    private int fitnessGainedBySwimming;
-    private int fitnessGainedByFlying;
+    private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
-    private List<FitnessBooster> fitnessBoosters;
-
-    public Fitness(MinetopiaPlayer minetopiaPlayer) {
-        this.minetopiaPlayer = minetopiaPlayer;
+    public Fitness(UUID uuid) {
+        this.uuid = uuid;
     }
 
-    public void load() {
-        FitnessManager.getInstance().getTotalFitness(minetopiaPlayer).whenComplete((totalFitness, throwable) -> {
-            if (totalFitness == null) {
-                this.totalFitness = 0;
+    public CompletableFuture<Void> load() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        dataModule.getAdapter().getStatistics(this).whenComplete((statistics, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
                 return;
             }
-            this.totalFitness = totalFitness;
+            this.statistics = statistics;
         });
-        FitnessManager.getInstance().getDrinkingPoints(minetopiaPlayer).whenComplete((drinkingPoints, throwable) -> {
-            if (drinkingPoints == null) {
-                this.drinkingPoints = 0;
+
+        if (this.statistics == null) {
+            this.statistics = List.of(
+                    new WalkingStatistic(0),
+                    new ClimbingStatistic(0),
+                    new DrinkingStatistic(0, 0),
+                    new EatingStatistic(0, 0, 0),
+                    new FlyingStatistic(0),
+                    new WalkingStatistic(0),
+                    new SprintingStatistic(0),
+                    new SwimmingStatistic(0),
+                    new HealthStatistic(0, 0),
+                    new TotalStatistic(0)
+            );
+
+            StormDatabase.getExecutorService().execute(() -> {
+                FitnessModel model = new FitnessModel();
+                model.setUniqueId(uuid);
+                StormDatabase.getInstance().saveStormModel(model).whenComplete((unused, throwable) -> {
+                    if (throwable != null) {
+                        throwable.printStackTrace();
+                        return;
+                    }
+                    dataModule.getAdapter().saveStatistics(this);
+                });
+            });
+        }
+
+        dataModule.getAdapter().getFitnessBoosters(this).whenComplete((boosters, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
                 return;
             }
-            this.drinkingPoints = drinkingPoints;
-        });
-        FitnessManager.getInstance().getFitnessGainedByDrinking(minetopiaPlayer).whenComplete((fitnessGainedByDrinking, throwable) -> {
-            if (fitnessGainedByDrinking == null) {
-                this.fitnessGainedByDrinking = 0;
-                return;
-            }
-            this.fitnessGainedByDrinking = fitnessGainedByDrinking;
-        });
-        FitnessManager.getInstance().getFitnessGainedByHealth(minetopiaPlayer).whenComplete((fitnessGainedByHealth, throwable) -> {
-            if (fitnessGainedByHealth == null) {
-                this.fitnessGainedByHealth = 0;
-                return;
-            }
-            this.fitnessGainedByHealth = fitnessGainedByHealth;
+            this.boosters = boosters;
         });
 
-        FitnessBoosterManager.getInstance().getFitnessBoosters(minetopiaPlayer).whenComplete((fitnessBoosters, throwable) -> {
-            if (fitnessBoosters == null) {
-                this.fitnessBoosters = List.of();
-                return;
-            }
-            this.fitnessBoosters = fitnessBoosters;
-        });
-
-        minetopiaPlayer.setFitness(this);
+        future.complete(null);
+        return future;
     }
 
-    public void setTotalFitness(int amount) {
-        this.totalFitness = amount;
-        FitnessManager.getInstance().setTotalFitness(minetopiaPlayer, amount);
+    public void save() {
+        dataModule.getAdapter().saveStatistics(this);
     }
 
-    public void setDrinkingPoints(double amount) {
-        this.drinkingPoints = amount;
-        FitnessManager.getInstance().setDrinkingPoints(minetopiaPlayer, amount);
+    public FitnessStatistic getStatistic(FitnessStatisticType type) {
+        if (statistics == null) return null;
+        return statistics.stream().filter(statistic -> statistic.getType().equals(type)).findFirst().orElse(null);
     }
 
-    public void setHealthPoints(int amount) {
-        this.healthPoints = amount;
-        FitnessManager.getInstance().setHealthPoints(minetopiaPlayer, amount);
+    public void addBooster(FitnessBooster booster) {
+        boosters.add(booster);
+        dataModule.getAdapter().addFitnessBooster(this, booster);
     }
 
-    /**
-     * Set fitness gained
-     */
-    public void setFitnessGainedByHealth(int amount) {
-        this.fitnessGainedByHealth = amount;
-        FitnessManager.getInstance().setFitnessGainedByHealth(minetopiaPlayer, amount);
-    }
-
-    public void setFitnessGainedByDrinking(int amount) {
-        this.fitnessGainedByDrinking = amount;
-        FitnessManager.getInstance().setFitnessGainedByDrinking(minetopiaPlayer, amount);
-    }
-
-    public void setFitnessGainedByClimbing(int amount) {
-        this.fitnessGainedByClimbing = amount;
-        FitnessManager.getInstance().setFitnessGainedByClimbing(minetopiaPlayer, amount);
-    }
-
-    public void setFitnessGainedBySprinting(int amount) {
-        this.fitnessGainedBySprinting = amount;
-        FitnessManager.getInstance().setFitnessGainedBySprinting(minetopiaPlayer, amount);
-    }
-
-    public void setFitnessGainedByFlying(int amount) {
-        this.fitnessGainedByFlying = amount;
-        FitnessManager.getInstance().setFitnessGainedByFlying(minetopiaPlayer, amount);
-    }
-
-    public void setFitnessGainedBySwimming(int amount) {
-        this.fitnessGainedBySwimming = amount;
-        FitnessManager.getInstance().setFitnessGainedBySwimming(minetopiaPlayer, amount);
-    }
-
-    public void setFitnessGainedByWalking(int amount) {
-        this.fitnessGainedByWalking = amount;
-        FitnessManager.getInstance().setFitnessGainedByWalking(minetopiaPlayer, amount);
-    }
-
-    public void addFitnessBooster(FitnessBooster booster) {
-        fitnessBoosters.add(booster);
-        FitnessBoosterManager.getInstance().addFitnessBooster(minetopiaPlayer, booster);
-    }
-
-    public void removeFitnessBooster(FitnessBooster booster) {
-        fitnessBoosters.remove(booster);
-        FitnessBoosterManager.getInstance().removeFitnessBooster(minetopiaPlayer, booster);
+    public void removeBooster(FitnessBooster booster) {
+        boosters.remove(booster);
+        dataModule.getAdapter().removeFitnessBooster(this, booster);
     }
 }

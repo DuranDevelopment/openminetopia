@@ -1,6 +1,7 @@
 package nl.openminetopia.modules.data.storm.models;
 
 import com.craftmend.storm.api.StormModel;
+import com.craftmend.storm.api.enums.KeyType;
 import com.craftmend.storm.api.markers.Column;
 import com.craftmend.storm.api.markers.Table;
 import lombok.Data;
@@ -18,12 +19,6 @@ public class FitnessModel extends StormModel {
 
     @Column(name = "total", defaultValue = "20")
     private Integer total;
-
-    @Column(name = "drinking_points", defaultValue = "0")
-    private Double drinkingPoints;
-
-    @Column(name = "health_points", defaultValue = "0")
-    private Integer healthPoints;
 
     @Column(name = "fitness_by_drinking", defaultValue = "0")
     private Integer fitnessGainedByDrinking;
@@ -46,5 +41,19 @@ public class FitnessModel extends StormModel {
     @Column(name = "fitness_by_health", defaultValue = "0")
     private Integer fitnessGainedByHealth;
 
+    @Column(name = "fitness_by_eating", defaultValue = "0")
+    private Integer fitnessGainedByEating;
+
+    @Column(name = "drinking_points", defaultValue = "0")
+    private Double drinkingPoints;
+
+    @Column(name = "health_points", defaultValue = "0")
+    private Integer healthPoints;
+
+    @Column(name = "luxury_food", defaultValue = "0")
+    private Integer luxuryFood;
+
+    @Column(name = "cheap_food", defaultValue = "0")
+    private Integer cheapFood;
 
 }

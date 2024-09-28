@@ -4,6 +4,7 @@ import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.builders.QueryBuilder;
 import lombok.experimental.UtilityClass;
 import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

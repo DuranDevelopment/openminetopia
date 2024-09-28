@@ -2,6 +2,9 @@ package nl.openminetopia.modules.fitness.runnables;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
+import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
@@ -23,60 +26,75 @@ public class FitnessRunnable extends BukkitRunnable {
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
 
+        if (!minetopiaPlayer.isInPlace()) {
+            FitnessUtils.clearFitnessEffects(player);
+            return;
+        }
+
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
         /* Walking points */
 
         int currentWalkedDistance = player.getStatistic(Statistic.WALK_ONE_CM);
         int amountOfCmWalkedPerPoint = configuration.getCmPerWalkingPoint();
-        int newWalkingFitness = (currentWalkedDistance - currentWalkedDistance % amountOfCmWalkedPerPoint) / amountOfCmWalkedPerPoint;
+        int newWalkingFitness = FitnessUtils.calculateFitness(currentWalkedDistance, amountOfCmWalkedPerPoint);
 
-        if (minetopiaPlayer.getFitness().getFitnessGainedByWalking() != newWalkingFitness && newWalkingFitness <= configuration.getMaxFitnessByWalking())
-            minetopiaPlayer.getFitness().setFitnessGainedByWalking(newWalkingFitness);
+        WalkingStatistic walkingStatistic = (WalkingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.WALKING);
+
+        if (walkingStatistic.getFitnessGained() != newWalkingFitness && newWalkingFitness <= walkingStatistic.getMaxFitnessGainable())
+            walkingStatistic.setFitnessGained(newWalkingFitness);
 
         /* Climbing points */
 
         int currentClimbingDistance = player.getStatistic(Statistic.CLIMB_ONE_CM);
         int amountOfCmClimbedPerPoint = configuration.getCmPerClimbingPoint();
-        int newClimbingFitness = (currentClimbingDistance - currentClimbingDistance % amountOfCmClimbedPerPoint) / amountOfCmClimbedPerPoint;
+        int newClimbingFitness = FitnessUtils.calculateFitness(currentClimbingDistance, amountOfCmClimbedPerPoint);
 
-        if (minetopiaPlayer.getFitness().getFitnessGainedByClimbing() != newClimbingFitness && newClimbingFitness <= configuration.getMaxFitnessByClimbing())
-            minetopiaPlayer.getFitness().setFitnessGainedByClimbing(newClimbingFitness);
+        ClimbingStatistic climbingStatistic = (ClimbingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.CLIMBING);
+
+        if (climbingStatistic.getFitnessGained() != newClimbingFitness && newClimbingFitness <= configuration.getMaxFitnessByClimbing())
+            climbingStatistic.setFitnessGained(newClimbingFitness);
 
         /* Sprinting points */
 
         int currentSprintingDistance = player.getStatistic(Statistic.SPRINT_ONE_CM);
         int amountOfCmSprintedPerPoint = configuration.getCmPerSprintingPoint();
-        int newSprintingFitness = (currentSprintingDistance - currentSprintingDistance % amountOfCmSprintedPerPoint) / amountOfCmSprintedPerPoint;
+        int newSprintingFitness = FitnessUtils.calculateFitness(currentSprintingDistance, amountOfCmSprintedPerPoint);
 
-        if (minetopiaPlayer.getFitness().getFitnessGainedByClimbing() != newSprintingFitness && newSprintingFitness <= configuration.getMaxFitnessBySprinting())
-            minetopiaPlayer.getFitness().setFitnessGainedBySprinting(newSprintingFitness);
+        SprintingStatistic sprintingStatistic = (SprintingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.SPRINTING);
+
+        if (sprintingStatistic.getFitnessGained() != newSprintingFitness && newSprintingFitness <= configuration.getMaxFitnessBySprinting())
+            sprintingStatistic.setFitnessGained(newSprintingFitness);
 
         /* Swimming points */
 
         int currentSwimmingDistance = player.getStatistic(Statistic.SWIM_ONE_CM);
         int amountOfCmSwamPerPoint = configuration.getCmPerSwimmingPoint();
-        int newSwimmingFitness = (currentSwimmingDistance - currentSwimmingDistance % amountOfCmSwamPerPoint) / amountOfCmSwamPerPoint;
+        int newSwimmingFitness = FitnessUtils.calculateFitness(currentSwimmingDistance, amountOfCmSwamPerPoint);
 
-        if (minetopiaPlayer.getFitness().getFitnessGainedBySwimming() != newSwimmingFitness && newSwimmingFitness <= configuration.getMaxFitnessBySwimming())
-            minetopiaPlayer.getFitness().setFitnessGainedBySwimming(newSwimmingFitness);
+        SwimmingStatistic swimmingStatistic = (SwimmingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.SWIMMING);
+
+        if (swimmingStatistic.getFitnessGained() != newSwimmingFitness && newSwimmingFitness <= configuration.getMaxFitnessBySwimming())
+            swimmingStatistic.setFitnessGained(newSwimmingFitness);
 
         /* Flying points */
 
         int currentFlyingDistance = player.getStatistic(Statistic.AVIATE_ONE_CM);
         int amountOfCmFlownPerPoint = configuration.getCmPerFlyingPoint();
-        int newFlyingFitness = (currentFlyingDistance - currentFlyingDistance % amountOfCmFlownPerPoint) / amountOfCmFlownPerPoint;
+        int newFlyingFitness = FitnessUtils.calculateFitness(currentFlyingDistance, amountOfCmFlownPerPoint);
 
-        if (minetopiaPlayer.getFitness().getFitnessGainedByFlying() != newFlyingFitness && newFlyingFitness <= configuration.getMaxFitnessByFlying())
-            minetopiaPlayer.getFitness().setFitnessGainedByFlying(newFlyingFitness);
+        FlyingStatistic flyingStatistic = (FlyingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.FLYING);
+
+        if (flyingStatistic.getFitnessGained() != newFlyingFitness && newFlyingFitness <= configuration.getMaxFitnessByFlying())
+            flyingStatistic.setFitnessGained(newFlyingFitness);
 
         /* Fitness boosts */
 
         int fitnessBoost = 0;
-        for (int i = 0; i < minetopiaPlayer.getFitness().getFitnessBoosters().size(); i++) {
-            FitnessBooster fitnessBooster = minetopiaPlayer.getFitness().getFitnessBoosters().get(i);
+        for (int i = 0; i < minetopiaPlayer.getFitness().getBoosters().size(); i++) {
+            FitnessBooster fitnessBooster = minetopiaPlayer.getFitness().getBoosters().get(i);
             if (fitnessBooster.getExpiresAt() < System.currentTimeMillis() && fitnessBooster.getExpiresAt() != -1) {
-                minetopiaPlayer.getFitness().removeFitnessBooster(fitnessBooster);
+                minetopiaPlayer.getFitness().removeBooster(fitnessBooster);
                 i--;
             } else {
                 fitnessBoost += fitnessBooster.getAmount();
@@ -85,20 +103,20 @@ public class FitnessRunnable extends BukkitRunnable {
 
         /* Total points */
 
-        int newTotalFitness = configuration.getDefaultFitnessLevel() +
-                minetopiaPlayer.getFitness().getFitnessGainedByDrinking() +
-                minetopiaPlayer.getFitness().getFitnessGainedByHealth() +
-                newWalkingFitness +
-                newClimbingFitness +
-                newSprintingFitness +
-                newSwimmingFitness +
-                newFlyingFitness +
-                fitnessBoost;
+        int newTotalFitness = configuration.getDefaultFitnessLevel();
+
+        for (FitnessStatistic statistic : minetopiaPlayer.getFitness().getStatistics()) {
+            if (statistic.getType() == FitnessStatisticType.TOTAL) continue;
+            newTotalFitness += statistic.getFitnessGained();
+        }
+
+        newTotalFitness += fitnessBoost;
 
         if (newTotalFitness > configuration.getMaxFitnessLevel()) newTotalFitness = configuration.getMaxFitnessLevel();
         if (newTotalFitness < 0) newTotalFitness = 0;
 
-        if (minetopiaPlayer.getFitness().getTotalFitness() != newTotalFitness) minetopiaPlayer.getFitness().setTotalFitness(newTotalFitness);
+        TotalStatistic totalStatistic = (TotalStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL);
+        if (totalStatistic.getFitnessGained() != newTotalFitness) totalStatistic.setFitnessGained(newTotalFitness);
 
         FitnessUtils.applyFitness(player);
     }

@@ -1,10 +1,8 @@
 package nl.openminetopia.api.player.objects;
 
-import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.*;
 import nl.openminetopia.api.places.MTPlaceManager;
 import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTPlace;
@@ -16,7 +14,6 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
 import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
@@ -25,9 +22,9 @@ import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Getter
 public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
@@ -67,6 +64,33 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     public void load() {
         try {
+            this.fitness = FitnessManager.getInstance().getFitness(uuid);
+            fitness.load().whenComplete((unused, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                }
+                this.fitnessRunnable = new FitnessRunnable(getBukkit());
+                fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
+                FitnessUtils.applyFitness(getBukkit());
+
+            });
+
+            dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
+                if (prefixes == null) {
+                    this.prefixes = new ArrayList<>();
+                    return;
+                }
+                this.prefixes = prefixes;
+            });
+
+            dataModule.getAdapter().getColors(this).whenComplete((colors, throwable) -> {
+                if (colors == null) {
+                    this.colors = new ArrayList<>();
+                    return;
+                }
+                this.colors = colors;
+            });
+
             dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
                 if (level == null) {
                     this.level = 0;
@@ -75,13 +99,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                 this.level = level;
             });
 
-            dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
-                if (prefixes == null) {
-                    this.prefixes = List.of();
-                    return;
-                }
-                this.prefixes = prefixes;
-            });
             dataModule.getAdapter().getActivePrefix(this).whenComplete((prefix, throwable) -> {
                 if (prefix == null) {
                     this.activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
@@ -118,13 +135,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                 }
                 this.activeLevelColor = (LevelColor) color;
             });
-            dataModule.getAdapter().getColors(this).whenComplete((colors, throwable) -> {
-                if (colors == null) {
-                    this.colors = List.of();
-                    return;
-                }
-                this.colors = colors;
-            });
 
             dataModule.getAdapter().getPlaytime(this).whenComplete((playtime, throwable) -> {
                 if (playtime == null) {
@@ -132,24 +142,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                     return;
                 }
                 this.playtime = playtime;
+                this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
+                playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
             });
         } catch (Exception exception) {
             getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
             exception.printStackTrace();
         }
 
-        this.fitness = FitnessManager.getInstance().getFitness(this);
-
-        this.fitnessRunnable = new FitnessRunnable(getBukkit());
-        this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
-
-        fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
-        playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
-        FitnessUtils.applyFitness(getBukkit());
     }
 
     public void save() {
         dataModule.getAdapter().savePlayer(this);
+        fitness.save();
     }
 
     @Override
@@ -205,7 +210,11 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void addPrefix(Prefix prefix) {
         prefixes.add(prefix);
-        dataModule.getAdapter().addPrefix(this, prefix);
+        dataModule.getAdapter().addPrefix(this, prefix).whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
+        });
     }
 
     @Override

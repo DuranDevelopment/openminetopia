@@ -4,11 +4,16 @@ import com.craftmend.storm.Storm;
 import com.craftmend.storm.api.enums.Where;
 import com.craftmend.storm.connection.hikaricp.HikariDriver;
 import com.zaxxer.hikari.HikariConfig;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTCity;
-import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
+import nl.openminetopia.api.player.fitness.objects.Fitness;
+import nl.openminetopia.api.player.fitness.statistics.*;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
+import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
@@ -24,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class MySQLAdapter implements DatabaseAdapter {
 
@@ -152,7 +158,7 @@ public class MySQLAdapter implements DatabaseAdapter {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
         StormDatabase.getExecutorService().submit(() -> {
             PrefixModel prefixModel = new PrefixModel();
-            prefixModel.setUniqueId(player.getUuid());
+            prefixModel.setPlayerId(player.getPlayerModel().getId());
             prefixModel.setPrefix(prefix.getPrefix());
             prefixModel.setExpiresAt(prefix.getExpiresAt());
 
@@ -215,17 +221,24 @@ public class MySQLAdapter implements DatabaseAdapter {
     public CompletableFuture<List<Prefix>> getPrefixes(MinetopiaPlayer player) {
         CompletableFuture<List<Prefix>> completableFuture = new CompletableFuture<>();
 
-        findPrefixes(player).thenAccept(prefixesModels -> {
-            // Create a list to store the prefixes
-            List<Prefix> prefixes = new ArrayList<>();
-            for (PrefixModel prefixModel : prefixesModels) {
-                prefixes.add(new Prefix(prefixModel.getId(), prefixModel.getPrefix(), prefixModel.getExpiresAt()));
-            }
+        StormDatabase.getExecutorService().submit(() -> {
+            List<Prefix> prefixes = player.getPlayerModel().getPrefixes().stream().map(prefixModel -> new Prefix(prefixModel.getId(), prefixModel.getPrefix(), prefixModel.getExpiresAt()))
+                    .collect(Collectors.toList());
+
             completableFuture.complete(prefixes);
-        }).exceptionally(ex -> {
-            completableFuture.completeExceptionally(ex);
-            return null;
         });
+
+//        findPrefixes(player).thenAccept(prefixesModels -> {
+//            // Create a list to store the prefixes
+//            List<Prefix> prefixes = new ArrayList<>();
+//            for (PrefixModel prefixModel : prefixesModels) {
+//                prefixes.add(new Prefix(prefixModel.getId(), prefixModel.getPrefix(), prefixModel.getExpiresAt()));
+//            }
+//            completableFuture.complete(prefixes);
+//        }).exceptionally(ex -> {
+//            completableFuture.completeExceptionally(ex);
+//            return null;
+//        });
 
         return completableFuture;
     }
@@ -257,24 +270,6 @@ public class MySQLAdapter implements DatabaseAdapter {
         return completableFuture;
     }
 
-    private CompletableFuture<List<PrefixModel>> findPrefixes(MinetopiaPlayer player) {
-        CompletableFuture<List<PrefixModel>> completableFuture = new CompletableFuture<>();
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<PrefixModel> prefixModel = StormDatabase.getInstance().getStorm().buildQuery(PrefixModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join();
-
-                completableFuture.complete(new ArrayList<>(prefixModel));
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
-    }
-
     /* Color related database queries */
 
     @Override
@@ -283,7 +278,7 @@ public class MySQLAdapter implements DatabaseAdapter {
 
         StormDatabase.getExecutorService().submit(() -> {
             ColorModel colorModel = new ColorModel();
-            colorModel.setUniqueId(player.getUuid());
+            colorModel.setPlayerId(player.getPlayerModel().getId());
             colorModel.setColor(color.getColor());
             colorModel.setExpiresAt(color.getExpiresAt());
             colorModel.setType(color.getType().toString().toLowerCase());
@@ -341,81 +336,17 @@ public class MySQLAdapter implements DatabaseAdapter {
     public CompletableFuture<List<OwnableColor>> getColors(MinetopiaPlayer player) {
         CompletableFuture<List<OwnableColor>> completableFuture = new CompletableFuture<>();
 
-        findColors(player).thenAccept(prefixesModels -> {
-            // Create a list to store the colors
-            List<OwnableColor> colors = new ArrayList<>();
-            for (ColorModel colorModel : prefixesModels) {
-                switch (colorModel.getType()) {
-                    case "prefix":
-                        colors.add(new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                    case "chat":
-                        colors.add(new ChatColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                    case "name":
-                        colors.add(new NameColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                    case "level":
-                        colors.add(new LevelColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                }
-            }
-            completableFuture.complete(colors);
-        }).exceptionally(ex -> {
-            completableFuture.completeExceptionally(ex);
-            return null;
-        });
-
-        return completableFuture;
-    }
-
-    @Override
-    public CompletableFuture<List<OwnableColor>> getColors(MinetopiaPlayer player, OwnableColorType type) {
-        CompletableFuture<List<OwnableColor>> completableFuture = new CompletableFuture<>();
-
-        findColors(player).thenAccept(prefixesModels -> {
-            // Create a list to store the colors
-            List<OwnableColor> colors = new ArrayList<>();
-            for (ColorModel colorModel : prefixesModels) {
-                switch (type) {
-                    case PREFIX:
-                        colors.add(new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                    case CHAT:
-                        colors.add(new ChatColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                    case NAME:
-                        colors.add(new NameColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                    case LEVEL:
-                        colors.add(new LevelColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt()));
-                        break;
-                }
-            }
-            completableFuture.complete(colors);
-        }).exceptionally(ex -> {
-            completableFuture.completeExceptionally(ex);
-            return null;
-        });
-
-        return completableFuture;
-    }
-
-    private CompletableFuture<List<ColorModel>> findColors(MinetopiaPlayer player) {
-        CompletableFuture<List<ColorModel>> completableFuture = new CompletableFuture<>();
         StormDatabase.getExecutorService().submit(() -> {
-            try {
-                Collection<ColorModel> colorModels = StormDatabase.getInstance().getStorm().buildQuery(ColorModel.class)
-                        .where("uuid", Where.EQUAL, player.getUuid().toString())
-                        .execute()
-                        .join();
-
-                completableFuture.complete(new ArrayList<>(colorModels));
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
+            List<OwnableColor> colors = player.getPlayerModel().getColors().stream().map(colorModel -> switch (colorModel.getType()) {
+                case "prefix" -> new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
+                case "name" -> new NameColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
+                case "chat" -> new ChatColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
+                case "level" -> new LevelColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
+                default -> null;
+            }).collect(Collectors.toList());
+            completableFuture.complete(colors);
         });
+
         return completableFuture;
     }
 
@@ -612,6 +543,161 @@ public class MySQLAdapter implements DatabaseAdapter {
                 cityModel -> cityModel.setLoadingName(loadingName)
         );
         completableFuture.complete(null);
+        return completableFuture;
+    }
+
+    /* Fitness related database queries */
+
+    @Override
+    public CompletableFuture<Void> saveStatistics(Fitness fitness) {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+        StormUtils.updateModelData(FitnessModel.class,
+                query -> query.where("uuid", Where.EQUAL, fitness.getUuid().toString()),
+                model -> {
+                    model.setTotal((fitness.getStatistic(FitnessStatisticType.TOTAL).getFitnessGained()));
+                    model.setFitnessGainedByWalking(fitness.getStatistic(FitnessStatisticType.WALKING).getFitnessGained());
+                    model.setFitnessGainedBySprinting(fitness.getStatistic(FitnessStatisticType.SPRINTING).getFitnessGained());
+                    model.setFitnessGainedByClimbing(fitness.getStatistic(FitnessStatisticType.CLIMBING).getFitnessGained());
+                    model.setFitnessGainedBySwimming(fitness.getStatistic(FitnessStatisticType.SWIMMING).getFitnessGained());
+                    model.setFitnessGainedByFlying(fitness.getStatistic(FitnessStatisticType.FLYING).getFitnessGained());
+
+                    DrinkingStatistic drinkingStatistic = (DrinkingStatistic) fitness.getStatistic(FitnessStatisticType.DRINKING);
+                    model.setFitnessGainedByDrinking(drinkingStatistic.getFitnessGained());
+                    model.setDrinkingPoints(drinkingStatistic.getPoints());
+
+                    HealthStatistic healthStatistic = (HealthStatistic) fitness.getStatistic(FitnessStatisticType.HEALTH);
+                    model.setFitnessGainedByHealth(healthStatistic.getFitnessGained());
+                    model.setHealthPoints(healthStatistic.getPoints());
+
+                    EatingStatistic eatingStatistic = (EatingStatistic) fitness.getStatistic(FitnessStatisticType.EATING);
+                    model.setFitnessGainedByEating(eatingStatistic.getFitnessGained());
+                    model.setLuxuryFood(eatingStatistic.getLuxuryFood());
+                    model.setCheapFood(eatingStatistic.getCheapFood());
+                }
+        );
+        completableFuture.complete(null);
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<List<FitnessStatistic>> getStatistics(Fitness fitness) {
+        CompletableFuture<List<FitnessStatistic>> completableFuture = new CompletableFuture<>();
+
+        StormUtils.getModelData(FitnessModel.class, query -> query.where("uuid", Where.EQUAL, fitness.getUuid().toString()), null,
+                model -> {
+                    List<FitnessStatistic> stats = new ArrayList<>();
+
+                    stats.add(new TotalStatistic(model.getTotal()));
+                    stats.add(new WalkingStatistic(model.getFitnessGainedByWalking()));
+                    stats.add(new DrinkingStatistic(model.getFitnessGainedByDrinking(), model.getHealthPoints()));
+                    stats.add(new SprintingStatistic(model.getFitnessGainedBySprinting()));
+                    stats.add(new ClimbingStatistic(model.getFitnessGainedByClimbing()));
+                    stats.add(new SwimmingStatistic(model.getFitnessGainedBySwimming()));
+                    stats.add(new FlyingStatistic(model.getFitnessGainedByFlying()));
+                    stats.add(new HealthStatistic(model.getFitnessGainedByHealth(), model.getHealthPoints()));
+                    stats.add(new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood()));
+
+                    completableFuture.complete(stats);
+                    return completableFuture;
+                },
+                null
+        );
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<FitnessStatistic> getStatistic(Fitness fitness, FitnessStatisticType type) {
+        CompletableFuture<FitnessStatistic> completableFuture = new CompletableFuture<>();
+
+        StormUtils.getModelData(FitnessModel.class,
+                query -> query.where("uuid", Where.EQUAL, fitness.getUuid().toString()),
+                null,
+                model -> switch (type) {
+                    case TOTAL -> new TotalStatistic(model.getTotal());
+                    case WALKING -> new WalkingStatistic(model.getFitnessGainedByWalking());
+                    case DRINKING -> new DrinkingStatistic(model.getFitnessGainedByDrinking(), model.getHealthPoints());
+                    case SPRINTING -> new SprintingStatistic(model.getFitnessGainedBySprinting());
+                    case CLIMBING -> new ClimbingStatistic(model.getFitnessGainedByClimbing());
+                    case SWIMMING -> new SwimmingStatistic(model.getFitnessGainedBySwimming());
+                    case FLYING -> new FlyingStatistic(model.getFitnessGainedByFlying());
+                    case HEALTH -> new HealthStatistic(model.getFitnessGainedByHealth(), model.getHealthPoints());
+                    case EATING -> new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
+                },
+                null
+        ).whenComplete((statistic, ex) -> {
+            if (ex != null) {
+                ex.printStackTrace();
+                completableFuture.completeExceptionally(ex);
+            } else {
+                completableFuture.complete(statistic);
+            }
+        });
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<FitnessBoosterModel> addFitnessBooster(Fitness fitness, FitnessBooster booster) {
+        CompletableFuture<FitnessBoosterModel> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            FitnessBoosterModel fitnessBoosterModel = new FitnessBoosterModel();
+            fitnessBoosterModel.setUniqueId(fitness.getUuid());
+            fitnessBoosterModel.setFitness(booster.getAmount());
+            fitnessBoosterModel.setExpiresAt(booster.getExpiresAt());
+
+            StormDatabase.getInstance().saveStormModel(fitnessBoosterModel);
+            completableFuture.complete(null);
+        });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster) {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+        StormUtils.deleteModelData(FitnessBoosterModel.class,
+                query -> query.where("id", Where.EQUAL, booster.getId())
+        );
+        completableFuture.complete(null);
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness) {
+        CompletableFuture<List<FitnessBooster>> completableFuture = new CompletableFuture<>();
+
+        findFitnessBoosts(fitness).thenAccept(fitnessBoosters -> {
+            List<FitnessBooster> boosters = new ArrayList<>();
+            for (FitnessBoosterModel fitnessBoosterModel : fitnessBoosters) {
+                boosters.add(new FitnessBooster(fitnessBoosterModel.getId(), fitnessBoosterModel.getFitness(), fitnessBoosterModel.getExpiresAt()));
+            }
+            completableFuture.complete(boosters);
+        }).exceptionally(ex -> {
+            completableFuture.completeExceptionally(ex);
+            return null;
+        });
+
+        return completableFuture;
+    }
+
+    private CompletableFuture<List<FitnessBoosterModel>> findFitnessBoosts(Fitness fitness) {
+        CompletableFuture<List<FitnessBoosterModel>> completableFuture = new CompletableFuture<>();
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                Collection<FitnessBoosterModel> fitnessBoosterModel = StormDatabase.getInstance().getStorm().buildQuery(FitnessBoosterModel.class)
+                        .where("uuid", Where.EQUAL, fitness.getUuid().toString())
+                        .execute()
+                        .join();
+
+                completableFuture.complete(new ArrayList<>(fitnessBoosterModel));
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
         return completableFuture;
     }
 }

@@ -1,12 +1,16 @@
 package nl.openminetopia.modules.data.adapters;
 
 import nl.openminetopia.api.places.objects.MTCity;
-import nl.openminetopia.api.places.objects.MTPlace;
 import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
+import nl.openminetopia.api.player.fitness.objects.Fitness;
+import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.storm.models.CityModel;
+import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.data.storm.models.WorldModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
@@ -57,8 +61,6 @@ public interface DatabaseAdapter {
 
     CompletableFuture<List<OwnableColor>> getColors(MinetopiaPlayer player);
 
-    CompletableFuture<List<OwnableColor>> getColors(MinetopiaPlayer player, OwnableColorType type);
-
     /* Level related database queries */
 
     CompletableFuture<Integer> getLevel(MinetopiaPlayer player);
@@ -84,4 +86,16 @@ public interface DatabaseAdapter {
     CompletableFuture<Void> setTitle(MTCity city, String title);
     CompletableFuture<Void> setLoadingName(MTCity city, String loadingName);
     CompletableFuture<Void> setColor(MTCity city, String color);
+
+    /* Fitness related database queries */
+
+    CompletableFuture<Void> saveStatistics(Fitness fitness);
+
+    CompletableFuture<List<FitnessStatistic>> getStatistics(Fitness fitness);
+    CompletableFuture<FitnessStatistic> getStatistic(Fitness fitness, FitnessStatisticType type);
+
+    CompletableFuture<FitnessBoosterModel> addFitnessBooster(Fitness fitness, FitnessBooster booster);
+    CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster);
+
+    CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness);
 }

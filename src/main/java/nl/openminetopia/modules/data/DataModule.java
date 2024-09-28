@@ -30,11 +30,17 @@ public class DataModule extends Module {
         if (type != DatabaseType.MONGO) {
             try {
                 storm.registerModel(new PlayerModel());
+                storm.runMigrations();
                 storm.registerModel(new PrefixModel());
+                storm.runMigrations();
                 storm.registerModel(new ColorModel());
+                storm.runMigrations();
                 storm.registerModel(new FitnessModel());
+                storm.runMigrations();
                 storm.registerModel(new FitnessBoosterModel());
+                storm.runMigrations();
                 storm.registerModel(new WorldModel());
+                storm.runMigrations();
                 storm.registerModel(new CityModel());
                 storm.runMigrations();
             } catch (Exception e) {

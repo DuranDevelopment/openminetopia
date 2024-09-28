@@ -3,7 +3,6 @@ package nl.openminetopia.modules.fitness.listeners;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.modules.data.utils.StormUtils;
@@ -29,7 +28,7 @@ public class PlayerDeathListener implements Listener {
                 return;
             }
             var fitnessBooster = new FitnessBooster(nextId, configuration.getFitnessDeathPunishmentAmount(), System.currentTimeMillis() + punishmentInMillis);
-            minetopiaPlayer.getFitness().addFitnessBooster(fitnessBooster);
+            minetopiaPlayer.getFitness().addBooster(fitnessBooster);
         });
         minetopiaPlayer.getFitnessRunnable().run();
     }
