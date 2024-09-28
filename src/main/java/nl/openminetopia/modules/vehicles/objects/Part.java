@@ -26,7 +26,14 @@ public class Part {
     public Part(Vehicle vehicle) {
         this.vehicle = vehicle;
 
-        this.entity = spawn(); /* Temp */
+        this.entity = spawn();
+        this.internalEntity = ((CraftEntity)entity).getHandle();
+    }
+
+    public Part(Vehicle vehicle, ItemDisplay entity) {
+        this.vehicle = vehicle;
+
+        this.entity = entity;
         this.internalEntity = ((CraftEntity)entity).getHandle();
     }
 
@@ -66,6 +73,10 @@ public class Part {
 
             oldRadians = vehicle.radians();
         }
+    }
+
+    public String serializableUuid() {
+        return entity.getUniqueId().toString();
     }
 
 }

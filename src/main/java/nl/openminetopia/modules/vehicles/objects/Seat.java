@@ -1,5 +1,6 @@
 package nl.openminetopia.modules.vehicles.objects;
 
+import com.jazzkuh.inventorylib.utils.PersistentData;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import lombok.Getter;
 import net.minecraft.world.entity.Entity;
@@ -12,6 +13,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.joml.Vector3f;
 
 import java.util.UUID;
@@ -39,6 +42,19 @@ public class Seat {
         entity.setAI(false);
     }
 
+    public Seat(Vehicle vehicle, ArmorStand entity) {
+        this.vehicle = vehicle;
+        this.entity = entity;
+        this.internalEntity = ((CraftEntity)entity).getHandle();
+
+        PersistentDataContainer data = entity.getPersistentDataContainer();
+        int[] posData = data.get(VehicleKey.RELATIVE_POSITION_KEY.key(), PersistentDataType.INTEGER_ARRAY);
+        this.isDriver = Boolean.TRUE.equals(data.get(VehicleKey.DRIVER_KEY.key(), PersistentDataType.BOOLEAN));
+
+        if (posData == null) posData = new int[2];
+        this.relativePosition = new Vector3f(posData[0], posData[1], posData[2]);
+    }
+
     public void tick() {
         internalEntity.setDeltaMovement(vehicle.getInternalEntity().getDeltaMovement());
         internalEntity.moveTo(globalLocation(), vehicle.degrees(), 0);
@@ -53,6 +69,10 @@ public class Seat {
         location.add(xOffset, relativePosition.y(), zOffset);
 
         return CraftLocation.toVec3D(location);
+    }
+
+    public String serializableUuid() {
+        return entity.getUniqueId().toString();
     }
 
 }

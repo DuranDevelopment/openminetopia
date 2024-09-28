@@ -4,8 +4,10 @@ import nl.openminetopia.OpenMinetopia;
 import org.bukkit.NamespacedKey;
 
 public enum VehicleKey {
-    TYPE_KEY("vehicle.type"),
-    UUIDS_KEY("vehicle.uuids"),
+    DRIVER_KEY("vehicle.driver"),
+    RELATIVE_POSITION_KEY("vehicle.relativePosition"),
+    SEAT_UUIDS_KEY("vehicle.seatUuids"),
+    PART_UUIDS_KEY("vehicle.partUuids"),
     VEHICLE_ID_KEY("vehicle.vehicleId");
 
     private final NamespacedKey key;
