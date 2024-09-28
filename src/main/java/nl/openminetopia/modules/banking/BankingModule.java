@@ -130,9 +130,10 @@ public class BankingModule extends Module {
         return StormDatabase.getInstance().getStorm().save(accountModel);
     }
 
-    public int createPermissions() throws SQLException {
-        this.getBankAccountModels().add(accountModel);
-        return StormDatabase.getInstance().getStorm().save(accountModel);
+    public int createPermissions(BankPermissionModel permissionModel) throws SQLException {
+        BankAccountModel accountModel = getAccountById(permissionModel.getAccount());
+        accountModel.getUsers().put(permissionModel.getUuid(), permissionModel.getPermission());
+        return StormDatabase.getInstance().getStorm().save(permissionModel);
     }
 
 }
