@@ -7,6 +7,8 @@ import nl.openminetopia.modules.vehicles.objects.Vehicle;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
 import org.bukkit.entity.ArmorStand;
 
+import java.lang.reflect.InvocationTargetException;
+
 public abstract class Movement {
 
     public final Vehicle vehicle;

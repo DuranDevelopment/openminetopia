@@ -1,0 +1,71 @@
+vehicles:
+   vortex:
+     display_name: "Vortex"
+     fuel:
+       enabled: true
+       usage: 0.02
+     seats:
+       driver_seat:
+         x: 0
+         y: -1
+         z: 0
+         driver: true
+       passenger_seat_1:
+         x: 1
+         y: -1
+         z: 0
+         driver: false
+     movement:
+       type: CAR
+       max_speed: 1.5
+       min_speed: -1
+       acceleration: 0.1
+       deceleration: 0.1
+       roll_rate: 0.05
+       turn_rate: 5
+     default_parts:
+       - "vortex_wheels"
+       - "vortex_gray_body"
+parts:
+  vortex:
+    vortex_gray_body:
+      display_name: "Vortex Gray Body" # REQUIRED
+      item:
+        material: IRON_INGOT # REQUIRED
+        custom_model_data: 2
+        # nbt: "mt_custom:vortex_gray_body"
+      visible: true
+      attributes:
+        max_speed: +10%
+        min_speed: +0.2
+    vortex_gray_body_barebones: # these are the minimum requirements for a part.
+      display_name: "Vortex Gray Body Barebones"
+      item:
+        material: IRON_INGOT
+    vortex_wheels:
+      display_name: "Vortex Wheels"
+      item:
+        material: IRON_INGOT
+        custom_model_data: 3
+        # nbt: "mt_custom:vortex_wheels"
+      visible: true
+      attributes:
+        acceleration: +25%
+        turn_rate: -1
+    vortex_internal_engine:
+      display_name: "Vortex Internal Engine V2"
+      item:
+        material: IRON_INGOT
+        custom_model_data: 4
+        # nbt: "mt_custom:vortex_internal_engine"
+      visible: false
+      attribute_index: 1 # default is 0, meaning that this one will get calculated before the rest
+      attributes:
+        max_speed: +25%
+        acceleration: +25%
+        deceleration: +25%
+      prohibited_parts: # part cannot be applied if any of these parts are on the vehicle already.
+        - "vortex_wheels"
+
+# all attributes -> max_speed, min_speed, acceleration, deceleration, roll_rate, turn_speed, fuel_usage, fuel_enabled
+# all attributes values: +, -, %, true/false -> only for fuel_enabled

@@ -30,7 +30,7 @@ public class Vehicle {
     public Vehicle(Location location) {
         this.entity = location.getWorld().spawn(location, ArmorStand.class);
         this.internalEntity = ((CraftEntity)entity).getHandle();
-        this.movement = BoatMovement.movement(this);
+        this.movement = CarMovement.inst(this);
 
         entity.setInvisible(true);
         entity.setInvulnerable(true);

@@ -14,19 +14,22 @@ public class CarMovement extends Movement {
 
     @Override
     public void move(WrappedPlayerInputPacket packet) {
-        float ACCELERATION = 0.1F;
         float MAX_SPEED = 1.5F;
-        float DECELERATION = 0.05F;
+        float MIN_SPEED = -1F;
+        float ACCELERATION = 0.1F;
+        float DECELERATION = 0.1F; /* Brake Speed & Reverse Speed */
+        float ROLL_RATE = 0.05F; /* Forced Deceleration */
+        float TURN_RATE = 5F;
 
         if (packet.isForward()) speed = Math.min(speed + ACCELERATION, MAX_SPEED);
-        else if (packet.isBackward()) speed = Math.max(speed - ACCELERATION, -MAX_SPEED);
+        else if (packet.isBackward()) speed = Math.max(speed - DECELERATION, MIN_SPEED);
         else {
-            if (speed > 0) speed = Math.max(speed - DECELERATION, 0);
-            else speed = Math.min(speed + DECELERATION, 0);
+            if (speed > 0) speed = Math.max(speed - ROLL_RATE, 0);
+            else speed = Math.min(speed + ROLL_RATE, 0);
         }
 
-        if (packet.isLeft()) internalEntity.setRot(internalEntity.yRotO - 5, 0);
-        else if (packet.isRight()) internalEntity.setRot(internalEntity.yRotO + 5, 0);
+        if (packet.isLeft()) internalEntity.setRot(internalEntity.yRotO - TURN_RATE, 0);
+        else if (packet.isRight()) internalEntity.setRot(internalEntity.yRotO + TURN_RATE, 0);
 
         entity.setVelocity(vector(speed));
     }
@@ -39,7 +42,7 @@ public class CarMovement extends Movement {
         return vector;
     }
 
-    public static CarMovement movement(Vehicle vehicle) {
+    public static CarMovement inst(Vehicle vehicle) {
         return new CarMovement(vehicle);
     }
 
