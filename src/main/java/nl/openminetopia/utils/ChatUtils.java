@@ -24,8 +24,12 @@ public class ChatUtils {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
 
+        int levelUps = minetopiaPlayer.getCalculatedLevel() - minetopiaPlayer.getLevel();
+
         message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
+                .replace("<calculated_level>", minetopiaPlayer.getCalculatedLevel() + "")
+                .replace("<levelups>", levelUps == 0 ? "<gold>0" : (levelUps > 0 ? "<green>+" + levelUps : "<red>" + levelUps))
                 .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor())
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
                 .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColor())

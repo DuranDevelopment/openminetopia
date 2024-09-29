@@ -15,6 +15,7 @@ import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.runnables.HealthStatisticRunnable;
+import nl.openminetopia.modules.player.runnables.LevelcheckRunnable;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
@@ -40,6 +41,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private HealthStatisticRunnable healthStatisticRunnable;
 
     private int level;
+    private @Setter int calculatedLevel;
+    private LevelcheckRunnable levelcheckRunnable;
 
     private boolean staffchatEnabled;
     private boolean commandSpyEnabled;
@@ -119,7 +122,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
         dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
             if (level == null) {
-                this.level = 0;
+                this.level = configuration.getDefaultLevel();
                 return;
             }
             this.level = level;
@@ -172,6 +175,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+
+        this.levelcheckRunnable = new LevelcheckRunnable(this);
+        levelcheckRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L * 30);
 
         this.healthStatisticRunnable = new HealthStatisticRunnable(this);
         healthStatisticRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);

@@ -64,7 +64,6 @@ public class StormDatabase {
             if (playerModel.isEmpty()) {
                 PlayerModel createdModel = new PlayerModel();
                 createdModel.setUniqueId(uuid);
-                createdModel.setLevel(1);
 
                 PlayerManager.getInstance().getPlayerModels().put(uuid, createdModel);
                 completableFuture.complete(createdModel);

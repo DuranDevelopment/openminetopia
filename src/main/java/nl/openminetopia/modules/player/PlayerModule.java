@@ -9,6 +9,7 @@ import nl.openminetopia.modules.player.commands.PlaytimeCommand;
 import nl.openminetopia.modules.player.listeners.PlayerJoinListener;
 import nl.openminetopia.modules.player.listeners.PlayerPreLoginListener;
 import nl.openminetopia.modules.player.listeners.PlayerQuitListener;
+import nl.openminetopia.modules.player.utils.LevelUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
