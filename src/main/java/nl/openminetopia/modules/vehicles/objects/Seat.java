@@ -39,7 +39,9 @@ public class Seat {
 
         entity.setInvisible(true);
         entity.setInvulnerable(true);
-        entity.setAI(false);
+        entity.setGravity(false);
+
+        save();
     }
 
     public Seat(Vehicle vehicle, ArmorStand entity) {
@@ -51,13 +53,22 @@ public class Seat {
         int[] posData = data.get(VehicleKey.RELATIVE_POSITION_KEY.key(), PersistentDataType.INTEGER_ARRAY);
         this.isDriver = Boolean.TRUE.equals(data.get(VehicleKey.DRIVER_KEY.key(), PersistentDataType.BOOLEAN));
 
-        if (posData == null) posData = new int[2];
+        if (posData == null) posData = new int[3];
         this.relativePosition = new Vector3f(posData[0], posData[1], posData[2]);
     }
 
     public void tick() {
         internalEntity.setDeltaMovement(vehicle.getInternalEntity().getDeltaMovement());
         internalEntity.moveTo(globalLocation(), vehicle.degrees(), 0);
+    }
+
+    private void save() {
+        PersistentDataContainer data = entity.getPersistentDataContainer();
+
+        data.set(VehicleKey.RELATIVE_POSITION_KEY.key(), PersistentDataType.INTEGER_ARRAY,
+                new int[]{(int) relativePosition.x(), (int) relativePosition.y(), (int) relativePosition.z()});
+
+        data.set(VehicleKey.DRIVER_KEY.key(), PersistentDataType.BOOLEAN, isDriver);
     }
 
     private Vec3 globalLocation() {

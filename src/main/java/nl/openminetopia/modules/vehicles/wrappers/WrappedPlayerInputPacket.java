@@ -2,7 +2,9 @@ package nl.openminetopia.modules.vehicles.wrappers;
 
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientSteerVehicle;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 public class WrappedPlayerInputPacket {
@@ -17,6 +19,15 @@ public class WrappedPlayerInputPacket {
         right = wrappedPacket.getSideways() < 0;
         sneak = wrappedPacket.isUnmount();
         jump = wrappedPacket.isJump();
+    }
+
+    public WrappedPlayerInputPacket() {
+        forward = false;
+        backward = false;
+        left = false;
+        right = false;
+        sneak = false;
+        jump = false;
     }
 
 }

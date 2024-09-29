@@ -1,5 +1,7 @@
 package nl.openminetopia.modules.vehicles.objects.movement;
 
+import lombok.Getter;
+import lombok.Setter;
 import nl.openminetopia.modules.vehicles.objects.Vehicle;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
 import org.bukkit.util.Vector;
@@ -10,6 +12,8 @@ public class CarMovement extends Movement {
         super(vehicle);
     }
 
+    @Getter
+    @Setter
     private double speed = 0;
 
     @Override

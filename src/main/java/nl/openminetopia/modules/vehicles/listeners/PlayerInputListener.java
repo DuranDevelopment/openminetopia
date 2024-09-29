@@ -15,6 +15,8 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class PlayerInputListener implements PacketListener {
     @Override
     public void onPacketReceive(PacketReceiveEvent event) {
@@ -25,9 +27,9 @@ public class PlayerInputListener implements PacketListener {
         WrappedPlayerInputPacket packet = new WrappedPlayerInputPacket(event);
         Entity entity = player.getVehicle();
 
-        Vehicle vehicle = VehiclesModule.vehicleBySeat((ArmorStand) entity);
+        Optional<Vehicle> optional = VehiclesModule.vehicleBySeat((ArmorStand) entity);
         Bukkit.getScheduler().runTask(OpenMinetopia.getInstance(), () -> {
-            vehicle.tick(packet);
+            optional.ifPresent(vehicle -> vehicle.movementTick(packet));
         });
     }
 

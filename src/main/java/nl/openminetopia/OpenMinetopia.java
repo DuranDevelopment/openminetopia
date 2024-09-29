@@ -9,6 +9,8 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
@@ -25,7 +27,9 @@ import nl.openminetopia.modules.core.CoreModule;
 import nl.openminetopia.modules.staff.StaffModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
 import nl.openminetopia.modules.vehicles.VehiclesModule;
+import nl.openminetopia.modules.vehicles.entity.BaseVehicleEntity;
 import nl.openminetopia.utils.ChatUtils;
+import nl.openminetopia.utils.nms.EntityUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,6 +50,14 @@ public final class OpenMinetopia extends JavaPlugin {
     public void onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         PacketEvents.getAPI().load();
+
+        if (!EntityUtils.isInjected("base_vehicle")) {
+            try {
+                EntityUtils.injectEntity("base_vehicle", EntityType.ARMOR_STAND, BaseVehicleEntity::new, MobCategory.MISC);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override

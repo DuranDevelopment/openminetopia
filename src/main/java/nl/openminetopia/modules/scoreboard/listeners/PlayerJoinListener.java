@@ -36,6 +36,6 @@ public class PlayerJoinListener implements Listener {
                 return;
             }
             ScoreboardManager.getInstance().updateBoard(minetopiaPlayer);
-        }, 0, 20);
+        }, 0, 10*20);
     }
 }

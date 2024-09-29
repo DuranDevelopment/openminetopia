@@ -8,7 +8,8 @@ public enum VehicleKey {
     RELATIVE_POSITION_KEY("vehicle.relativePosition"),
     SEAT_UUIDS_KEY("vehicle.seatUuids"),
     PART_UUIDS_KEY("vehicle.partUuids"),
-    VEHICLE_ID_KEY("vehicle.vehicleId");
+    VEHICLE_ID_KEY("vehicle.vehicleId"),
+    BASE_VEHICLE_KEY("vehicle.baseVehicle");
 
     private final NamespacedKey key;
 

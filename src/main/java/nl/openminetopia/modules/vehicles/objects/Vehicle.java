@@ -2,59 +2,65 @@ package nl.openminetopia.modules.vehicles.objects;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import lombok.Getter;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import nl.openminetopia.modules.vehicles.VehiclesModule;
+import nl.openminetopia.modules.vehicles.entity.BaseVehicleEntity;
 import nl.openminetopia.modules.vehicles.enums.VehicleKey;
-import nl.openminetopia.modules.vehicles.objects.movement.BoatMovement;
 import nl.openminetopia.modules.vehicles.objects.movement.CarMovement;
 import nl.openminetopia.modules.vehicles.objects.movement.Movement;
 import nl.openminetopia.modules.vehicles.wrappers.WrappedPlayerInputPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.entity.Pig;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 public class Vehicle {
 
     private final ArmorStand entity;
-    private final Entity internalEntity;
+    private final BaseVehicleEntity internalEntity;
     private final Movement movement;
 
     private final List<Seat> seats = new ArrayList<>();
     private final List<Part> parts = new ArrayList<>();
 
     public Vehicle(Location location) {
-        this.entity = location.getWorld().spawn(location, ArmorStand.class);
-        this.internalEntity = ((CraftEntity)entity).getHandle();
+        this.internalEntity = new BaseVehicleEntity(this, location.getWorld());
+        this.entity = (ArmorStand) internalEntity.getBukkitEntity();
         this.movement = CarMovement.inst(this);
+        VehiclesModule.vehicles.add(this);
 
-        entity.setInvisible(true);
-        entity.setInvulnerable(true);
-        entity.setAI(false);
+        Optional.ofNullable(entity.getAttribute(Attribute.GENERIC_STEP_HEIGHT)).ifPresent(attribute -> {
+            attribute.setBaseValue(0.5);
+        });
+
+        internalEntity.spawn(location);
     }
 
-    public Vehicle(ArmorStand entity) {
-        this.entity = entity;
-        this.internalEntity = ((CraftEntity)entity).getHandle();
+    public Vehicle(BaseVehicleEntity internalEntity) {
+        this.internalEntity = internalEntity;
+        this.entity = (ArmorStand) internalEntity.getBukkitEntity();
         this.movement = CarMovement.inst(this);
-
-        this.extractSeats();
-        this.extractParts();
+        VehiclesModule.vehicles.add(this);
     }
 
-    public void tick(WrappedPlayerInputPacket packet) {
+    public void movementTick(WrappedPlayerInputPacket packet) {
         movement.move(packet);
+    }
+
+    public void tick() {
         seats.forEach(Seat::tick);
         parts.forEach(Part::tick);
     }
@@ -97,27 +103,29 @@ public class Vehicle {
         return entity.getBodyYaw();
     }
 
-    private void extractSeats() {
+    public void extractSeats() {
         String[] entities = entity.getPersistentDataContainer().get(VehicleKey.SEAT_UUIDS_KEY.key(), DataType.STRING_ARRAY);
         if (entities == null) return;
 
         for (String s : entities) {
-            ArmorStand seatEntity = (ArmorStand) Bukkit.getEntity(UUID.fromString(s));
+            ArmorStand seatEntity = (ArmorStand) entity.getWorld().getEntity(UUID.fromString(s));
             if (seatEntity == null) continue;
+            System.out.println("Added seat");
 
             seats.add(new Seat(this, seatEntity));
         }
     }
 
-    private void extractParts() {
+    public void extractParts() {
         String[] entities = entity.getPersistentDataContainer().get(VehicleKey.PART_UUIDS_KEY.key(), DataType.STRING_ARRAY);
         if (entities == null) return;
 
         for (String s : entities) {
-            ItemDisplay partEntity = (ItemDisplay) Bukkit.getEntity(UUID.fromString(s));
+            ItemDisplay partEntity = (ItemDisplay) entity.getWorld().getEntity(UUID.fromString(s));
             if (partEntity == null) return;
 
             parts.add(new Part(this, partEntity));
+            System.out.println("yeaaaaah");
         }
     }
 
