@@ -1,11 +1,16 @@
 package nl.openminetopia.modules.data.storm.models;
 
+
 import com.craftmend.storm.api.StormModel;
+import com.craftmend.storm.api.enums.ColumnType;
+import com.craftmend.storm.api.enums.KeyType;
 import com.craftmend.storm.api.markers.Column;
 import com.craftmend.storm.api.markers.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -17,34 +22,48 @@ public class FitnessModel extends StormModel {
     private UUID uniqueId;
 
     @Column(name = "total", defaultValue = "20")
-    private Integer total;
-
-    @Column(name = "drinking_points", defaultValue = "0")
-    private Double drinkingPoints;
-
-    @Column(name = "health_points", defaultValue = "0")
-    private Integer healthPoints;
+    private Integer total = 0;
 
     @Column(name = "fitness_by_drinking", defaultValue = "0")
-    private Integer fitnessGainedByDrinking;
+    private Integer fitnessGainedByDrinking = 0;
 
     @Column(name = "fitness_by_walking", defaultValue = "0")
-    private Integer fitnessGainedByWalking;
+    private Integer fitnessGainedByWalking = 0;
 
     @Column(name = "fitness_by_climbing", defaultValue = "0")
-    private Integer fitnessGainedByClimbing;
+    private Integer fitnessGainedByClimbing = 0;
 
     @Column(name = "fitness_by_sprinting", defaultValue = "0")
-    private Integer fitnessGainedBySprinting;
+    private Integer fitnessGainedBySprinting = 0;
 
     @Column(name = "fitness_by_swimming", defaultValue = "0")
-    private Integer fitnessGainedBySwimming;
+    private Integer fitnessGainedBySwimming = 0;
 
     @Column(name = "fitness_by_flying", defaultValue = "0")
-    private Integer fitnessGainedByFlying;
+    private Integer fitnessGainedByFlying = 0;
 
     @Column(name = "fitness_by_health", defaultValue = "0")
-    private Integer fitnessGainedByHealth;
+    private Integer fitnessGainedByHealth = 0;
 
+    @Column(name = "fitness_by_eating", defaultValue = "0")
+    private Integer fitnessGainedByEating = 0;
 
+    @Column(name = "drinking_points", defaultValue = "0")
+    private Double drinkingPoints = 0.0;
+
+    @Column(name = "health_points", defaultValue = "0")
+    private Integer healthPoints = 0;
+
+    @Column(name = "luxury_food", defaultValue = "0")
+    private Integer luxuryFood = 0;
+
+    @Column(name = "cheap_food", defaultValue = "0")
+    private Integer cheapFood = 0;
+
+    @Column(
+            type = ColumnType.ONE_TO_MANY,
+            references = FitnessBoosterModel.class,
+            matchTo = "fitness_id"
+    )
+    private List<FitnessBoosterModel> boosters = new ArrayList<>();
 }

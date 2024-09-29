@@ -2,6 +2,9 @@ package nl.openminetopia.modules.fitness.listeners;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
+import nl.openminetopia.api.player.fitness.statistics.types.DrinkingStatistic;
+import nl.openminetopia.api.player.fitness.statistics.types.HealthStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import org.bukkit.Material;
@@ -38,23 +41,28 @@ public class PlayerDrinkListener implements Listener {
             return;
         }
 
-        double currentDrinkingPoints = minetopiaPlayer.getFitness().getDrinkingPoints(); // Huidige drink punten
+        DrinkingStatistic drinkingStatistic = (DrinkingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.DRINKING);
+
+        double currentDrinkingPoints = drinkingStatistic.getPoints(); // Huidige drink punten
         double drinkingPointsPerBottle = configuration.getDrinkingPointsPerWaterBottle();
 
-        if (meta.getBasePotionType() == PotionType.WATER) {
-            event.getPlayer().sendMessage("Je hebt water gedronken.");
-            minetopiaPlayer.getFitness().setDrinkingPoints(currentDrinkingPoints + drinkingPointsPerBottle);
-            minetopiaPlayer.getFitness().setLastDrinkingTime(System.currentTimeMillis());
-        } else {
-            double drinkingPointsPerPotion = configuration.getDrinkingPointsPerPotion();
-            event.getPlayer().sendMessage("Je hebt een potion gedronken.");
-            minetopiaPlayer.getFitness().setDrinkingPoints(currentDrinkingPoints + drinkingPointsPerPotion);
-            minetopiaPlayer.getFitness().setLastDrinkingTime(System.currentTimeMillis());
+        switch (meta.getBasePotionType()) {
+            case WATER:
+                event.getPlayer().sendMessage("Je hebt water gedronken.");
+                drinkingStatistic.setPoints(currentDrinkingPoints + drinkingPointsPerBottle);
+                minetopiaPlayer.getFitness().setLastDrinkingTime(System.currentTimeMillis());
+                break;
+            case null:
+            default:
+                double drinkingPointsPerPotion = configuration.getDrinkingPointsPerPotion();
+                event.getPlayer().sendMessage("Je hebt een potion gedronken.");
+                drinkingStatistic.setPoints(currentDrinkingPoints + drinkingPointsPerPotion);
+                minetopiaPlayer.getFitness().setLastDrinkingTime(System.currentTimeMillis());
         }
 
-        if (minetopiaPlayer.getFitness().getDrinkingPoints() >= 1 && minetopiaPlayer.getFitness().getFitnessGainedByDrinking() <= configuration.getMaxFitnessByDrinking()) {
-            minetopiaPlayer.getFitness().setFitnessGainedByDrinking(minetopiaPlayer.getFitness().getFitnessGainedByDrinking() + 1);
-            minetopiaPlayer.getFitness().setDrinkingPoints(0);
+        if (drinkingStatistic.getPoints() >= 1 && drinkingStatistic.getFitnessGained() <= configuration.getMaxFitnessByDrinking()) {
+            drinkingStatistic.setFitnessGained(drinkingStatistic.getFitnessGained() + 1);
+            drinkingStatistic.setPoints(0);
         }
     }
 }

@@ -34,15 +34,9 @@ public class ColorAddCommand extends BaseCommand {
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
 
-        // Validate the color
-        if (!isValidColor(color)) {
-            player.sendMessage(ChatUtils.color("<red>Ongeldige kleur ingevoerd. Gebruik een geldige kleur zoals ").append(Component.text("<red>, <blue>, <#RRGGBB>")));
-            return;
-        }
-
         switch (type) {
             case PREFIX:
-                if (minetopiaPlayer.getColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(prefixColor -> prefixColor.getColor().equalsIgnoreCase(color) && prefixColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat al."));
                     return;
                 }
@@ -59,7 +53,7 @@ public class ColorAddCommand extends BaseCommand {
                 break;
 
             case CHAT:
-                if (minetopiaPlayer.getColors().stream().anyMatch(chatColor -> chatColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(chatColor -> chatColor.getColor().equalsIgnoreCase(color) && chatColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze chatkleur bestaat al."));
                     return;
                 }
@@ -76,7 +70,7 @@ public class ColorAddCommand extends BaseCommand {
                 break;
 
             case NAME:
-                if (minetopiaPlayer.getColors().stream().anyMatch(nameColor -> nameColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(nameColor -> nameColor.getColor().equalsIgnoreCase(color) && nameColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze naamkleur bestaat al."));
                     return;
                 }
@@ -93,7 +87,7 @@ public class ColorAddCommand extends BaseCommand {
                 break;
 
             case LEVEL:
-                if (minetopiaPlayer.getColors().stream().anyMatch(levelColor -> levelColor.getColor().equalsIgnoreCase(color))) {
+                if (minetopiaPlayer.getColors().stream().anyMatch(levelColor -> levelColor.getColor().equalsIgnoreCase(color) && levelColor.getType() == type)) {
                     player.sendMessage(ChatUtils.color("<red>Deze levelkleur bestaat al."));
                     return;
                 }
@@ -109,29 +103,5 @@ public class ColorAddCommand extends BaseCommand {
                 });
                 break;
         }
-    }
-
-
-    // Helper method to validate the color
-    private boolean isValidColor(String color) {
-        // Remove angle brackets if they exist
-        if (color.startsWith("<") && color.endsWith(">")) {
-            color = color.substring(1, color.length() - 1);
-        } else {
-            return false;  // If color is not wrapped in <>, it's invalid
-        }
-
-        // Check for named colors
-        String[] validColors = {
-                "rainbow", "red", "blue", "green", "yellow", "aqua", "dark_red", "dark_blue", "dark_green", "gold", "white", "black", "gray", "dark_gray", "light_purple", "dark_purple"
-        };
-        for (String validColor : validColors) {
-            if (color.equalsIgnoreCase(validColor)) {
-                return true;
-            }
-        }
-
-        // Check for hex color (e.g., #RRGGBB)
-        return color.matches("^#([A-Fa-f0-9]{6})$");
     }
 }

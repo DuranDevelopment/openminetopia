@@ -1,10 +1,8 @@
 package nl.openminetopia.api.player.objects;
 
-import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.*;
 import nl.openminetopia.api.places.MTPlaceManager;
 import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTPlace;
@@ -16,15 +14,14 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
-import nl.openminetopia.modules.data.utils.StormUtils;
-import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
-import nl.openminetopia.modules.fitness.utils.FitnessUtils;
+import nl.openminetopia.modules.fitness.runnables.HealthStatisticRunnable;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -40,9 +37,13 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private int playtime;
     private PlaytimeRunnable playtimeRunnable;
 
+    private HealthStatisticRunnable healthStatisticRunnable;
+
     private int level;
 
     private boolean staffchatEnabled;
+    private boolean commandSpyEnabled;
+    private boolean chatSpyEnabled;
 
     private List<Prefix> prefixes;
     private Prefix activePrefix;
@@ -55,8 +56,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     private @Setter Fitness fitness;
 
-    private FitnessRunnable fitnessRunnable;
-
     private final DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
     private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
@@ -65,91 +64,141 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         this.playerModel = playerModel;
     }
 
-    public void load() {
-        try {
-            dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
-                if (level == null) {
-                    this.level = 0;
-                    return;
-                }
-                this.level = level;
-            });
+    public CompletableFuture<Void> load() {
+        CompletableFuture<Void> loadFuture = new CompletableFuture<>();
 
-            dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
-                if (prefixes == null) {
-                    this.prefixes = List.of();
-                    return;
-                }
-                this.prefixes = prefixes;
-            });
-            dataModule.getAdapter().getActivePrefix(this).whenComplete((prefix, throwable) -> {
-                if (prefix == null) {
-                    this.activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
-                    return;
-                }
-                this.activePrefix = prefix;
-            });
+        this.fitness = FitnessManager.getInstance().getFitness(uuid);
+        fitness.load().whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            fitness.getRunnable().runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
+            fitness.apply();
+        });
 
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activeNameColor = (NameColor) getDefaultColor(OwnableColorType.NAME);
-                    return;
-                }
-                this.activeNameColor = (NameColor) color;
-            });
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activeChatColor = (ChatColor) getDefaultColor(OwnableColorType.CHAT);
-                    return;
-                }
-                this.activeChatColor = (ChatColor) color;
-            });
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.PREFIX).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activePrefixColor = (PrefixColor) getDefaultColor(OwnableColorType.PREFIX);
-                    return;
-                }
-                this.activePrefixColor = (PrefixColor) color;
-            });
-            dataModule.getAdapter().getActiveColor(this, OwnableColorType.LEVEL).whenComplete((color, throwable) -> {
-                if (color == null) {
-                    this.activeLevelColor = (LevelColor) getDefaultColor(OwnableColorType.LEVEL);
-                    return;
-                }
-                this.activeLevelColor = (LevelColor) color;
-            });
-            dataModule.getAdapter().getColors(this).whenComplete((colors, throwable) -> {
-                if (colors == null) {
-                    this.colors = List.of();
-                    return;
-                }
-                this.colors = colors;
-            });
+        dataModule.getAdapter().getStaffchatEnabled(this).whenComplete((staffchatEnabled, throwable) -> {
+            if (staffchatEnabled == null) {
+                this.staffchatEnabled = false;
+                return;
+            }
+            this.staffchatEnabled = staffchatEnabled;
+        });
+  
+        dataModule.getAdapter().getCommandSpyEnabled(this).whenComplete((spy, throwable) -> {
+            if (spy == null) {
+                this.commandSpyEnabled = false;
+                return;
+            }
 
-            dataModule.getAdapter().getPlaytime(this).whenComplete((playtime, throwable) -> {
-                if (playtime == null) {
-                    this.playtime = 0;
-                    return;
-                }
-                this.playtime = playtime;
-            });
-        } catch (Exception exception) {
-            getBukkit().kick(ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens. Probeer het later opnieuw."));
-            exception.printStackTrace();
-        }
+            this.commandSpyEnabled = spy;
+        });
 
-        this.fitness = FitnessManager.getInstance().getFitness(this);
+        dataModule.getAdapter().getChatSpyEnabled(this).whenComplete((spy, throwable) -> {
+            if (spy == null) {
+                this.chatSpyEnabled = false;
+                return;
+            }
 
-        this.fitnessRunnable = new FitnessRunnable(getBukkit());
+            this.chatSpyEnabled = spy;
+        });
+
+        dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
+            if (prefixes == null) {
+                this.prefixes = new ArrayList<>();
+                return;
+            }
+            this.prefixes = prefixes;
+        });
+
+        dataModule.getAdapter().getColors(this).whenComplete((colors, throwable) -> {
+            if (colors == null) {
+                this.colors = new ArrayList<>();
+                return;
+            }
+            this.colors = colors;
+        });
+
+        dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
+            if (level == null) {
+                this.level = 0;
+                return;
+            }
+            this.level = level;
+        });
+
+        dataModule.getAdapter().getActivePrefix(this).whenComplete((prefix, throwable) -> {
+            if (prefix == null) {
+                this.activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
+                return;
+            }
+            this.activePrefix = prefix;
+        });
+
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activeNameColor = (NameColor) getDefaultColor(OwnableColorType.NAME);
+                return;
+            }
+            this.activeNameColor = (NameColor) color;
+        });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.NAME).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activeChatColor = (ChatColor) getDefaultColor(OwnableColorType.CHAT);
+                return;
+            }
+            this.activeChatColor = (ChatColor) color;
+        });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.PREFIX).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activePrefixColor = (PrefixColor) getDefaultColor(OwnableColorType.PREFIX);
+                return;
+            }
+            this.activePrefixColor = (PrefixColor) color;
+        });
+        dataModule.getAdapter().getActiveColor(this, OwnableColorType.LEVEL).whenComplete((color, throwable) -> {
+            if (color == null) {
+                this.activeLevelColor = (LevelColor) getDefaultColor(OwnableColorType.LEVEL);
+                return;
+            }
+            this.activeLevelColor = (LevelColor) color;
+        });
+
+        dataModule.getAdapter().getPlaytime(this).whenComplete((playtime, throwable) -> {
+            if (playtime == null) {
+                this.playtime = 0;
+                return;
+            }
+            this.playtime = playtime;
+        });
+
+
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
-
-        fitnessRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
-        FitnessUtils.applyFitness(getBukkit());
+
+        this.healthStatisticRunnable = new HealthStatisticRunnable(this);
+        healthStatisticRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+
+        loadFuture.complete(null);
+        return loadFuture;
     }
 
-    public void save() {
-        dataModule.getAdapter().savePlayer(this);
+    public CompletableFuture<Void> save() {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        dataModule.getAdapter().savePlayer(this).whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
+        });
+        fitness.save().whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
+        });
+
+        future.complete(null);
+        return future;
     }
 
     @Override
@@ -200,12 +249,28 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         dataModule.getAdapter().setStaffchatEnabled(this, staffchatEnabled);
     }
 
+    /* Spy */
+
+    public void setCommandSpyEnabled(boolean commandSpyEnabled) {
+        this.commandSpyEnabled = commandSpyEnabled;
+        dataModule.getAdapter().setCommandSpyEnabled(this, commandSpyEnabled);
+    }
+
+    public void setChatSpyEnabled(boolean chatSpyEnabled) {
+        this.chatSpyEnabled = chatSpyEnabled;
+        dataModule.getAdapter().setChatSpyEnabled(this, chatSpyEnabled);
+    }
+
     /* Prefix */
 
     @Override
     public void addPrefix(Prefix prefix) {
         prefixes.add(prefix);
-        dataModule.getAdapter().addPrefix(this, prefix);
+        dataModule.getAdapter().addPrefix(this, prefix).whenComplete((unused, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+            }
+        });
     }
 
     @Override

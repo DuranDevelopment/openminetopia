@@ -2,6 +2,7 @@ package nl.openminetopia.modules.player.runnables;
 
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -20,7 +21,7 @@ public class PlaytimeRunnable extends BukkitRunnable {
 
         int newPlaytime = minetopiaPlayer.getPlaytime() + 1;
 
-        // If the new playtime is a multiple of 60, update the playtime in the database
+        // If the new playtime is a multiple of 60, update the playtime in the database, so it's only updated every minute
         if (newPlaytime % 60 == 0) {
             minetopiaPlayer.setPlaytime(newPlaytime, true);
             return;

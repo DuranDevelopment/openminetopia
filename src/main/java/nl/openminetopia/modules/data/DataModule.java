@@ -1,7 +1,9 @@
 package nl.openminetopia.modules.data;
 
 import com.craftmend.storm.Storm;
+import com.craftmend.storm.api.StormModel;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
@@ -44,6 +46,8 @@ public class DataModule extends Module {
                 storm.runMigrations();
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());
+                OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
+                OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
             }
         }
     }
@@ -53,5 +57,12 @@ public class DataModule extends Module {
         if (adapter != null) {
             adapter.disconnect();
         }
+    }
+
+    @SneakyThrows
+    private void registerStormModel(StormModel model) {
+        Storm storm = StormDatabase.getInstance().getStorm();
+        storm.registerModel(model);
+        storm.runMigrations();
     }
 }

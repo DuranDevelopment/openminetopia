@@ -74,6 +74,12 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final int pointsBelow5Hearts;
     private final int pointsBelow2Hearts;
 
+    private final int maxFitnessByEating;
+    private final double pointsForLuxuryFood;
+    private final double pointsForCheapFood;
+    private final List<String> cheapFood;
+    private final List<String> luxuryFood;
+
     private final boolean fitnessDeathPunishmentEnabled;
     private final int fitnessDeathPunishmentAmount;
     private final int fitnessDeathPunishmentDuration;
@@ -110,7 +116,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Database configuration
          */
-        this.databaseType = DatabaseType.valueOf(rootNode.node("database", "type").getString("mysql").toUpperCase());
+        this.databaseType = DatabaseType.valueOf(rootNode.node("database", "type").getString("sqlite").toUpperCase());
         this.host = rootNode.node("database", "host").getString("localhost");
         this.port = rootNode.node("database", "port").getInt(3306);
         this.databaseName = rootNode.node("database", "name").getString("openminetopia");
@@ -165,6 +171,12 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.pointsBelow5Hearts = rootNode.node("fitness", "health", "pointsBelow5Hearts").getInt(-50);
         this.pointsBelow2Hearts = rootNode.node("fitness", "health", "pointsBelow2Hearts").getInt(-75);
 
+        this.maxFitnessByEating = rootNode.node("fitness", "eating", "maxFitnessByEating").getInt(20);
+        this.pointsForLuxuryFood = rootNode.node("fitness", "eating", "pointsForLuxuryFood").getDouble(5);
+        this.pointsForCheapFood = rootNode.node("fitness", "eating", "pointsForCheapFood").getDouble(2);
+        this.luxuryFood = rootNode.node("fitness", "eating", "luxuryFood").getList(String.class, List.of("COOKED_BEEF", "MUSHROOM_STEW", "COOKED_PORKCHOP",  "COOKED_SALMON", "COOKED_COD", "BAKED_POTATO", "COOKED_RABBIT"));
+        this.cheapFood = rootNode.node("fitness", "eating", "cheapFood").getList(String.class, List.of("APPLE", "BREAD", "MELON_BLOCK", "RAW_FISH", "COOKED_CHICKEN", "COOKED_MUTTON", "COOKIE"));
+
         this.fitnessDeathPunishmentDuration = rootNode.node("fitness", "deathPunishment", "duration").getInt(1440);
         this.fitnessDeathPunishmentEnabled = rootNode.node("fitness", "deathPunishment", "enabled").getBoolean(true);
         this.fitnessDeathPunishmentAmount = rootNode.node("fitness", "deathPunishment", "amount").getInt(-20);
@@ -186,7 +198,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         defaultFitnessLevels.put("160-179", new FitnessLevel(0.29, List.of("JUMP_BOOST:2")));
         defaultFitnessLevels.put("180-199", new FitnessLevel(0.31, List.of("JUMP_BOOST:2")));
         defaultFitnessLevels.put("200-209", new FitnessLevel(0.325, List.of("JUMP_BOOST:3")));
-        defaultFitnessLevels.put("210-255", new FitnessLevel(0.335, List.of("JUMP_BOOST:3")));
+        defaultFitnessLevels.put("210-225", new FitnessLevel(0.335, List.of("JUMP_BOOST:3")));
 
         ConfigurationNode fitnessNode = this.rootNode.node("fitness", "levels");
 
@@ -215,7 +227,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Chat configuration
          */
-        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<levelcolor>Level <level><dark_gray>] <dark_gray>[<prefixcolor><prefix><dark_gray>] <namecolor><name>: <chatcolor><message>");
+        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<level_color>Level <level><dark_gray>] <dark_gray>[<prefix_color><prefix><dark_gray>] <name_color><name>: <chat_color><message>");
         this.chatEnabled = rootNode.node("chat", "enabled").getBoolean(true);
         this.chatRadiusEnabled = rootNode.node("chat", "radius", "enabled").getBoolean(true);
         this.chatRadiusRange = rootNode.node("chat", "radius", "range").getInt(20);
