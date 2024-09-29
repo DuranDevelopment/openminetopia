@@ -105,6 +105,11 @@ public class DefaultConfiguration extends ConfigurateConfig {
      */
     private final List<String> displayLines;
 
+    /**
+     * Plot configuration
+     */
+    private final List<String> commandsOnPlotCreate;
+
     @SneakyThrows
     public DefaultConfiguration(File file) {
         super(file, "config.yml");
@@ -164,7 +169,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.maxFitnessByEating = rootNode.node("fitness", "eating", "maxFitnessByEating").getInt(20);
         this.pointsForLuxuryFood = rootNode.node("fitness", "eating", "pointsForLuxuryFood").getDouble(5);
         this.pointsForCheapFood = rootNode.node("fitness", "eating", "pointsForCheapFood").getDouble(2);
-        this.luxuryFood = rootNode.node("fitness", "eating", "luxuryFood").getList(String.class, List.of("COOKED_BEEF", "MUSHROOM_STEW", "COOKED_PORKCHOP",  "COOKED_SALMON", "COOKED_COD", "BAKED_POTATO", "COOKED_RABBIT"));
+        this.luxuryFood = rootNode.node("fitness", "eating", "luxuryFood").getList(String.class, List.of("COOKED_BEEF", "MUSHROOM_STEW", "COOKED_PORKCHOP", "COOKED_SALMON", "COOKED_COD", "BAKED_POTATO", "COOKED_RABBIT"));
         this.cheapFood = rootNode.node("fitness", "eating", "cheapFood").getList(String.class, List.of("APPLE", "BREAD", "MELON_BLOCK", "RAW_FISH", "COOKED_CHICKEN", "COOKED_MUTTON", "COOKIE"));
 
         this.fitnessDeathPunishmentDuration = rootNode.node("fitness", "deathPunishment", "duration").getInt(1440);
@@ -245,6 +250,17 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.displayLines = rootNode.node("teleporter", "lines").getList(String.class, List.of(
                 "<gold>Teleporter",
                 "<grey><x>;<y>;<z>;<world>"
+        ));
+
+        /*
+         * Plot configuration
+         */
+        this.commandsOnPlotCreate = rootNode.node("plot", "commandsOnCreate").getList(String.class, List.of(
+                "rg flag <plot> -w <world> interact -g NON_MEMBERS DENY",
+                "rg flag <plot> -w <world> chest-access -g NON_MEMBERS DENY",
+                "rg flag <plot> -w <world> USE -g MEMBERS ALLOW",
+                "rg flag <plot> -w <world> INTERACT -g MEMBERS ALLOW",
+                "rg flag <plot> -w <world> PVP ALLOW"
         ));
     }
 }

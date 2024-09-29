@@ -741,8 +741,7 @@ public class MySQLAdapter implements DatabaseAdapter {
                     case SWIMMING -> new SwimmingStatistic(model.getFitnessGainedBySwimming());
                     case FLYING -> new FlyingStatistic(model.getFitnessGainedByFlying());
                     case HEALTH -> new HealthStatistic(model.getFitnessGainedByHealth(), model.getHealthPoints());
-                    case EATING ->
-                            new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
+                    case EATING -> new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
                 },
                 null
         ).whenComplete((statistic, ex) -> {

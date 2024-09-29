@@ -67,12 +67,10 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     public CompletableFuture<Void> load() {
         CompletableFuture<Void> loadFuture = new CompletableFuture<>();
 
+        getBukkit().sendMessage(ChatUtils.color("<red>Je data wordt geladen..."));
+
         this.fitness = FitnessManager.getInstance().getFitness(uuid);
-        fitness.load().whenComplete((unused, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
+        fitness.load().thenAccept((unused) -> {
             fitness.getRunnable().runTaskTimer(OpenMinetopia.getInstance(), 0, 60 * 20L);
             fitness.apply();
         });
@@ -171,7 +169,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             }
             this.playtime = playtime;
         });
-
 
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);

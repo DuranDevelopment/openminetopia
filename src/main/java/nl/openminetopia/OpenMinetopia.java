@@ -44,7 +44,6 @@ public final class OpenMinetopia extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
 
         commandManager = new PaperCommandManager(this);

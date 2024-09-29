@@ -6,6 +6,8 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 
@@ -27,5 +29,12 @@ public class MTWorldCreateCommand extends BaseCommand {
         MTWorld world = new MTWorld(player.getWorld().getName(), title, "<gold>", 21.64, loadingName);
         MTWorldManager.getInstance().createWorld(world);
         player.sendMessage(ChatUtils.color("<green>World <white>" + loadingName + " <green>has been created!"));
+
+        for (Player worldPlayer : player.getWorld().getPlayers()) {
+            MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(worldPlayer);
+            if (minetopiaPlayer == null) return;
+
+            minetopiaPlayer.getFitness().getRunnable().run();
+        }
     }
 }
