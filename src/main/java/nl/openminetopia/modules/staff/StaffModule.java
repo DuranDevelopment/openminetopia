@@ -9,6 +9,8 @@ import nl.openminetopia.modules.staff.admintool.listeners.PlayerInteractListener
 import nl.openminetopia.modules.staff.chat.commands.StaffchatCommand;
 import nl.openminetopia.modules.staff.chat.listeners.PlayerChatListener;
 import nl.openminetopia.modules.staff.mod.commands.ModCommand;
+import nl.openminetopia.modules.staff.mod.commands.subcommands.ModChatSpyCommand;
+import nl.openminetopia.modules.staff.mod.commands.subcommands.ModCommandSpyCommand;
 import nl.openminetopia.modules.staff.mod.commands.subcommands.ModSetLevelCommand;
 
 public class StaffModule extends Module {
@@ -16,6 +18,8 @@ public class StaffModule extends Module {
     public void enable() {
         registerCommand(new ModCommand());
         registerCommand(new ModSetLevelCommand());
+        registerCommand(new ModChatSpyCommand());
+        registerCommand(new ModCommandSpyCommand());
 
         registerCommand(new AdminToolCommand());
         registerCommand(new AdminToolOpenCommand());
