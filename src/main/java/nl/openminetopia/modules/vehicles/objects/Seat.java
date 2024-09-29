@@ -50,10 +50,10 @@ public class Seat {
         this.internalEntity = ((CraftEntity)entity).getHandle();
 
         PersistentDataContainer data = entity.getPersistentDataContainer();
-        int[] posData = data.get(VehicleKey.RELATIVE_POSITION_KEY.key(), PersistentDataType.INTEGER_ARRAY);
+        float[] posData = data.get(VehicleKey.RELATIVE_POSITION_KEY.key(), DataType.FLOAT_ARRAY);
         this.isDriver = Boolean.TRUE.equals(data.get(VehicleKey.DRIVER_KEY.key(), PersistentDataType.BOOLEAN));
 
-        if (posData == null) posData = new int[3];
+        if (posData == null) posData = new float[3];
         this.relativePosition = new Vector3f(posData[0], posData[1], posData[2]);
     }
 
@@ -62,11 +62,11 @@ public class Seat {
         internalEntity.moveTo(globalLocation(), vehicle.degrees(), 0);
     }
 
-    private void save() {
+    public void save() {
         PersistentDataContainer data = entity.getPersistentDataContainer();
 
-        data.set(VehicleKey.RELATIVE_POSITION_KEY.key(), PersistentDataType.INTEGER_ARRAY,
-                new int[]{(int) relativePosition.x(), (int) relativePosition.y(), (int) relativePosition.z()});
+        data.set(VehicleKey.RELATIVE_POSITION_KEY.key(), DataType.FLOAT_ARRAY,
+                new float[]{relativePosition.x, relativePosition.y, relativePosition.z});
 
         data.set(VehicleKey.DRIVER_KEY.key(), PersistentDataType.BOOLEAN, isDriver);
     }

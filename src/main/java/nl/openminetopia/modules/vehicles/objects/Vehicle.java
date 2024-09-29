@@ -110,7 +110,6 @@ public class Vehicle {
         for (String s : entities) {
             ArmorStand seatEntity = (ArmorStand) entity.getWorld().getEntity(UUID.fromString(s));
             if (seatEntity == null) continue;
-            System.out.println("Added seat");
 
             seats.add(new Seat(this, seatEntity));
         }
@@ -125,7 +124,6 @@ public class Vehicle {
             if (partEntity == null) return;
 
             parts.add(new Part(this, partEntity));
-            System.out.println("yeaaaaah");
         }
     }
 
