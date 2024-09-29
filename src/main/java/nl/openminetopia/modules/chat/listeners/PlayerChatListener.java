@@ -5,6 +5,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.modules.chat.utils.SpyUtils;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -48,6 +49,8 @@ public class PlayerChatListener implements Listener {
         // Format the message
         String originalMessage = ChatUtils.stripMiniMessage(event.message());
         String formattedMessage = configuration.getChatFormat();
+
+        SpyUtils.chatSpy(source, originalMessage, recipients);
 
         // Iterate over recipients
         recipients.forEach(player -> {

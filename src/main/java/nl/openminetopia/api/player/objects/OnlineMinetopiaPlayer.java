@@ -42,6 +42,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private int level;
 
     private boolean staffchatEnabled;
+    private boolean commandSpyEnabled;
+    private boolean chatSpyEnabled;
 
     private List<Prefix> prefixes;
     private Prefix activePrefix;
@@ -62,7 +64,6 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         this.playerModel = playerModel;
     }
 
-
     public CompletableFuture<Void> load() {
         CompletableFuture<Void> loadFuture = new CompletableFuture<>();
 
@@ -82,6 +83,24 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
                 return;
             }
             this.staffchatEnabled = staffchatEnabled;
+        });
+  
+        dataModule.getAdapter().getCommandSpyEnabled(this).whenComplete((spy, throwable) -> {
+            if (spy == null) {
+                this.commandSpyEnabled = false;
+                return;
+            }
+
+            this.commandSpyEnabled = spy;
+        });
+
+        dataModule.getAdapter().getChatSpyEnabled(this).whenComplete((spy, throwable) -> {
+            if (spy == null) {
+                this.chatSpyEnabled = false;
+                return;
+            }
+
+            this.chatSpyEnabled = spy;
         });
 
         dataModule.getAdapter().getPrefixes(this).whenComplete((prefixes, throwable) -> {
@@ -228,6 +247,18 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     public void setStaffchatEnabled(boolean staffchatEnabled) {
         this.staffchatEnabled = staffchatEnabled;
         dataModule.getAdapter().setStaffchatEnabled(this, staffchatEnabled);
+    }
+
+    /* Spy */
+
+    public void setCommandSpyEnabled(boolean commandSpyEnabled) {
+        this.commandSpyEnabled = commandSpyEnabled;
+        dataModule.getAdapter().setCommandSpyEnabled(this, commandSpyEnabled);
+    }
+
+    public void setChatSpyEnabled(boolean chatSpyEnabled) {
+        this.chatSpyEnabled = chatSpyEnabled;
+        dataModule.getAdapter().setChatSpyEnabled(this, chatSpyEnabled);
     }
 
     /* Prefix */

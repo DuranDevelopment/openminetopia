@@ -173,6 +173,70 @@ public class MySQLAdapter implements DatabaseAdapter {
         return completableFuture;
     }
 
+    @Override
+    public CompletableFuture<Boolean> setCommandSpyEnabled(MinetopiaPlayer player, boolean enabled) {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+        StormUtils.updateModelData(PlayerModel.class,
+                query -> query.where("uuid", Where.EQUAL, player.getUuid().toString()),
+                playerModel -> playerModel.setCommandSpyEnabled(enabled)
+        );
+        completableFuture.complete(enabled);
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> setChatSpyEnabled(MinetopiaPlayer player, boolean enabled) {
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+        StormUtils.updateModelData(PlayerModel.class,
+                query -> query.where("uuid", Where.EQUAL, player.getUuid().toString()),
+                playerModel -> playerModel.setChatSpyEnabled(enabled)
+        );
+        completableFuture.complete(enabled);
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> getCommandSpyEnabled(MinetopiaPlayer player) {
+        CompletableFuture<Boolean> spyFuture = new CompletableFuture<>();
+
+        StormUtils.getModelData(PlayerModel.class,
+                query -> query.where("uuid", Where.EQUAL, player.getUuid().toString()),
+                null,
+                PlayerModel::getCommandSpyEnabled,
+                false
+        ).whenComplete((spy, ex) -> {
+            if (ex != null) {
+                ex.printStackTrace();
+                spyFuture.completeExceptionally(ex);
+                return;
+            }
+            spyFuture.complete(spy);
+        });
+        return spyFuture;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> getChatSpyEnabled(MinetopiaPlayer player) {
+        CompletableFuture<Boolean> spyFuture = new CompletableFuture<>();
+
+        StormUtils.getModelData(PlayerModel.class,
+                query -> query.where("uuid", Where.EQUAL, player.getUuid().toString()),
+                null,
+                PlayerModel::getChatSpyEnabled,
+                false
+        ).whenComplete((spy, ex) -> {
+            if (ex != null) {
+                ex.printStackTrace();
+                spyFuture.completeExceptionally(ex);
+                return;
+            }
+            spyFuture.complete(spy);
+        });
+        return spyFuture;
+    }
+
     /* Prefix related database queries */
 
     @Override

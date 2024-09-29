@@ -35,6 +35,14 @@ public interface DatabaseAdapter {
     CompletableFuture<Boolean> getStaffchatEnabled(MinetopiaPlayer player);
     CompletableFuture<Boolean> setStaffchatEnabled(MinetopiaPlayer player, boolean enabled);
 
+    CompletableFuture<Boolean> setCommandSpyEnabled(MinetopiaPlayer player, boolean enabled);
+
+    CompletableFuture<Boolean> setChatSpyEnabled(MinetopiaPlayer player, boolean enabled);
+
+    CompletableFuture<Boolean> getCommandSpyEnabled(MinetopiaPlayer player);
+
+    CompletableFuture<Boolean> getChatSpyEnabled(MinetopiaPlayer player);
+
     /* Prefix related database queries */
 
     CompletableFuture<Void> addPrefix(MinetopiaPlayer player, Prefix prefix);
