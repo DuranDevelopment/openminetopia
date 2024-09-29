@@ -3,8 +3,9 @@ package nl.openminetopia.modules.chat.listeners;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.modules.chat.utils.SpyUtils;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -21,8 +22,13 @@ public class PlayerChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(AsyncChatEvent event) {
-
         Player source = event.getPlayer();
+        OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(source);
+        if (minetopiaPlayer == null) return;
+
+        if (!minetopiaPlayer.isInPlace()) return;
+        if (minetopiaPlayer.isStaffchatEnabled()) return;
+
         List<Player> recipients = new ArrayList<>();
 
         event.setCancelled(true);
@@ -38,21 +44,13 @@ public class PlayerChatListener implements Listener {
             event.getPlayer().sendMessage(ChatUtils.color("<red>Er zijn geen spelers in de buurt om je bericht te horen."));
             return;
         }
-
         recipients.add(source);
-        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(source);
-        if (minetopiaPlayer == null) return;
 
         // Format the message
         String originalMessage = ChatUtils.stripMiniMessage(event.message());
-        String formattedMessage = configuration.getChatFormat()
-                .replace("<levelcolor>", "<white>")
-                .replace("<level>", minetopiaPlayer.getLevel() + "")
-                .replace("<prefixcolor>", minetopiaPlayer.getActivePrefixColor().getColor())
-                .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
-                .replace("<namecolor>", "<white>")
-                .replace("<name>", source.getName())
-                .replace("<chatcolor>", "<white>");
+        String formattedMessage = configuration.getChatFormat();
+
+        SpyUtils.chatSpy(source, originalMessage, recipients);
 
         // Iterate over recipients
         recipients.forEach(player -> {
@@ -69,7 +67,7 @@ public class PlayerChatListener implements Listener {
             }
 
             // Send the formatted message to the player
-            player.sendMessage(ChatUtils.color(finalMessage));
+            player.sendMessage(ChatUtils.format(minetopiaPlayer, finalMessage));
         });
     }
 }

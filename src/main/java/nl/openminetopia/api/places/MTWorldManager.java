@@ -2,7 +2,9 @@ package nl.openminetopia.api.places;
 
 import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTWorld;
+import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.WorldModel;
 import org.bukkit.Location;
@@ -22,6 +24,8 @@ public class MTWorldManager {
         }
         return instance;
     }
+
+    private final DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
 
     public List<MTWorld> worlds = new ArrayList<>();
 
@@ -60,40 +64,54 @@ public class MTWorldManager {
         return completableFuture;
     }
 
-    public void createWorld(MTWorld world) {
-        worlds.add(world);
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                WorldModel worldModel = new WorldModel();
-                worldModel.setWorldName(world.getName());
-                worldModel.setTitle(world.getTitle());
-                worldModel.setColor(world.getColor());
-                worldModel.setTemperature(world.getTemperature());
-                worldModel.setLoadingName(world.getLoadingName());
-
-                StormDatabase.getInstance().saveStormModel(worldModel);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
+    public void setTitle(MTWorld world, String title) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setTitle(title);
         });
+        dataModule.getAdapter().setTitle(world, title);
+    }
+
+    public void setTemperature(MTWorld world, double temperature) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setTemperature(temperature);
+        });
+        dataModule.getAdapter().setTemperature(world, temperature);
+    }
+
+    public void setLoadingName(MTWorld world, String loadingName) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setLoadingName(loadingName);
+        });
+        dataModule.getAdapter().setLoadingName(world, loadingName);
+    }
+
+    public void setColor(MTWorld world, String color) {
+        worlds.forEach(mtWorld -> {
+            if (!mtWorld.getName().equals(world.getName())) return;
+            mtWorld.setColor(color);
+        });
+        dataModule.getAdapter().setColor(world, color);
+    }
+
+    public void createWorld(MTWorld world) {
+        dataModule.getAdapter().createWorld(world);
+        worlds.add(world);
     }
 
     public void deleteWorld(MTWorld world) {
+        dataModule.getAdapter().deleteWorld(world);
         worlds.remove(world);
+    }
 
-        getWorldModel(world).whenComplete((model, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            StormDatabase.getExecutorService().submit(() -> {
-                try {
-                    StormDatabase.getInstance().getStorm().delete(model);
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            });
-        });
+    public MTWorld getWorld(String worldName) {
+        for (MTWorld world : worlds) {
+            if (!world.getName().equals(worldName)) continue;
+            return world;
+        }
+        return null;
     }
 
     public MTWorld getWorld(Location location) {
@@ -102,27 +120,5 @@ public class MTWorldManager {
             return world;
         }
         return null;
-    }
-
-    public CompletableFuture<WorldModel> getWorldModel(MTWorld world) {
-        CompletableFuture<WorldModel> completableFuture = new CompletableFuture<>();
-
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                WorldModel model = StormDatabase.getInstance().getStorm().buildQuery(WorldModel.class)
-                        .where("world_name", Where.EQUAL, world.getName())
-                        .execute()
-                        .join()
-                        .stream()
-                        .findFirst()
-                        .orElse(null);
-
-                completableFuture.complete(model);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
     }
 }

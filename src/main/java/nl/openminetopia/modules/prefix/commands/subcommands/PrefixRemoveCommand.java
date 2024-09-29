@@ -14,6 +14,7 @@ public class PrefixRemoveCommand extends BaseCommand {
 
     @Subcommand("remove")
     @Syntax("<player> <id>")
+    @CommandPermission("openminetopia.prefix.remove")
     @CommandCompletion("@players")
     @Description("Remove a prefix from a player.")
     public static void addPrefixCommand(Player player, OfflinePlayer offlinePlayer, Integer id) {

@@ -5,9 +5,9 @@ import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
-import nl.openminetopia.modules.fitness.objects.FitnessBooster;
+import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
+import nl.openminetopia.modules.data.utils.StormUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -15,22 +15,27 @@ import org.bukkit.entity.Player;
 public class FitnessBoosterCommand extends BaseCommand {
 
     @Subcommand("booster")
-    @Syntax("<player> <amount> [expiresAt]")
+    @CommandPermission("openminetopia.fitness.booster")
     @CommandCompletion("@players")
-    public void onBooster(Player player, OfflinePlayer offlinePlayer, int amount, @Optional int expiresAt) {
+    public void onBooster(Player player, OfflinePlayer offlinePlayer, int amount, @Optional Integer expiresAt) {
         if (offlinePlayer.getPlayer() == null) return;
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
 
-        if (expiresAt == 0) expiresAt = -1;
+        if (expiresAt == null || expiresAt <= 0) expiresAt = -1;
+        long expiresAtMillis = expiresAt == -1 ? -1 : System.currentTimeMillis() + (expiresAt * 1000);
 
-        int nextId = StormDatabase.getInstance().getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId);
-        FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, System.currentTimeMillis() + expiresAt);
-        minetopiaPlayer.addFitnessBooster(fitnessBooster);
+        StormUtils.getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId).whenComplete((nextId, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+            FitnessBooster fitnessBooster = new FitnessBooster(nextId, amount, expiresAtMillis);
+            minetopiaPlayer.getFitness().addBooster(fitnessBooster);
+        });
 
-        if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitnessRunnable().run();
+        if (minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer) onlineMinetopiaPlayer.getFitness().getRunnable().run();
 
         player.sendMessage("Added fitness booster to " + offlinePlayer.getName());
-        minetopiaPlayer.getFitnessBoosters().forEach(fitnessBooster1 -> player.sendMessage("Booster: " + fitnessBooster1.getAmount() + " - " + fitnessBooster1.getExpiresAt()));
     }
 }

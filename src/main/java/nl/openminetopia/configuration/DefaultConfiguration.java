@@ -3,7 +3,7 @@ package nl.openminetopia.configuration;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.data.types.DatabaseType;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import nl.openminetopia.utils.ConfigurateConfig;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -21,89 +21,93 @@ public class DefaultConfiguration extends ConfigurateConfig {
     /**
      * Database configuration
      */
-    private DatabaseType databaseType;
-    private String host;
-    private int port;
-    private String databaseName;
-    private String username;
-    private String password;
+    private final DatabaseType databaseType;
+    private final String host;
+    private final int port;
+    private final String databaseName;
+    private final String username;
+    private final String password;
 
     /**
      * Chat configuration
      */
-    private String chatFormat;
-    private boolean chatEnabled;
-    private boolean chatRadiusEnabled;
-    private int chatRadiusRange;
-    private boolean notifyWhenNobodyInRange;
+    private final String chatFormat;
+    private final boolean chatEnabled;
+    private final boolean chatRadiusEnabled;
+    private final int chatRadiusRange;
+    private final boolean notifyWhenNobodyInRange;
 
     /**
      * Fitness configuration
      */
-    private int maxFitnessLevel;
-    private int defaultFitnessLevel;
+    private final int maxFitnessLevel;
+    private final int defaultFitnessLevel;
 
-    private int maxFitnessByDrinking;
-    private double drinkingPointsPerPotion;
-    private double drinkingPointsPerWaterBottle;
-    private int drinkingPointsPerFitnessPoint;
-    private int drinkingCooldown;
+    private final int maxFitnessByDrinking;
+    private final double drinkingPointsPerPotion;
+    private final double drinkingPointsPerWaterBottle;
+    private final int drinkingPointsPerFitnessPoint;
+    private final int drinkingCooldown;
 
-    private int maxFitnessByWalking;
-    private int cmPerWalkingPoint;
+    private final int maxFitnessByWalking;
+    private final int cmPerWalkingPoint;
 
-    private int maxFitnessByClimbing;
-    private int cmPerClimbingPoint;
+    private final int maxFitnessByClimbing;
+    private final int cmPerClimbingPoint;
 
-    private int maxFitnessBySprinting;
-    private int cmPerSprintingPoint;
+    private final int maxFitnessBySprinting;
+    private final int cmPerSprintingPoint;
 
-    private int maxFitnessBySwimming;
-    private int cmPerSwimmingPoint;
+    private final int maxFitnessBySwimming;
+    private final int cmPerSwimmingPoint;
 
-    private int maxFitnessByFlying;
-    private int cmPerFlyingPoint;
+    private final int maxFitnessByFlying;
+    private final int cmPerFlyingPoint;
 
-    private int maxFitnessByHealth;
-    private int pointsAbove9Hearts;
-    private int pointsBelow5Hearts;
-    private int pointsBelow2Hearts;
+    private final int maxFitnessByHealth;
+    private final int pointsAbove9Hearts;
+    private final int pointsBelow5Hearts;
+    private final int pointsBelow2Hearts;
 
-    private boolean fitnessDeathPunishmentEnabled;
-    private int fitnessDeathPunishmentAmount;
-    private int fitnessDeathPunishmentDuration;
+    private final int maxFitnessByEating;
+    private final double pointsForLuxuryFood;
+    private final double pointsForCheapFood;
+    private final List<String> cheapFood;
+    private final List<String> luxuryFood;
+
+    private final boolean fitnessDeathPunishmentEnabled;
+    private final int fitnessDeathPunishmentAmount;
+    private final int fitnessDeathPunishmentDuration;
 
     private final Map<String, FitnessLevel> fitnessLevels = new HashMap<>();
 
-    private boolean rainSlowdownEnabled;
+    private final boolean rainSlowdownEnabled;
 
     /**
      * Scoreboard configuration
      */
-    private boolean scoreboardEnabled;
-    private List<String> scoreboardLines;
+    private final boolean scoreboardEnabled;
+    private final List<String> scoreboardLines;
 
     /**
      * Default settings configuration
      */
-    private String defaultPrefix;
-    private String defaultPrefixColor;
-    private int defaultLevel;
+    private final String defaultPrefix;
+    private final String defaultPrefixColor;
+    private final int defaultLevel;
+    private final String defaultLevelColor;
+
+    private final String defaultNameColor;
+    private final String defaultChatColor;
 
     /**
      * Teleporter configuration
      */
-    private List<String> displayLines;
+    private final List<String> displayLines;
 
     @SneakyThrows
     public DefaultConfiguration(File file) {
-
         super(file, "config.yml");
-        reload();
-    }
-
-    @SneakyThrows
-    public void reload() {
         /*
          * Database configuration
          */
@@ -120,11 +124,15 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.defaultPrefix = rootNode.node("default", "prefix").getString("Zwerver");
         this.defaultPrefixColor = rootNode.node("default", "prefixColor").getString("<gray>");
         this.defaultLevel = rootNode.node("default", "level").getInt(1);
+        this.defaultLevelColor = rootNode.node("default", "levelColor").getString("<gray>");
+
+        this.defaultNameColor = rootNode.node("default", "nameColor").getString("<white>");
+        this.defaultChatColor = rootNode.node("default", "chatColor").getString("<white>");
 
         /*
          * Fitness configuration
          */
-        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(255);
+        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(225);
         this.defaultFitnessLevel = rootNode.node("fitness", "defaultFitnessLevel").getInt(20);
 
         this.maxFitnessByDrinking = rootNode.node("fitness", "drinking", "maxFitnessByDrinking").getInt(20);
@@ -152,6 +160,12 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.pointsAbove9Hearts = rootNode.node("fitness", "health", "pointsAbove9Hearts").getInt(60);
         this.pointsBelow5Hearts = rootNode.node("fitness", "health", "pointsBelow5Hearts").getInt(-50);
         this.pointsBelow2Hearts = rootNode.node("fitness", "health", "pointsBelow2Hearts").getInt(-75);
+
+        this.maxFitnessByEating = rootNode.node("fitness", "eating", "maxFitnessByEating").getInt(20);
+        this.pointsForLuxuryFood = rootNode.node("fitness", "eating", "pointsForLuxuryFood").getDouble(5);
+        this.pointsForCheapFood = rootNode.node("fitness", "eating", "pointsForCheapFood").getDouble(2);
+        this.luxuryFood = rootNode.node("fitness", "eating", "luxuryFood").getList(String.class, List.of("COOKED_BEEF", "MUSHROOM_STEW", "COOKED_PORKCHOP",  "COOKED_SALMON", "COOKED_COD", "BAKED_POTATO", "COOKED_RABBIT"));
+        this.cheapFood = rootNode.node("fitness", "eating", "cheapFood").getList(String.class, List.of("APPLE", "BREAD", "MELON_BLOCK", "RAW_FISH", "COOKED_CHICKEN", "COOKED_MUTTON", "COOKIE"));
 
         this.fitnessDeathPunishmentDuration = rootNode.node("fitness", "deathPunishment", "duration").getInt(1440);
         this.fitnessDeathPunishmentEnabled = rootNode.node("fitness", "deathPunishment", "enabled").getBoolean(true);
@@ -203,7 +217,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Chat configuration
          */
-        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<levelcolor>Level <level><dark_gray>] <dark_gray>[<prefixcolor><prefix><dark_gray>] <namecolor><name>: <chatcolor><message>");
+        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<level_color>Level <level><dark_gray>] <dark_gray>[<prefix_color><prefix><dark_gray>] <name_color><name>: <chat_color><message>");
         this.chatEnabled = rootNode.node("chat", "enabled").getBoolean(true);
         this.chatRadiusEnabled = rootNode.node("chat", "radius", "enabled").getBoolean(true);
         this.chatRadiusRange = rootNode.node("chat", "radius", "range").getInt(20);
@@ -232,6 +246,5 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "<gold>Teleporter",
                 "<grey><x>;<y>;<z>;<world>"
         ));
-
     }
 }

@@ -3,25 +3,26 @@ package nl.openminetopia;
 import co.aikar.commands.MessageType;
 import co.aikar.commands.PaperCommandManager;
 import com.github.retrooper.packetevents.PacketEvents;
+import com.jazzkuh.inventorylib.loader.InventoryLoader;
+import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import lombok.Getter;
+import lombok.Setter;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
-import nl.openminetopia.modules.config.ConfigModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
-import nl.openminetopia.modules.mod.ModModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
 import nl.openminetopia.modules.vehicles.VehiclesModule;
-import org.bukkit.Bukkit;
+import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,7 +34,7 @@ public final class OpenMinetopia extends JavaPlugin {
     private static ModuleManager moduleManager;
     @Getter
     private static PaperCommandManager commandManager;
-    @Getter
+    @Getter @Setter
     private static DefaultConfiguration defaultConfiguration;
     @Getter
     private static MessageConfiguration messageConfiguration;
@@ -53,13 +54,6 @@ public final class OpenMinetopia extends JavaPlugin {
 
         CustomBlockData.registerListener(this);
 
-        try {
-            defaultConfiguration = new DefaultConfiguration(getDataFolder());
-            defaultConfiguration.saveConfiguration();
-        } catch (Exception e) {
-            this.getLogger().severe("An error occurred while loading the configuration file.");
-            e.printStackTrace();
-        }
         defaultConfiguration = new DefaultConfiguration(getDataFolder());
         defaultConfiguration.saveConfiguration();
 
@@ -67,17 +61,17 @@ public final class OpenMinetopia extends JavaPlugin {
         messageConfiguration.saveConfiguration();
 
         moduleManager.register(
-                new ConfigModule(),
+                new CoreModule(),
                 new DataModule(),
                 new PlayerModule(),
                 new FitnessModule(),
-                new ModModule(),
+                new StaffModule(),
                 new PrefixModule(),
                 new ChatModule(),
                 new ColorModule(),
                 new PlacesModule(),
                 new ScoreboardModule(),
-                new ScoreboardModule(),
+                new PlotModule(),
                 new TeleporterModule(),
                 new VehiclesModule()
         );
@@ -88,6 +82,9 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
         commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
         commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
+
+        Menu.init(this);
+        InventoryLoader.setFormattingProvider(message -> ChatUtils.color("<red>" + message));
     }
 
     @Override
