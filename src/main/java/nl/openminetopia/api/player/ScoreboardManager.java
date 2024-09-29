@@ -27,7 +27,6 @@ public class ScoreboardManager {
     }
 
     public HashMap<UUID, Sidebar> scoreboards = new HashMap<>();
-    public DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
     public void updateBoard(MinetopiaPlayer minetopiaPlayer) {
         Sidebar sidebar = getScoreboard(minetopiaPlayer.getUuid());
@@ -46,7 +45,7 @@ public class ScoreboardManager {
             sidebar.addPlayer(player);
         }
 
-        List<String> lines = configuration.getScoreboardLines();
+        List<String> lines = OpenMinetopia.getDefaultConfiguration().getScoreboardLines();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             if (i == 0) {
