@@ -39,11 +39,4 @@ public class PlayerModel extends StormModel {
 
     @Column(name = "staffchat")
     private Boolean staffchatEnabled;
-
-    @Column(name = "command_spy_enabled", defaultValue = "false")
-    private Boolean commandSpyEnabled;
-
-    @Column(name = "chat_spy_enabled", defaultValue = "false")
-    private Boolean chatSpyEnabled;
-
 }
