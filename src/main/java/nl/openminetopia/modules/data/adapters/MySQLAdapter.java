@@ -56,6 +56,8 @@ public class MySQLAdapter implements DatabaseAdapter {
             StormDatabase.getInstance().setStorm(new Storm(new HikariDriver(config)));
         } catch (Exception e) {
             OpenMinetopia.getInstance().getLogger().severe("Failed to connect to MySQL database: " + e.getMessage());
+            OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
+            OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
         }
     }
 

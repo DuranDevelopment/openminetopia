@@ -111,7 +111,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Database configuration
          */
-        this.databaseType = DatabaseType.valueOf(rootNode.node("database", "type").getString("mysql").toUpperCase());
+        this.databaseType = DatabaseType.valueOf(rootNode.node("database", "type").getString("sqlite").toUpperCase());
         this.host = rootNode.node("database", "host").getString("localhost");
         this.port = rootNode.node("database", "port").getInt(3306);
         this.databaseName = rootNode.node("database", "name").getString("openminetopia");
@@ -188,7 +188,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         defaultFitnessLevels.put("160-179", new FitnessLevel(0.29, List.of("JUMP_BOOST:2")));
         defaultFitnessLevels.put("180-199", new FitnessLevel(0.31, List.of("JUMP_BOOST:2")));
         defaultFitnessLevels.put("200-209", new FitnessLevel(0.325, List.of("JUMP_BOOST:3")));
-        defaultFitnessLevels.put("210-255", new FitnessLevel(0.335, List.of("JUMP_BOOST:3")));
+        defaultFitnessLevels.put("210-225", new FitnessLevel(0.335, List.of("JUMP_BOOST:3")));
 
         ConfigurationNode fitnessNode = this.rootNode.node("fitness", "levels");
 
