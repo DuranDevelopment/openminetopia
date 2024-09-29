@@ -2,18 +2,21 @@ package nl.openminetopia.modules.data;
 
 import com.craftmend.storm.Storm;
 import com.craftmend.storm.api.StormModel;
+import com.craftmend.storm.parser.types.TypeRegistry;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
+import nl.openminetopia.modules.banking.enums.AccountPermission;
+import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.adapters.DatabaseAdapter;
 import nl.openminetopia.modules.data.adapters.utils.AdapterUtil;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.adapters.AccountPermissionAdapter;
 import nl.openminetopia.modules.data.storm.adapters.AccountTypeAdapter;
 import nl.openminetopia.modules.data.storm.models.*;
-import nl.openminetopia.modules.data.type.DatabaseType;
+import nl.openminetopia.modules.data.types.DatabaseType;
 
 @Getter
 public class DataModule extends Module {
@@ -36,16 +39,18 @@ public class DataModule extends Module {
                 TypeRegistry.registerAdapter(AccountType.class, new AccountTypeAdapter());
                 TypeRegistry.registerAdapter(AccountPermission.class, new AccountPermissionAdapter());
 
-                storm.registerModel(new PlayerModel());
-                storm.registerModel(new PrefixesModel());
-                storm.registerModel(new ColorsModel());
-                storm.registerModel(new FitnessModel());
-                storm.registerModel(new FitnessBoosterModel());
-                storm.registerModel(new WorldModel());
-                storm.registerModel(new CityModel());
+                registerStormModel(new BankAccountModel());
+                registerStormModel(new BankPermissionModel());
+                registerStormModel(new PlayerModel());
+                registerStormModel(new PrefixModel());
+                registerStormModel(new ColorModel());
+                registerStormModel(new FitnessModel());
+                registerStormModel(new FitnessBoosterModel());
+                registerStormModel(new WorldModel());
+                registerStormModel(new CityModel());
                 storm.runMigrations();
             } catch (Exception e) {
-                OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());
+                OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type + " database: " + e.getMessage());
                 OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
                 OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
             }

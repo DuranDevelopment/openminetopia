@@ -1,11 +1,11 @@
 package nl.openminetopia.modules.banking;
 
 import com.craftmend.storm.api.enums.Where;
-import com.mysql.cj.x.protobuf.MysqlxCursor;
 import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
-import nl.openminetopia.modules.banking.commands.BankingCommand;
+import nl.openminetopia.modules.banking.commands.BankingCreateCommand;
+import nl.openminetopia.modules.banking.commands.BankingUsersCommand;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Todo:
@@ -57,17 +58,17 @@ public class BankingModule extends Module {
             });
         }, 20 * 5L);
 
-        registerCommand(new BankingCommand());
+        registerCommand(new BankingCreateCommand());
+        registerCommand(new BankingUsersCommand());
     }
 
     @Override
     public void disable() {
-
+        // todo: save all accounts.
     }
 
-    // fix when permissions are done.
     public List<BankAccountModel> getAccountsFromPlayer(UUID uuid) {
-        return null;
+        return bankAccountModels.stream().filter(account -> account.getUsers().containsKey(uuid)).collect(Collectors.toList());
     }
 
     public BankAccountModel getAccountByName(String name) {
@@ -123,6 +124,11 @@ public class BankingModule extends Module {
             completableFuture.completeExceptionally(e);
         }
         return completableFuture;
+    }
+
+    public CompletableFuture<BankAccountModel> getAccountModel(UUID accountId) {
+        return StormDatabase.getInstance().getStorm().buildQuery(BankAccountModel.class)
+                .where("")
     }
 
     public int createAccount(BankAccountModel accountModel) throws SQLException {

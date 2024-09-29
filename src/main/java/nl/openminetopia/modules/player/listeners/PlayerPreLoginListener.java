@@ -2,6 +2,7 @@ package nl.openminetopia.modules.player.listeners;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.adapters.utils.AdapterUtil;
 import nl.openminetopia.modules.data.storm.StormDatabase;
@@ -22,6 +23,8 @@ public class PlayerPreLoginListener implements Listener {
         try {
             DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
             dataModule.getAdapter().loadPlayer(event.getUniqueId());
+
+            BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
         } catch (Exception e) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
             OpenMinetopia.getInstance().getLogger().warning("Error loading player model: " + e.getMessage());

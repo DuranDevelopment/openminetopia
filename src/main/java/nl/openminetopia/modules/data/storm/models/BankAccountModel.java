@@ -22,15 +22,24 @@ public class BankAccountModel extends StormModel {
     @Column(name = "uuid", unique = true)
     private UUID uniqueId;
 
-    @Column(name = "type")
+    @Column(name = "type", defaultValue = "PRIVATE")
     private AccountType type;
 
     @Column(name = "balance", defaultValue = "0")
     private Long balance;
 
-    @Column(name = "name")
+    @Column(name = "name", defaultValue = "Rekening")
     private String name;
 
+    @Column(name = "frozen", defaultValue = "false")
+    private Boolean frozen;
+
     private Map<UUID, AccountPermission> users = new HashMap<>();
+
+    public boolean hasPermission(UUID uuid, AccountPermission accountPermission) {
+        if(!users.containsKey(uuid)) return false;
+        AccountPermission currentPermission = users.get(uuid);
+        return currentPermission == AccountPermission.ADMIN || currentPermission == accountPermission;
+    }
 
 }
