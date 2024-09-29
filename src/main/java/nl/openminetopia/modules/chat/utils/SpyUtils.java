@@ -18,7 +18,7 @@ public class SpyUtils {
 
     public void chatSpy(Player player, String message, List<Player> ignore) {
         Component spiedMessage = ChatUtils
-                .color("<dark_gray>[<gray>ChatSpy<dark_gray>]<gray> " + player.getName() + ": " + message);
+                .color("<dark_gray>[<gray>ChatSpy<dark_gray>]<gray>" + player.getName() + ": " + message);
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getUniqueId().equals(player.getUniqueId())) continue;
@@ -34,7 +34,7 @@ public class SpyUtils {
 
     public void commandSpy(Player player, String command) {
         Component spiedMessage = ChatUtils
-                .color("<dark_gray>[<gray>CommandSpy<dark_gray>]<gray> " + player.getName() + ": " + command);
+                .color("<dark_gray>[<gray>CommandSpy<dark_gray>]<gray>" + player.getName() + ": " + command);
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getUniqueId().equals(player.getUniqueId())) continue;
