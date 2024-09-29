@@ -23,6 +23,8 @@ import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
 import nl.openminetopia.utils.ChatUtils;
+import nl.openminetopia.utils.placeholderapi.OpenMinetopiaExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -78,6 +80,8 @@ public final class OpenMinetopia extends JavaPlugin {
 
         Menu.init(this);
         InventoryLoader.setFormattingProvider(message -> ChatUtils.color("<red>" + message));
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new OpenMinetopiaExpansion().register();
     }
 
     @Override

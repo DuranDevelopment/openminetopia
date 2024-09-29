@@ -48,7 +48,11 @@ public class ChatUtils {
                     .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + "");
         }
 
-        return MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(minetopiaPlayer.getBukkit(), message));
+        if (OpenMinetopia.getInstance().getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            message = PlaceholderAPI.setPlaceholders(player, message);
+        }
+
+        return MiniMessage.miniMessage().deserialize(message);
     }
 
     public static String stripMiniMessage(Component component) {
