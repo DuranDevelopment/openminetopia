@@ -3,6 +3,7 @@ package nl.openminetopia.modules.places.listeners;
 import net.kyori.adventure.title.Title;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,3 +25,4 @@ public class PlayerJoinListener implements Listener {
         player.showTitle(title);
     }
 }
+

@@ -1,7 +1,9 @@
 package nl.openminetopia.modules.data;
 
 import com.craftmend.storm.Storm;
+import com.craftmend.storm.api.StormModel;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.Module;
@@ -25,18 +27,15 @@ public class DataModule extends Module {
         adapter = AdapterUtil.getAdapter(type);
         adapter.connect();
 
-        Storm storm = StormDatabase.getInstance().getStorm();
-
         if (type != DatabaseType.MONGO) {
             try {
-                storm.registerModel(new PlayerModel());
-                storm.registerModel(new PrefixModel());
-                storm.registerModel(new ColorModel());
-                storm.registerModel(new FitnessModel());
-                storm.registerModel(new FitnessBoosterModel());
-                storm.registerModel(new WorldModel());
-                storm.registerModel(new CityModel());
-                storm.runMigrations();
+                registerStormModel(new PlayerModel());
+                registerStormModel(new FitnessModel());
+                registerStormModel(new FitnessBoosterModel());
+                registerStormModel(new PrefixModel());
+                registerStormModel(new ColorModel());
+                registerStormModel(new WorldModel());
+                registerStormModel(new CityModel());
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());
             }
@@ -48,5 +47,12 @@ public class DataModule extends Module {
         if (adapter != null) {
             adapter.disconnect();
         }
+    }
+
+    @SneakyThrows
+    private void registerStormModel(StormModel model) {
+        Storm storm = StormDatabase.getInstance().getStorm();
+        storm.registerModel(model);
+        storm.runMigrations();
     }
 }

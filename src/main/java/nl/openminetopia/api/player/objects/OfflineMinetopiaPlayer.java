@@ -8,7 +8,6 @@ import nl.openminetopia.api.player.fitness.FitnessManager;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.OwnableColor;
-import nl.openminetopia.modules.color.objects.PrefixColor;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import org.bukkit.Bukkit;
@@ -25,8 +24,7 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
 
     public OfflineMinetopiaPlayer(UUID uuid) {
         this.uuid = uuid;
-
-        this.fitness = FitnessManager.getInstance().getFitness(this);
+        this.fitness = FitnessManager.getInstance().getFitness(uuid);
     }
 
     @Override

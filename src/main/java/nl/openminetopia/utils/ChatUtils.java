@@ -5,10 +5,14 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import org.bukkit.entity.Player;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @UtilityClass
@@ -21,9 +25,8 @@ public class ChatUtils {
     public static Component format(MinetopiaPlayer minetopiaPlayer, String message) {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
-        message = PlaceholderAPI.setPlaceholders(minetopiaPlayer.getBukkit(), message
-                .replace("<fitness>", minetopiaPlayer.getFitness().getTotalFitness() + "")
-                .replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
+
+        message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
                 .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor())
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
@@ -33,14 +36,21 @@ public class ChatUtils {
                 .replace("<world_title>", minetopiaPlayer.getWorld().getTitle())
                 .replace("<world_loadingname>", minetopiaPlayer.getWorld().getLoadingName())
                 .replace("<world_name>", minetopiaPlayer.getWorld().getName())
-                .replace("<world_color>", minetopiaPlayer.getWorld().getColor()))
+                .replace("<world_color>", minetopiaPlayer.getWorld().getColor())
                 .replace("<city_title>", minetopiaPlayer.getPlace().getTitle()) // Defaults to the world name if the player is not in a city
                 .replace("<city_loadingname>", minetopiaPlayer.getPlace().getLoadingName()) // Defaults to the world loading name if the player is not in a city
                 .replace("<city_name>", minetopiaPlayer.getPlace().getName()) // Defaults to the world name if the player is not in a city
+                .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "") // Defaults to the world temperature if the player is not in a city
                 .replace("<city_color>", minetopiaPlayer.getPlace().getColor()) // Defaults to the world color if the player is not in a city
-                .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "")
-                .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + "");
-        return MiniMessage.miniMessage().deserialize(message);
+                .replace("<date>", new SimpleDateFormat("dd-MM-yyyy").format(new Date()))
+                .replace("<time>", new SimpleDateFormat("HH:mm").format(new Date()));
+
+        if (minetopiaPlayer.getFitness().getStatistics() != null && !minetopiaPlayer.getFitness().getStatistics().isEmpty()) {
+            message = message.replace("<fitness>", minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained() + "")
+                    .replace("<max_fitness>", OpenMinetopia.getDefaultConfiguration().getMaxFitnessLevel() + "");
+        }
+
+        return MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(minetopiaPlayer.getBukkit(), message));
     }
 
     public static String stripMiniMessage(Component component) {

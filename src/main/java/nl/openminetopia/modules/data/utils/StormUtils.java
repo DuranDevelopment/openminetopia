@@ -4,6 +4,7 @@ import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.builders.QueryBuilder;
 import lombok.experimental.UtilityClass;
 import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -160,6 +161,7 @@ public class StormUtils {
 
         return completableFuture;
     }
+
 
     public <M extends StormModel> CompletableFuture<Integer> getNextId(Class<M> modelClass, Function<M, Integer> idGetter) {
         CompletableFuture<Integer> completableFuture = new CompletableFuture<>();

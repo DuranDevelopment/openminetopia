@@ -13,4 +13,7 @@ public class FitnessBooster {
     private int amount;
     private long expiresAt;
 
+    public boolean isExpired() {
+        return expiresAt != -1 && System.currentTimeMillis() >= expiresAt;
+    }
 }

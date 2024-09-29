@@ -1,6 +1,8 @@
 package nl.openminetopia.modules.player;
 
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.player.commands.PlaytimeCommand;
@@ -19,6 +21,15 @@ public class PlayerModule extends Module {
         registerListener(new PlayerQuitListener());
 
         registerCommand(new PlaytimeCommand());
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(OpenMinetopia.getInstance(), () -> {
+            for (MinetopiaPlayer minetopiaPlayer : PlayerManager.getInstance().getMinetopiaPlayers().values()) {
+                if (!(minetopiaPlayer instanceof OnlineMinetopiaPlayer onlineMinetopiaPlayer)) continue;
+                onlineMinetopiaPlayer.save().whenComplete((unused, throwable) -> {
+                    if (throwable != null) throwable.printStackTrace();
+                });
+            }
+        }, 0, 20 * 60 * 5); // Save every 5 minutes
     }
 
     @Override
@@ -26,7 +37,9 @@ public class PlayerModule extends Module {
         for (Player player : Bukkit.getOnlinePlayers()) {
             OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(player);
             if (minetopiaPlayer == null) continue;
-            minetopiaPlayer.save();
+            minetopiaPlayer.save().whenComplete((unused, throwable) -> {
+                if (throwable != null) throwable.printStackTrace();
+            });
         }
     }
 }

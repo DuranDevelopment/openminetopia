@@ -25,10 +25,13 @@ public class PlayerChatListener implements Listener {
         Player source = event.getPlayer();
         OnlineMinetopiaPlayer minetopiaPlayer = (OnlineMinetopiaPlayer) PlayerManager.getInstance().getMinetopiaPlayer(source);
         if (minetopiaPlayer == null) return;
+
+        if (!minetopiaPlayer.isInPlace()) return;
+        if (minetopiaPlayer.isStaffchatEnabled()) return;
+
         List<Player> recipients = new ArrayList<>();
 
         event.setCancelled(true);
-        if (minetopiaPlayer.isStaffchatEnabled()) return;
 
         Bukkit.getServer().getOnlinePlayers().forEach(target -> {
             if (target.getWorld().equals(source.getWorld())
