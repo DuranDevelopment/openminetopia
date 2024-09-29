@@ -69,7 +69,6 @@ public class BankingCreateCommand extends BaseCommand {
                 sender.sendMessage("    " + uuid + ": " + permission);
             });
         }
-
     }
 
 }

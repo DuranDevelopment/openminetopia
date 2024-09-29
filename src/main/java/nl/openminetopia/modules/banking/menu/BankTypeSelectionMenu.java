@@ -11,16 +11,16 @@ import org.bukkit.inventory.ItemStack;
 public class BankTypeSelectionMenu extends Menu {
 
     public BankTypeSelectionMenu(Player player) {
-        super(ChatUtils.color("<gold>Selecteer het rekeningtype:"), 3 * 9);
+        super(ChatUtils.color("<gold>Selecteer het rekeningtype:"), 3);
 
         for(AccountType type : AccountType.values()) {
             ItemStack iconStack = new ItemBuilder(type.getMaterial())
                     .setName(type.getName())
                     .toItemStack();
 
-            this.addItem(new Icon(iconStack, true, (event) -> {
+            this.addItem(new Icon(type.getSlot(), iconStack, true, (event) -> {
                 event.setCancelled(true);
-                player.sendMessage("kanker: " + type);
+                new BankAccountSelectionMenu(player, type).open(player);
             }));
         }
 

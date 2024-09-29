@@ -2,9 +2,11 @@ package nl.openminetopia.modules.banking;
 
 import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.banking.commands.BankingCreateCommand;
+import nl.openminetopia.modules.banking.commands.BankingOpenCommand;
 import nl.openminetopia.modules.banking.commands.BankingUsersCommand;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.storm.StormDatabase;
@@ -22,9 +24,8 @@ import java.util.stream.Collectors;
 
 /**
  * Todo:
- * - Commands (create, delete, adduser, removeuser, setbalance, freeze, pin)
- * - Menu's (type selection, banking inventory)
- * - Fix user permissions
+ * - Commands (delete, removeuser, setbalance, freeze, pin)
+ * - Menu's (banking inventory)
  * - Debitcards
  */
 
@@ -56,10 +57,11 @@ public class BankingModule extends Module {
                 });
 
             });
-        }, 20 * 5L);
+        }, 20 * 2L);
 
         registerCommand(new BankingCreateCommand());
         registerCommand(new BankingUsersCommand());
+        registerCommand(new BankingOpenCommand());
     }
 
     @Override
@@ -126,9 +128,26 @@ public class BankingModule extends Module {
         return completableFuture;
     }
 
+    @SneakyThrows
     public CompletableFuture<BankAccountModel> getAccountModel(UUID accountId) {
-        return StormDatabase.getInstance().getStorm().buildQuery(BankAccountModel.class)
-                .where("")
+        CompletableFuture<BankAccountModel> accountModelFuture = new CompletableFuture<>();
+
+        CompletableFuture<Collection<BankAccountModel>> collectionFuture = StormDatabase.getInstance().getStorm()
+                .buildQuery(BankAccountModel.class)
+                .where("uuid", Where.EQUAL, accountId.toString())
+                .execute();
+
+        collectionFuture.whenComplete((collection, throwable) -> {
+            if(throwable != null) {
+                accountModelFuture.completeExceptionally(throwable);
+                return;
+            }
+
+            BankAccountModel bankAccountModel = collection.stream().findFirst().orElse(null);
+            accountModelFuture.complete(bankAccountModel);
+        });
+
+        return accountModelFuture;
     }
 
     public int createAccount(BankAccountModel accountModel) throws SQLException {
