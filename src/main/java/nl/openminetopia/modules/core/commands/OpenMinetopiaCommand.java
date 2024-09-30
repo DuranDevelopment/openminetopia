@@ -10,7 +10,7 @@ import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 
-@CommandAlias("openminetopia")
+@CommandAlias("openminetopia|sdb|minetopia|omt")
 public class OpenMinetopiaCommand extends BaseCommand {
 
     @Subcommand("reload")

@@ -777,14 +777,28 @@ public class MySQLAdapter implements DatabaseAdapter {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
-            fitness.getBoosters().forEach(booster -> {
-                FitnessBoosterModel model = new FitnessBoosterModel();
-                model.setFitnessId(fitness.getFitnessModel().getId());
-                model.setFitness(booster.getAmount());
-                model.setExpiresAt(booster.getExpiresAt());
 
-                StormDatabase.getInstance().saveStormModel(model);
-            });
+            try {
+                Collection<FitnessBoosterModel> fitnessBoosterModels = StormDatabase.getInstance().getStorm().buildQuery(FitnessBoosterModel.class)
+                        .where("fitness_id", Where.EQUAL, fitness.getFitnessModel().getId())
+                        .execute()
+                        .join();
+
+                // loop through fitness.getBoosters() and see if the booster is already in the database
+                // if it is not, add it to the database
+                fitness.getBoosters().forEach(booster -> {
+                    if (fitnessBoosterModels.stream().noneMatch(model -> model.getId().equals(booster.getId()))) {
+                        FitnessBoosterModel model = new FitnessBoosterModel();
+                        model.setFitnessId(fitness.getFitnessModel().getId());
+                        model.setFitness(booster.getAmount());
+                        model.setExpiresAt(booster.getExpiresAt());
+                        StormDatabase.getInstance().saveStormModel(model);
+                    }
+                });
+            } catch (Exception e) {
+                completableFuture.completeExceptionally(e);
+                e.printStackTrace();
+            }
             completableFuture.complete(null);
         });
 

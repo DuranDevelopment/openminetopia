@@ -104,7 +104,6 @@ public class Fitness {
     }
 
     public void removeBooster(FitnessBooster booster) {
-        System.out.println("removing booster " + booster.getAmount() + " - " + booster.getId());
         boosters.remove(booster);
         dataModule.getAdapter().removeFitnessBooster(this, booster);
     }
