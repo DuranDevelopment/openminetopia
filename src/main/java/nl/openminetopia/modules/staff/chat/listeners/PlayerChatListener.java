@@ -35,7 +35,7 @@ public class PlayerChatListener implements Listener {
         // Iterate over recipients
         recipients.forEach(player -> {
             // Send the formatted message to the player
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_gray>[<gold><b>Staff</b><dark_gray>] <dark_gray>(<red><b>" + minetopiaPlayer.getWorld().getName() + "</b><dark_gray>) <green>" + player.getName() + "<white>: " + ChatUtils.stripMiniMessage(event.message())));
+            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_gray>[<gold><b>Staff</b><dark_gray>] <dark_gray>(<red><b>" + minetopiaPlayer.getWorld().getName() + "</b><dark_gray>) <green>" + source.getName() + "<white>: " + ChatUtils.stripMiniMessage(event.message())));
         });
     }
 }
