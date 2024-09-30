@@ -22,14 +22,9 @@ public class PlayerDeathListener implements Listener {
         if (minetopiaPlayer == null) return;
 
         int punishmentInMillis = configuration.getFitnessDeathPunishmentDuration() * 60 * 1000;
-        StormUtils.getNextId(FitnessBoosterModel.class, FitnessBoosterModel::getId).whenComplete((nextId, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            var fitnessBooster = new FitnessBooster(nextId, configuration.getFitnessDeathPunishmentAmount(), System.currentTimeMillis() + punishmentInMillis);
-            minetopiaPlayer.getFitness().addBooster(fitnessBooster);
-            minetopiaPlayer.getFitness().getRunnable().run();
-        });
+
+        var fitnessBooster = new FitnessBooster(configuration.getFitnessDeathPunishmentAmount(), System.currentTimeMillis() + punishmentInMillis);
+        minetopiaPlayer.getFitness().addBooster(fitnessBooster);
+        minetopiaPlayer.getFitness().getRunnable().run();
     }
 }

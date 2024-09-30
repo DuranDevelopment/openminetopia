@@ -18,4 +18,10 @@ public class PrefixColor extends OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
+
+    public PrefixColor(String color, long expiresAt) {
+        super(OwnableColorType.PREFIX, color, expiresAt);
+        this.color = color;
+        this.expiresAt = expiresAt;
+    }
 }

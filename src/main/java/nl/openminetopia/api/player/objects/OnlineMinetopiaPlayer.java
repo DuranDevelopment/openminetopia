@@ -268,11 +268,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     @Override
     public void addPrefix(Prefix prefix) {
-        prefixes.add(prefix);
-        dataModule.getAdapter().addPrefix(this, prefix).whenComplete((unused, throwable) -> {
+        dataModule.getAdapter().addPrefix(this, prefix).whenComplete((id, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
+                return;
             }
+            prefixes.add(new Prefix(id, prefix.getPrefix(), prefix.getExpiresAt()));
         });
     }
 
@@ -300,8 +301,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
         }
 
-        if (activePrefix.getExpiresAt() < System.currentTimeMillis() && activePrefix.getExpiresAt() != -1) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix <dark_red>" + activePrefix + " is verlopen!"));
+        if (activePrefix.isExpired()) {
+            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix <dark_red>" + activePrefix.getPrefix() + " <red>is verlopen!"));
             removePrefix(activePrefix);
             setActivePrefix(new Prefix(-1, configuration.getDefaultPrefix(), -1));
         }
@@ -312,8 +313,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     /* Colors */
     @Override
     public void addColor(OwnableColor color) {
-        colors.add(color);
-        dataModule.getAdapter().addColor(this, color);
+        dataModule.getAdapter().addColor(this, color).whenComplete((id, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+
+            switch (color.getType()) {
+                case PREFIX -> colors.add(new PrefixColor(id, color.getColor(), color.getExpiresAt()));
+                case NAME -> colors.add(new NameColor(id, color.getColor(), color.getExpiresAt()));
+                case CHAT -> colors.add(new ChatColor(id, color.getColor(), color.getExpiresAt()));
+                case LEVEL -> colors.add(new LevelColor(id, color.getColor(), color.getExpiresAt()));
+            }
+        });
     }
 
     @Override

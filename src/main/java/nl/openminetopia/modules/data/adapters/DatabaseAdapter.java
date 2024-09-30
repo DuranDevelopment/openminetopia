@@ -45,7 +45,7 @@ public interface DatabaseAdapter {
 
     /* Prefix related database queries */
 
-    CompletableFuture<Void> addPrefix(MinetopiaPlayer player, Prefix prefix);
+    CompletableFuture<Integer> addPrefix(MinetopiaPlayer player, Prefix prefix);
 
     CompletableFuture<Void> removePrefix(MinetopiaPlayer player, Prefix prefix);
 
@@ -57,7 +57,7 @@ public interface DatabaseAdapter {
 
     /* Color related database queries */
 
-    CompletableFuture<Void> addColor(MinetopiaPlayer player, OwnableColor color);
+    CompletableFuture<Integer> addColor(MinetopiaPlayer player, OwnableColor color);
 
     CompletableFuture<Void> removeColor(MinetopiaPlayer player, OwnableColor color);
 
@@ -104,7 +104,7 @@ public interface DatabaseAdapter {
 
     CompletableFuture<Void> saveFitnessBoosters(Fitness fitness);
 
-    CompletableFuture<?> addFitnessBooster(Fitness fitness, FitnessBooster booster);
+    CompletableFuture<Integer> addFitnessBooster(Fitness fitness, FitnessBooster booster);
     CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster);
 
     CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness);

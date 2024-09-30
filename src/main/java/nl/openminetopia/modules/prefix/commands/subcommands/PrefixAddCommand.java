@@ -29,13 +29,7 @@ public class PrefixAddCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
         player.sendMessage("Added the prefix to the player.");
 
-        StormUtils.getNextId(PrefixModel.class, PrefixModel::getId).whenComplete((id, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-                return;
-            }
-            Prefix prefix1 = new Prefix(id, prefix, expiresAt);
-            minetopiaPlayer.addPrefix(prefix1);
-        });
+        Prefix prefix1 = new Prefix(prefix, expiresAt);
+        minetopiaPlayer.addPrefix(prefix1);
     }
 }
