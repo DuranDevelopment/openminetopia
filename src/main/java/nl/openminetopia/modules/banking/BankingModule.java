@@ -57,7 +57,7 @@ public class BankingModule extends Module {
                 });
 
             });
-        }, 20 * 2L);
+        }, 20L);
 
         registerCommand(new BankingCreateCommand());
         registerCommand(new BankingUsersCommand());

@@ -62,8 +62,8 @@ public final class OpenMinetopia extends JavaPlugin {
         moduleManager.register(
                 new CoreModule(),
                 new DataModule(),
-                new PlayerModule(),
                 new BankingModule(),
+                new PlayerModule(),
                 new FitnessModule(),
                 new StaffModule(),
                 new PrefixModule(),

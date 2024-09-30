@@ -30,38 +30,38 @@ public class PlayerPreLoginListener implements Listener {
         try {
             DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
             dataModule.getAdapter().loadPlayer(event.getUniqueId());
-
-            BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
-            bankingModule.getAccountModel(event.getUniqueId()).whenComplete(((bankAccountModel, throwable) -> {
-                if(throwable != null) {
-                    event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
-                    return;
-                }
-
-                if(bankAccountModel == null) {
-                    BankAccountModel accountModel = new BankAccountModel();
-                    accountModel.setBalance(0L); // todo: fix ooit startersbedrag.
-                    accountModel.setName(event.getName());
-                    accountModel.getUsers().put(event.getUniqueId(), AccountPermission.ADMIN);
-                    bankingModule.getBankAccountModels().add(accountModel);
-                    try {
-                        bankingModule.createAccount(accountModel);
-                        OpenMinetopia.getInstance().getLogger().info("Created account for: " + player.getName());
-                    } catch (SQLException e) {
-                        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
-                        return;
-                    }
-                    return;
-                }
-
-                bankAccountModel.getUsers().put(player.getId(), AccountPermission.ADMIN);
-                OpenMinetopia.getInstance().getLogger().info("Loaded account for: " + player.getName());
-                bankingModule.getBankAccountModels().add(bankAccountModel);
-            }));
-
         } catch (Exception e) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
             OpenMinetopia.getInstance().getLogger().warning("Error loading player model: " + e.getMessage());
         }
+
+
+        BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
+        bankingModule.getAccountModel(event.getUniqueId()).whenComplete(((bankAccountModel, throwable) -> {
+            if(throwable != null) {
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
+                return;
+            }
+
+            if(bankAccountModel == null) {
+                BankAccountModel accountModel = new BankAccountModel();
+                accountModel.setBalance(0L); // todo: fix ooit startersbedrag.
+                accountModel.setName(event.getName());
+                accountModel.getUsers().put(event.getUniqueId(), AccountPermission.ADMIN);
+                bankingModule.getBankAccountModels().add(accountModel);
+                try {
+                    bankingModule.createAccount(accountModel);
+                    OpenMinetopia.getInstance().getLogger().info("Created account for: " + player.getName());
+                } catch (SQLException e) {
+                    event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
+                    return;
+                }
+                return;
+            }
+
+            bankAccountModel.getUsers().put(player.getId(), AccountPermission.ADMIN);
+            OpenMinetopia.getInstance().getLogger().info("Loaded account for: " + player.getName());
+            bankingModule.getBankAccountModels().add(bankAccountModel);
+        }));
     }
 }

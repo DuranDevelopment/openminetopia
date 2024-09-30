@@ -24,15 +24,19 @@ public class BankAccountSelectionMenu extends PaginatedMenu {
                 .stream().filter(account -> account.getType() == type)
                 .toList();
 
+        this.addItem(new Icon(new ItemStack(Material.RAIL), true));
+
         for (BankAccountModel accountModel : accountModels) {
             ItemStack accountStack = new ItemBuilder(type.getMaterial())
                     .setName(type.getColor() + accountModel.getName())
                     .toItemStack();
 
             this.addItem(new Icon(accountStack, false, (event) -> {
-
+                event.setCancelled(true);
             }));
         }
+
+
     }
 
     @Override
