@@ -24,11 +24,10 @@ import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.modules.prefix.objects.Prefix;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -68,24 +67,42 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     /* Player related database queries */
 
+    private CompletableFuture<Optional<PlayerModel>> findPlayerModel(@NotNull UUID uuid) {
+        CompletableFuture<Optional<PlayerModel>> completableFuture = new CompletableFuture<>();
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                Collection<PlayerModel> playerModel = StormDatabase.getInstance().getStorm().buildQuery(PlayerModel.class).where("uuid", Where.EQUAL, uuid.toString()).limit(1).execute().join();
+                Bukkit.getScheduler().runTaskLaterAsynchronously(OpenMinetopia.getInstance(), () -> completableFuture.complete(playerModel.stream().findFirst()), 1L);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
+        return completableFuture;
+    }
+
     @Override
     public CompletableFuture<PlayerModel> loadPlayer(UUID uuid) {
-        CompletableFuture<PlayerModel> future = StormDatabase.getInstance().loadPlayerModel(uuid);
-        future.whenComplete((playerModel, throwable) -> {
-            if (throwable != null) {
-                future.completeExceptionally(throwable);
-                OpenMinetopia.getInstance().getLogger().warning("Error loading player model: " + throwable.getMessage());
+        CompletableFuture<PlayerModel> completableFuture = new CompletableFuture<>();
+        findPlayerModel(uuid).thenAccept(playerModel -> {
+            PlayerManager.getInstance().getPlayerModels().remove(uuid);
+
+            if (playerModel.isEmpty()) {
+                PlayerModel createdModel = new PlayerModel();
+                createdModel.setUniqueId(uuid);
+
+                PlayerManager.getInstance().getPlayerModels().put(uuid, createdModel);
+                completableFuture.complete(createdModel);
+
+                StormDatabase.getInstance().saveStormModel(createdModel);
                 return;
             }
 
-            if (playerModel == null) {
-                future.completeExceptionally(new NullPointerException("Player model is null"));
-                return;
-            }
-            PlayerManager.getInstance().getPlayerModels().put(uuid, playerModel);
-            future.complete(playerModel);
+            PlayerManager.getInstance().getPlayerModels().put(uuid, playerModel.get());
+            completableFuture.complete(playerModel.get());
         });
-        return future;
+
+        return completableFuture;
     }
 
     @Override

@@ -42,7 +42,7 @@ public class LevelUtil {
         }
 
         // Check points needed for a level up (for example 2500 points per level)
-        int level = 1;
+        int level = 0;
         int neededPoints = configuration.getPointsNeededForLevelUp();
         while (points >= neededPoints) {
             points -= neededPoints;
@@ -53,6 +53,11 @@ public class LevelUtil {
         // Check if level isn't greater than the max level
         if (level > OpenMinetopia.getLevelcheckConfiguration().getMaxLevel()) {
             level = OpenMinetopia.getLevelcheckConfiguration().getMaxLevel();
+        }
+
+        // Check if level isn't lower than the default level
+        if (level < OpenMinetopia.getDefaultConfiguration().getDefaultLevel()) {
+            level = OpenMinetopia.getDefaultConfiguration().getDefaultLevel();
         }
 
         return level;
