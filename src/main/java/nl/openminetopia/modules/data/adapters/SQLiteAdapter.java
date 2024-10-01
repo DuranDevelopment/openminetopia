@@ -16,6 +16,8 @@ public class SQLiteAdapter extends MySQLAdapter {
             StormDatabase.getInstance().setStorm(new Storm(new SqliteFileDriver(new File(OpenMinetopia.getInstance().getDataFolder(), "database.db"))));
         } catch (Exception e) {
             OpenMinetopia.getInstance().getLogger().severe("Failed to connect to SQLite database: " + e.getMessage());
+            OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
+            OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
         }
     }
 }

@@ -45,6 +45,8 @@ public class FitnessUtils {
             int maxFitness = Integer.parseInt(entry.getKey().split("-")[1]);
 
             entry.getValue().getEffects().forEach(effect -> {
+                int effectAmplifier = Integer.parseInt(effect.split(":")[1]);
+                if (effectAmplifier <= 0) return;
                 String effectName = effect.split(":")[0].toLowerCase();
                 if (!possibleEffects.contains(Registry.EFFECT.get(NamespacedKey.minecraft(effectName))))
                     possibleEffects.add(Registry.EFFECT.get(NamespacedKey.minecraft(effectName)));
@@ -61,7 +63,7 @@ public class FitnessUtils {
                         return;
                     }
 
-                    effects.put(potionEffectType, effectAmplifier);
+                    if (effectAmplifier > 0) effects.put(potionEffectType, effectAmplifier);
                 });
             }
         }
@@ -85,7 +87,7 @@ public class FitnessUtils {
                 if (player.hasPotionEffect(effect)) {
                     player.removePotionEffect(effect);
                 }
-                player.addPotionEffect(new PotionEffect(effect, Integer.MAX_VALUE, amplifier - 1, true, false));
+                player.addPotionEffect(new PotionEffect(effect, PotionEffect.INFINITE_DURATION, amplifier - 1, true, false));
             });
         });
     }

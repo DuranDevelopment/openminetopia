@@ -56,6 +56,8 @@ public class MySQLAdapter implements DatabaseAdapter {
             StormDatabase.getInstance().setStorm(new Storm(new HikariDriver(config)));
         } catch (Exception e) {
             OpenMinetopia.getInstance().getLogger().severe("Failed to connect to MySQL database: " + e.getMessage());
+            OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
+            OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
         }
     }
 
@@ -739,8 +741,7 @@ public class MySQLAdapter implements DatabaseAdapter {
                     case SWIMMING -> new SwimmingStatistic(model.getFitnessGainedBySwimming());
                     case FLYING -> new FlyingStatistic(model.getFitnessGainedByFlying());
                     case HEALTH -> new HealthStatistic(model.getFitnessGainedByHealth(), model.getHealthPoints());
-                    case EATING ->
-                            new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
+                    case EATING -> new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
                 },
                 null
         ).whenComplete((statistic, ex) -> {

@@ -16,20 +16,21 @@ import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
+import nl.openminetopia.modules.core.CoreModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
+import nl.openminetopia.modules.staff.StaffModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
-import nl.openminetopia.modules.core.CoreModule;
-import nl.openminetopia.modules.staff.StaffModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
-import nl.openminetopia.modules.vehicles.VehiclesModule;
 import nl.openminetopia.modules.vehicles.entity.BaseVehicleEntity;
 import nl.openminetopia.utils.ChatUtils;
+import nl.openminetopia.utils.placeholderapi.OpenMinetopiaExpansion;
 import nl.openminetopia.utils.nms.EntityUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -87,11 +88,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new PlotModule(),
-                new TeleporterModule(),
-                new VehiclesModule()
+                new TeleporterModule()
         );
-
-        PacketEvents.getAPI().init();
 
         commandManager.enableUnstableAPI("help");
         commandManager.setFormat(MessageType.HELP, 1, ChatColor.GOLD);
@@ -100,6 +98,8 @@ public final class OpenMinetopia extends JavaPlugin {
 
         Menu.init(this);
         InventoryLoader.setFormattingProvider(message -> ChatUtils.color("<red>" + message));
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new OpenMinetopiaExpansion().register();
     }
 
     @Override

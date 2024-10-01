@@ -38,6 +38,8 @@ public class DataModule extends Module {
                 registerStormModel(new CityModel());
             } catch (Exception e) {
                 OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());
+                OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
+                OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
             }
         }
     }
