@@ -21,13 +21,4 @@ public class WrappedPlayerInputPacket {
         jump = wrappedPacket.isJump();
     }
 
-    public WrappedPlayerInputPacket() {
-        forward = false;
-        backward = false;
-        left = false;
-        right = false;
-        sneak = false;
-        jump = false;
-    }
-
 }

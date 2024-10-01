@@ -29,6 +29,13 @@ public class VehiclesModule extends Module {
         registerCommand(new VehicleCommand());
         registerCommand(new VehicleSpawnCommand());
 
+        loadConfiguration();
+    }
+
+    @Override
+    public void disable() {}
+
+    public void loadConfiguration() {
         File vehiclesFolder = new File(OpenMinetopia.getInstance().getDataFolder(), "vehicles");
         if (!vehiclesFolder.exists()) {
             vehiclesFolder.mkdir();
@@ -36,9 +43,6 @@ public class VehiclesModule extends Module {
 
         BlueprintManager.load(vehiclesFolder);
     }
-
-    @Override
-    public void disable() {}
 
     public static Optional<Vehicle> vehicleBySeat(ArmorStand entity) {
         return vehicles.stream().filter(vehicle -> vehicle.getSeats().stream()

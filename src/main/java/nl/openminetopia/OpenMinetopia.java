@@ -98,6 +98,7 @@ public final class OpenMinetopia extends JavaPlugin {
         commandManager.setFormat(MessageType.HELP, 2, ChatColor.YELLOW);
         commandManager.setFormat(MessageType.HELP, 3, ChatColor.GRAY);
 
+        PacketEvents.getAPI().init();
         Menu.init(this);
         InventoryLoader.setFormattingProvider(message -> ChatUtils.color("<red>" + message));
 

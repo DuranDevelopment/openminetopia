@@ -9,7 +9,8 @@ public enum VehicleKey {
     SEAT_UUIDS_KEY("vehicle.seatUuids"),
     PART_UUIDS_KEY("vehicle.partUuids"),
     VEHICLE_ID_KEY("vehicle.vehicleId"),
-    BASE_VEHICLE_KEY("vehicle.baseVehicle");
+    BASE_VEHICLE_KEY("vehicle.baseVehicle"),
+    PART_IDENTIFIER_KEY("vehicle.partId");
 
     private final NamespacedKey key;
 

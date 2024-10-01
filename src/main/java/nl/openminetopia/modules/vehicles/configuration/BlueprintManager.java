@@ -5,6 +5,8 @@ import nl.openminetopia.modules.vehicles.configuration.components.FuelComponent;
 import nl.openminetopia.modules.vehicles.configuration.components.MovementComponent;
 import nl.openminetopia.modules.vehicles.configuration.components.PartComponent;
 import nl.openminetopia.modules.vehicles.configuration.components.SeatComponent;
+import nl.openminetopia.modules.vehicles.objects.Vehicle;
+import org.bukkit.Location;
 
 import java.io.File;
 import java.util.*;
@@ -67,6 +69,21 @@ public class BlueprintManager {
 
         public void addPart(PartComponent part) {
             parts.put(part.identifier(), part);
+        }
+
+        /* This can be done inside the Vehicle object eventually */
+        public Vehicle spawn(Location location) {
+            Vehicle vehicle = new Vehicle(location, this);
+            for (SeatComponent seat : this.seats) {
+                vehicle.seat(seat.vector(), seat.isDriver());
+            }
+
+            /* Could also supply the component directly */
+            for (String identifier : this.defaultParts) {
+                vehicle.part(identifier);
+            }
+
+            return vehicle;
         }
 
     }

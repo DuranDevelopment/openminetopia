@@ -1,9 +1,11 @@
 package nl.openminetopia.modules.vehicles.objects;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import nl.openminetopia.modules.vehicles.enums.VehicleKey;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.entity.CraftEntity;
@@ -11,6 +13,8 @@ import org.bukkit.craftbukkit.util.CraftLocation;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Transformation;
 
 @Getter
@@ -23,11 +27,13 @@ public class Part {
     @Getter(AccessLevel.PRIVATE)
     private float oldRadians = 0.0F;
 
-    public Part(Vehicle vehicle) {
+    public Part(Vehicle vehicle, String identifier) {
         this.vehicle = vehicle;
 
-        this.entity = spawn();
+        this.entity = spawn(identifier);
         this.internalEntity = ((CraftEntity)entity).getHandle();
+
+        this.save(identifier);
     }
 
     public Part(Vehicle vehicle, ItemDisplay entity) {
@@ -45,12 +51,19 @@ public class Part {
         transform();
     }
 
-    private ItemDisplay spawn() {
+    public void save(String identifier) {
+        PersistentDataContainer data = entity.getPersistentDataContainer();
+
+        data.set(VehicleKey.PART_IDENTIFIER_KEY.key(), PersistentDataType.STRING, identifier);
+    }
+
+    private ItemDisplay spawn(String identifier) {
         Location location = vehicle.location();
         location.setPitch(0); location.setYaw(0);
 
+        ItemStack item = vehicle.getBlueprint().obtainPart(identifier).item();
         ItemDisplay entity = vehicle.location().getWorld().spawn(location, ItemDisplay.class);
-        entity.setItemStack(new ItemStack(Material.IRON_HOE));
+        entity.setItemStack(item);
         entity.setViewRange(0.595F);
         entity.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.HEAD);
 

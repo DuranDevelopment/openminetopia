@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.*;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.modules.vehicles.VehiclesModule;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 
@@ -18,6 +19,7 @@ public class OpenMinetopiaCommand extends BaseCommand {
     public void onReload(Player player) {
         OpenMinetopia.getDefaultConfiguration().getLoader().load();
         OpenMinetopia.setDefaultConfiguration(new DefaultConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.getModuleManager().getModule(VehiclesModule.class).loadConfiguration();
         player.sendMessage(ChatUtils.color("<gold>De configuratiebestanden zijn succesvol herladen!"));
     }
 

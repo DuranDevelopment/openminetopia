@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import nl.openminetopia.modules.vehicles.VehiclesModule;
+import nl.openminetopia.modules.vehicles.configuration.BlueprintManager;
 import nl.openminetopia.modules.vehicles.entity.BaseVehicleEntity;
 import nl.openminetopia.modules.vehicles.enums.VehicleKey;
 import nl.openminetopia.modules.vehicles.objects.movement.CarMovement;
@@ -29,6 +30,7 @@ import java.util.*;
 @Getter
 public class Vehicle {
 
+    private final BlueprintManager.Blueprint blueprint;
     private final ArmorStand entity;
     private final BaseVehicleEntity internalEntity;
     private final Movement movement;
@@ -36,10 +38,11 @@ public class Vehicle {
     private final List<Seat> seats = new ArrayList<>();
     private final List<Part> parts = new ArrayList<>();
 
-    public Vehicle(Location location) {
+    public Vehicle(Location location, BlueprintManager.Blueprint blueprint) {
         this.internalEntity = new BaseVehicleEntity(this, location.getWorld());
         this.entity = (ArmorStand) internalEntity.getBukkitEntity();
         this.movement = CarMovement.inst(this);
+        this.blueprint = blueprint;
         VehiclesModule.vehicles.add(this);
 
         Optional.ofNullable(entity.getAttribute(Attribute.GENERIC_STEP_HEIGHT)).ifPresent(attribute -> {
@@ -53,6 +56,7 @@ public class Vehicle {
         this.internalEntity = internalEntity;
         this.entity = (ArmorStand) internalEntity.getBukkitEntity();
         this.movement = CarMovement.inst(this);
+        this.blueprint = null;
         VehiclesModule.vehicles.add(this);
     }
 
@@ -73,8 +77,8 @@ public class Vehicle {
         return seat;
     }
 
-    public Part part() {
-        Part part = new Part(this);
+    public Part part(String identifier) {
+        Part part = new Part(this, identifier);
         parts.add(part);
 
         update();

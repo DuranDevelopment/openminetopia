@@ -1,6 +1,9 @@
 package nl.openminetopia.modules.vehicles.configuration.components;
 
+import nl.openminetopia.utils.item.ItemBuilder;
+import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @param identifier      Identifier in the config.
@@ -12,4 +15,20 @@ import org.bukkit.Material;
  * @param visible         Setting if part should be shown.
  */
 public record PartComponent(String identifier, String displayName, Material material, String namespacedNBT,
-                            String hexColor, int customModelData, boolean visible) {}
+                            String hexColor, int customModelData, boolean visible) {
+
+    public ItemStack item() {
+        ItemBuilder builder = new ItemBuilder(material);
+        builder.setName(displayName);
+
+        if (namespacedNBT != null) {
+            String[] split = namespacedNBT.split(":");
+            builder.setNBT(split[0], split[1]);
+        }
+        if (hexColor != null) builder.setLeatherArmorColor(Color.BLACK);
+        if (customModelData != -1) builder.setCustomModelData(customModelData);
+
+        return builder.toItemStack();
+    }
+
+}
