@@ -1,5 +1,6 @@
 package nl.openminetopia.modules.vehicles.configuration;
 
+import com.google.gson.Gson;
 import nl.openminetopia.modules.vehicles.configuration.components.FuelComponent;
 import nl.openminetopia.modules.vehicles.configuration.components.MovementComponent;
 import nl.openminetopia.modules.vehicles.configuration.components.PartComponent;

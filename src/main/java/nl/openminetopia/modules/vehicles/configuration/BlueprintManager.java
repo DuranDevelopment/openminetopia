@@ -23,7 +23,7 @@ public class BlueprintManager {
                 load(file);
             } else if (file.getName().endsWith(".yml") || file.getName().endsWith(".yaml")) {
                 /* holy java garbage collector please be my saviour */
-                new VehicleConfiguration(file, file.getName());
+                new VehicleConfiguration(file.getParentFile(), file.getName());
             }
         }
     }

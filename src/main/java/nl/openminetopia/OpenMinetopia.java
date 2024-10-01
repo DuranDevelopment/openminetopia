@@ -26,6 +26,7 @@ import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
+import nl.openminetopia.modules.vehicles.VehiclesModule;
 import nl.openminetopia.modules.vehicles.entity.BaseVehicleEntity;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.placeholderapi.OpenMinetopiaExpansion;
@@ -88,7 +89,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new PlotModule(),
-                new TeleporterModule()
+                new TeleporterModule(),
+                new VehiclesModule()
         );
 
         commandManager.enableUnstableAPI("help");
