@@ -18,6 +18,7 @@ import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.storm.StormDatabase;
@@ -814,5 +815,29 @@ public class MySQLAdapter implements DatabaseAdapter {
         );
         completableFuture.complete(null);
         return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Integer> createBankAccount(UUID uuid, AccountType type, long balance, String name, boolean frozen) {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            BankAccountModel accountModel = new BankAccountModel();
+            accountModel.setUniqueId(uuid);
+            accountModel.setType(type);
+            accountModel.setBalance(balance);
+            accountModel.setName(name);
+            accountModel.setFrozen(frozen);
+
+            int id = StormDatabase.getInstance().saveStormModel(accountModel).join();
+            completableFuture.complete(id);
+        });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Integer> createBankPermission(BankPermissionModel accountModel) {
+        return null;
     }
 }

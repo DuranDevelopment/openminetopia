@@ -9,6 +9,7 @@ import nl.openminetopia.modules.banking.commands.BankingCreateCommand;
 import nl.openminetopia.modules.banking.commands.BankingOpenCommand;
 import nl.openminetopia.modules.banking.commands.BankingUsersCommand;
 import nl.openminetopia.modules.banking.enums.AccountType;
+import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
@@ -112,7 +113,7 @@ public class BankingModule extends Module {
             permissionsFuture.whenComplete((permissions, throwable) -> {
                 for (BankPermissionModel permission : permissions) {
                     BankAccountModel accountModel = getAccountById(permission.getAccount());
-                    if(accountModel == null) {
+                    if (accountModel == null) {
                         // todo: remove from db, account isn't valid?
                         continue;
                     }
@@ -132,33 +133,20 @@ public class BankingModule extends Module {
     public CompletableFuture<BankAccountModel> getAccountModel(UUID accountId) {
         CompletableFuture<BankAccountModel> accountModelFuture = new CompletableFuture<>();
 
-        CompletableFuture<Collection<BankAccountModel>> collectionFuture = StormDatabase.getInstance().getStorm()
+        Collection<BankAccountModel> collectionFuture = StormDatabase.getInstance().getStorm()
                 .buildQuery(BankAccountModel.class)
                 .where("uuid", Where.EQUAL, accountId.toString())
-                .execute();
+                .execute().join();
 
-        collectionFuture.whenComplete((collection, throwable) -> {
-            if(throwable != null) {
-                accountModelFuture.completeExceptionally(throwable);
-                return;
-            }
-
-            BankAccountModel bankAccountModel = collection.stream().findFirst().orElse(null);
-            accountModelFuture.complete(bankAccountModel);
-        });
+        accountModelFuture.complete(collectionFuture.stream().findFirst().orElse(null));
 
         return accountModelFuture;
     }
 
-    public int createAccount(BankAccountModel accountModel) throws SQLException {
-        this.getBankAccountModels().add(accountModel);
-        return StormDatabase.getInstance().getStorm().save(accountModel);
-    }
-
-    public int createPermissions(BankPermissionModel permissionModel) throws SQLException {
+    public void createPermissions(BankPermissionModel permissionModel) throws SQLException {
         BankAccountModel accountModel = getAccountById(permissionModel.getAccount());
         accountModel.getUsers().put(permissionModel.getUuid(), permissionModel.getPermission());
-        return StormDatabase.getInstance().getStorm().save(permissionModel);
+        StormDatabase.getInstance().getStorm().save(permissionModel);
     }
 
 }

@@ -7,6 +7,7 @@ import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.storm.models.*;
@@ -108,4 +109,10 @@ public interface DatabaseAdapter {
     CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster);
 
     CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness);
+
+    /* Banking related database queries */
+
+    CompletableFuture<Integer> createBankAccount(UUID uuid, AccountType type, long balance, String name, boolean frozen);
+
+    CompletableFuture<Integer> createBankPermission(BankPermissionModel accountModel);
 }

@@ -86,6 +86,7 @@ public class StormDatabase {
             try {
                 completableFuture.complete(storm.save(stormModel));
             } catch (SQLException exception) {
+                OpenMinetopia.getInstance().getLogger().severe("Something went wrong! " + exception.getMessage());
                 completableFuture.completeExceptionally(exception);
             }
         });
