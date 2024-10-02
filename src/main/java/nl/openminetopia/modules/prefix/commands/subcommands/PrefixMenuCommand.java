@@ -12,7 +12,7 @@ public class PrefixMenuCommand extends BaseCommand {
     @Subcommand("menu")
     @Description("Open het prefix menu.")
     @CommandCompletion("@players")
-    public void menuCommand(Player player, @Optional OfflinePlayer target) {
+    public void prefixMenu(Player player, @Optional OfflinePlayer target) {
         if (target == null) {
             target = player;
         }

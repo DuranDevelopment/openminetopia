@@ -60,7 +60,7 @@ public class PrefixMenu extends PaginatedMenu {
                         event.setCancelled(true);
                         minetopiaPlayer.setActivePrefix(prefix.getId() == -1 ? new Prefix(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefix(), -1) : prefix);
                         player.sendMessage(ChatUtils.format(minetopiaPlayer, "<gold>Je hebt de prefix <yellow>" + prefix.getPrefix() + " <gold>geselecteerd."));
-                        player.closeInventory();
+                        new PrefixMenu(player, offlinePlayer).open(player);
                     });
             this.addItem(prefixIcon);
             i++;
@@ -73,7 +73,7 @@ public class PrefixMenu extends PaginatedMenu {
 
         if (millis <= -1) return "<yellow>nooit";
 
-        return "<gold>over <yellow>" + hours + " uur en <yellow>" + minutes + " <gold>minuten";
+        return "<gold>over <yellow>" + hours + " uur, <yellow>" + minutes + " <gold>minuten en <yellow>" + millisToSeconds(millis) + " <gold>seconden";
     }
 
     private int millisToHours(long millis) {
@@ -82,6 +82,10 @@ public class PrefixMenu extends PaginatedMenu {
 
     private int millisToMinutes(long millis) {
         return (int) (millis / 1000 / 60);
+    }
+
+    private int millisToSeconds(long millis) {
+        return (int) (millis / 1000);
     }
 
     @Override

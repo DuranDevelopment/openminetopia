@@ -24,7 +24,7 @@ public class PrefixAddCommand extends BaseCommand {
     @CommandCompletion("@players")
     @CommandPermission("openminetopia.prefix.add")
     @Description("Add a prefix to a player.")
-    public static void addPrefixCommand(Player player, OfflinePlayer offlinePlayer, Integer expiresAt, String prefix) {
+    public static void addPrefix(Player player, OfflinePlayer offlinePlayer, Integer expiresAt, String prefix) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage("This player does not exist.");
             return;

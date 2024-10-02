@@ -18,7 +18,7 @@ public class PrefixSelectCommand extends BaseCommand {
 
     @Subcommand("select")
     @Syntax("<id>")
-    public void onSelectCommand(Player player, int id) {
+    public void selectPrefix(Player player, int id) {
 
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) {
