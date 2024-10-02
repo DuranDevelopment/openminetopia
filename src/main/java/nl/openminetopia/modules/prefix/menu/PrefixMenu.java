@@ -42,7 +42,6 @@ public class PrefixMenu extends PaginatedMenu {
                 .setName("<white>" + minetopiaPlayer.getActivePrefix().getPrefix())
                 .addLoreLine("")
                 .addLoreLine("<gold>Je hebt deze prefix geselecteerd.")
-                .addLoreLine("<gold>Deze prefix vervalt <yellow>" + millisToTime(minetopiaPlayer.getActivePrefix().getExpiresAt() - System.currentTimeMillis()) + "<gold>.")
                 .setGlowing(true)
                 .toItemStack(),
                 event -> event.setCancelled(true));
@@ -50,12 +49,17 @@ public class PrefixMenu extends PaginatedMenu {
 
         int i = 1;
         for (Prefix prefix : prefixes) {
-            Icon prefixIcon = new Icon(i, new ItemBuilder(Material.PAPER)
+            var builder = new ItemBuilder(Material.PAPER)
                     .setName("<white>" + prefix.getPrefix())
                     .addLoreLine("")
                     .addLoreLine("<gold>Klik <yellow>hier <gold>om deze prefix te selecteren.")
-                    .addLoreLine("<gold>Deze prefix vervalt <yellow>" + millisToTime(prefix.getExpiresAt() - System.currentTimeMillis()) + ".")
-                    .toItemStack(),
+                    .addLoreLine("");
+
+            if (prefix.getExpiresAt() != -1 && prefix.getExpiresAt() - System.currentTimeMillis() < -1) builder.addLoreLine("<red>Deze prefix is vervallen.");
+            if (prefix.getExpiresAt() != -1 && prefix.getExpiresAt() - System.currentTimeMillis() > -1) builder.addLoreLine("<gold>Deze prefix vervalt over <yellow>" + millisToTime(prefix.getExpiresAt() - System.currentTimeMillis()) + "<gold>.");
+            if (prefix.getExpiresAt() == -1) builder.addLoreLine("<gold>Deze prefix vervalt <yellow>nooit<gold>.");
+
+            Icon prefixIcon = new Icon(i, builder.toItemStack(),
                     event -> {
                         event.setCancelled(true);
                         minetopiaPlayer.setActivePrefix(prefix.getId() == -1 ? new Prefix(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefix(), -1) : prefix);
@@ -71,9 +75,7 @@ public class PrefixMenu extends PaginatedMenu {
         long hours = millisToHours(millis);
         long minutes = millisToMinutes(millis) - (hours * 60);
 
-        if (millis <= -1) return "<yellow>nooit";
-
-        return "<gold>over <yellow>" + hours + " uur, <yellow>" + minutes + " <gold>minuten en <yellow>" + millisToSeconds(millis) + " <gold>seconden";
+        return "<yellow>" + hours + " uur, <yellow>" + minutes + " <gold>minuten en <yellow>" + millisToSeconds(millis) + " <gold>seconden";
     }
 
     private int millisToHours(long millis) {
