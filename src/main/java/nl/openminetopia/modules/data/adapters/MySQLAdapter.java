@@ -54,15 +54,7 @@ public class MySQLAdapter implements DatabaseAdapter {
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
             StormDatabase.getInstance().setStorm(new Storm(new HikariDriver(config)));
-
-            registerStormModel(new PlayerModel());
-            registerStormModel(new FitnessModel());
-            registerStormModel(new FitnessBoosterModel());
-            registerStormModel(new PrefixModel());
-            registerStormModel(new ColorModel());
-            registerStormModel(new WorldModel());
-            registerStormModel(new CityModel());
-
+            registerStormModels();
         } catch (Exception e) {
             OpenMinetopia.getInstance().getLogger().severe("Failed to connect to MySQL database: " + e.getMessage());
             OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
@@ -70,9 +62,20 @@ public class MySQLAdapter implements DatabaseAdapter {
         }
     }
 
+    public void registerStormModels() {
+        registerStormModel(new PlayerModel());
+        registerStormModel(new FitnessModel());
+        registerStormModel(new FitnessBoosterModel());
+        registerStormModel(new PrefixModel());
+        registerStormModel(new ColorModel());
+        registerStormModel(new WorldModel());
+        registerStormModel(new CityModel());
+    }
+
     @SneakyThrows
     private void registerStormModel(StormModel model) {
         Storm storm = StormDatabase.getInstance().getStorm();
+
         storm.registerModel(model);
         storm.runMigrations();
     }
