@@ -320,10 +320,10 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             }
 
             switch (color.getType()) {
-                case PREFIX -> colors.add(new PrefixColor(id, color.getColor(), color.getExpiresAt()));
-                case NAME -> colors.add(new NameColor(id, color.getColor(), color.getExpiresAt()));
-                case CHAT -> colors.add(new ChatColor(id, color.getColor(), color.getExpiresAt()));
-                case LEVEL -> colors.add(new LevelColor(id, color.getColor(), color.getExpiresAt()));
+                case PREFIX -> colors.add(new PrefixColor(id, color.getColorId(), color.getExpiresAt()));
+                case NAME -> colors.add(new NameColor(id, color.getColorId(), color.getExpiresAt()));
+                case CHAT -> colors.add(new ChatColor(id, color.getColorId(), color.getExpiresAt()));
+                case LEVEL -> colors.add(new LevelColor(id, color.getColorId(), color.getExpiresAt()));
             }
         });
     }
@@ -367,7 +367,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         }
 
         if (color.isExpired()) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je " + type.name().toLowerCase() + " kleur <dark_red>" + color.getColor() + " is verlopen!"));
+            getBukkit().sendMessage(ChatUtils.color("<red>Je " + type.name().toLowerCase() + " kleur <dark_red>" + color.getColorId() + " is verlopen!"));
             removeColor(color);
             setActiveColor(getDefaultColor(type), type);
         }

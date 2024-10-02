@@ -27,15 +27,15 @@ public class ChatUtils {
 
         int levelUps = minetopiaPlayer.getCalculatedLevel() - minetopiaPlayer.getLevel();
 
-        message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
+        message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).color())
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
                 .replace("<calculated_level>", minetopiaPlayer.getCalculatedLevel() + "")
                 .replace("<levelups>", levelUps == 0 ? "<gold>0" : (levelUps > 0 ? "<green>+" + levelUps : "<red>" + levelUps))
-                .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor())
+                .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).color())
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
-                .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColor())
+                .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).color())
                 .replace("<name>", player.getName())
-                .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).getColor())
+                .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).color())
                 .replace("<date>", new SimpleDateFormat("dd-MM-yyyy").format(new Date()))
                 .replace("<time>", new SimpleDateFormat("HH:mm").format(new Date()));
 
