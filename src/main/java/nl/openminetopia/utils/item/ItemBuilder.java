@@ -101,6 +101,25 @@ public class ItemBuilder {
         return this;
     }
 
+
+    /**
+     * Make the item glow.
+     *
+     * @param toggle Glow on or off
+     */
+    public ItemBuilder setGlowing(boolean toggle) {
+        if (toggle) {
+            addUnsafeEnchantment(Enchantment.LUCK_OF_THE_SEA, 1);
+            setItemFlag(ItemFlag.HIDE_ENCHANTS);
+            return this;
+        }
+        ItemMeta im = is.getItemMeta();
+        removeEnchantment(Enchantment.LUCK_OF_THE_SEA);
+        im.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+        is.setItemMeta(im);
+        return this;
+    }
+
     /**
      * Add an unsafe enchantment.
      *

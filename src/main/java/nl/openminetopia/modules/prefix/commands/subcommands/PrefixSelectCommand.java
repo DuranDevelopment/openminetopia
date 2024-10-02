@@ -42,10 +42,10 @@ public class PrefixSelectCommand extends BaseCommand {
             player.sendMessage("You don't have a prefix with id " + id + "!");
             // send available prefixes:
             player.sendMessage("Available prefixes:");
-            player.sendMessage(ChatUtils.format(minetopiaPlayer,"<gray>-1 <dark_gray>- <prefixcolor>" + OpenMinetopia.getDefaultConfiguration().getDefaultPrefix()
+            player.sendMessage(ChatUtils.format(minetopiaPlayer,"<gray>-1 <dark_gray>- <prefix_color>" + OpenMinetopia.getDefaultConfiguration().getDefaultPrefix()
                     + " <green><hover:show_text:'<green>Sets this prefix as the active prefix'><click:suggest_command:'/prefix select -1'>SELECT</click></hover>"));
 
-            prefixes.forEach(prefix -> player.sendMessage(ChatUtils.format(minetopiaPlayer,"<gray>" + prefix.getId() + " <dark_gray>- <prefixcolor>" + prefix.getPrefix()
+            prefixes.forEach(prefix -> player.sendMessage(ChatUtils.format(minetopiaPlayer,"<gray>" + prefix.getId() + " <dark_gray>- <prefix_color>" + prefix.getPrefix()
                     + " <green><hover:show_text:'<green>Sets this prefix as the active prefix'><click:suggest_command:'/prefix select " + prefix.getId() + "'>SELECT</click></hover>"
                     + " <red><hover:show_text:'<red>Removes this prefix from the player'><click:suggest_command:'/prefix remove " + player.getName() + " " + prefix.getId() + "'>REMOVE</click></hover>")));
             return;

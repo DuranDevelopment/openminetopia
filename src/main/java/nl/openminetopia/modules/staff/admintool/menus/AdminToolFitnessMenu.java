@@ -163,7 +163,5 @@ public class AdminToolFitnessMenu extends Menu {
 
         });
         this.addItem(backIcon);
-
-        this.open(player);
     }
 }

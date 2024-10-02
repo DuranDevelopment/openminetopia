@@ -76,7 +76,7 @@ dependencies {
     implementation("com.jeff-media:MorePersistentDataTypes:2.4.0")
 
     /* InventoryLib (JAZZZZ) */
-    implementation("com.github.Jazzkuh.InventoryLib:spigot:d519cdde69")
+    implementation("com.github.Jazzkuh.InventoryLib:spigot:0b06d55b7c")
 }
 
 val targetJavaVersion = 21

@@ -3,7 +3,6 @@ package nl.openminetopia.modules.staff.admintool.menus;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import lombok.Getter;
-import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.TotalStatistic;
@@ -87,7 +86,6 @@ public class AdminToolInfoMenu extends Menu {
             if (targetPlayer == null) return;
             AdminToolFitnessMenu menu = new AdminToolFitnessMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
-
         });
         this.addItem(targetFitnessIcon);
 
@@ -117,7 +115,5 @@ public class AdminToolInfoMenu extends Menu {
 
         });
         this.addItem(backIcon);
-
-        this.open(player);
     }
 }

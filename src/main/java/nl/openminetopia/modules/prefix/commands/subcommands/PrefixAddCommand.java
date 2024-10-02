@@ -14,6 +14,11 @@ import org.bukkit.entity.Player;
 @CommandAlias("prefix")
 public class PrefixAddCommand extends BaseCommand {
 
+    /**
+     * Add a prefix to a player.
+     * @param expiresAt The time in minutes when the prefix expires.
+     */
+
     @Subcommand("add")
     @Syntax("<player> <expiresAt> <prefix>")
     @CommandCompletion("@players")
@@ -29,7 +34,8 @@ public class PrefixAddCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
         player.sendMessage("Added the prefix to the player.");
 
-        Prefix prefix1 = new Prefix(prefix, expiresAt);
+        long expiresAtMillis = System.currentTimeMillis() + (expiresAt * 60 * 1000);
+        Prefix prefix1 = new Prefix(prefix, expiresAtMillis);
         minetopiaPlayer.addPrefix(prefix1);
     }
 }
