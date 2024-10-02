@@ -15,6 +15,7 @@ import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.runnables.HealthStatisticRunnable;
+import nl.openminetopia.modules.player.runnables.LevelcheckRunnable;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
@@ -40,6 +41,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     private HealthStatisticRunnable healthStatisticRunnable;
 
     private int level;
+    private @Setter int calculatedLevel;
+    private LevelcheckRunnable levelcheckRunnable;
 
     private boolean staffchatEnabled;
     private boolean commandSpyEnabled;
@@ -119,7 +122,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
         dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
             if (level == null) {
-                this.level = 0;
+                this.level = configuration.getDefaultLevel();
                 return;
             }
             this.level = level;
@@ -172,6 +175,9 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
+
+        this.levelcheckRunnable = new LevelcheckRunnable(this);
+        levelcheckRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L * 30);
 
         this.healthStatisticRunnable = new HealthStatisticRunnable(this);
         healthStatisticRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
@@ -262,11 +268,12 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     @Override
     public void addPrefix(Prefix prefix) {
-        prefixes.add(prefix);
-        dataModule.getAdapter().addPrefix(this, prefix).whenComplete((unused, throwable) -> {
+        dataModule.getAdapter().addPrefix(this, prefix).whenComplete((id, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
+                return;
             }
+            prefixes.add(new Prefix(id, prefix.getPrefix(), prefix.getExpiresAt()));
         });
     }
 
@@ -294,8 +301,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             activePrefix = new Prefix(-1, configuration.getDefaultPrefix(), -1);
         }
 
-        if (activePrefix.getExpiresAt() < System.currentTimeMillis() && activePrefix.getExpiresAt() != -1) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix <dark_red>" + activePrefix + " is verlopen!"));
+        if (activePrefix.isExpired()) {
+            getBukkit().sendMessage(ChatUtils.color("<red>Je prefix <dark_red>" + activePrefix.getPrefix() + " <red>is verlopen!"));
             removePrefix(activePrefix);
             setActivePrefix(new Prefix(-1, configuration.getDefaultPrefix(), -1));
         }
@@ -306,8 +313,19 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
     /* Colors */
     @Override
     public void addColor(OwnableColor color) {
-        colors.add(color);
-        dataModule.getAdapter().addColor(this, color);
+        dataModule.getAdapter().addColor(this, color).whenComplete((id, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+
+            switch (color.getType()) {
+                case PREFIX -> colors.add(new PrefixColor(id, color.getColor(), color.getExpiresAt()));
+                case NAME -> colors.add(new NameColor(id, color.getColor(), color.getExpiresAt()));
+                case CHAT -> colors.add(new ChatColor(id, color.getColor(), color.getExpiresAt()));
+                case LEVEL -> colors.add(new LevelColor(id, color.getColor(), color.getExpiresAt()));
+            }
+        });
     }
 
     @Override

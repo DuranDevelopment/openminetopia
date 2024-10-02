@@ -27,6 +27,7 @@ public interface MinetopiaPlayer {
     /* Level */
     void setLevel(int level);
     int getLevel();
+    int getCalculatedLevel();
 
     /* Prefixes */
     List<Prefix> getPrefixes();

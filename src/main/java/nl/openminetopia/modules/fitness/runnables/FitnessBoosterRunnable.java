@@ -16,7 +16,7 @@ public class FitnessBoosterRunnable extends BukkitRunnable {
         fitness.getBoosters().forEach(booster -> {
             boolean triggerUpdate = false;
             if (booster.isExpired()) {
-                fitness.getBoosters().remove(booster);
+                fitness.removeBooster(booster);
                 triggerUpdate = true;
             }
             if (triggerUpdate) fitness.getRunnable().run();

@@ -24,7 +24,7 @@ public interface DatabaseAdapter {
 
     /* Player related database queries */
 
-    CompletableFuture<PlayerModel> loadPlayer(UUID uuid);
+    CompletableFuture<?> loadPlayer(UUID uuid);
 
     CompletableFuture<Void> savePlayer(MinetopiaPlayer player);
 
@@ -45,7 +45,7 @@ public interface DatabaseAdapter {
 
     /* Prefix related database queries */
 
-    CompletableFuture<Void> addPrefix(MinetopiaPlayer player, Prefix prefix);
+    CompletableFuture<Integer> addPrefix(MinetopiaPlayer player, Prefix prefix);
 
     CompletableFuture<Void> removePrefix(MinetopiaPlayer player, Prefix prefix);
 
@@ -57,7 +57,7 @@ public interface DatabaseAdapter {
 
     /* Color related database queries */
 
-    CompletableFuture<Void> addColor(MinetopiaPlayer player, OwnableColor color);
+    CompletableFuture<Integer> addColor(MinetopiaPlayer player, OwnableColor color);
 
     CompletableFuture<Void> removeColor(MinetopiaPlayer player, OwnableColor color);
 
@@ -75,7 +75,7 @@ public interface DatabaseAdapter {
 
     /* World related database queries */
 
-    CompletableFuture<WorldModel> createWorld(MTWorld world);
+    CompletableFuture<?> createWorld(MTWorld world);
     CompletableFuture<Void> deleteWorld(MTWorld world);
 
     CompletableFuture<Void> setTemperature(MTWorld world, double temperature);
@@ -85,7 +85,7 @@ public interface DatabaseAdapter {
 
     /* City related database queries */
 
-    CompletableFuture<CityModel> createCity(MTCity city);
+    CompletableFuture<?> createCity(MTCity city);
     CompletableFuture<Void> deleteCity(MTCity city);
 
     CompletableFuture<Void> setTemperature(MTCity city, double temperature);
@@ -104,7 +104,7 @@ public interface DatabaseAdapter {
 
     CompletableFuture<Void> saveFitnessBoosters(Fitness fitness);
 
-    CompletableFuture<FitnessBoosterModel> addFitnessBooster(Fitness fitness, FitnessBooster booster);
+    CompletableFuture<Integer> addFitnessBooster(Fitness fitness, FitnessBooster booster);
     CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster);
 
     CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness);

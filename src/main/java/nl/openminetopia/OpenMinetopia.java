@@ -8,6 +8,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.LevelcheckConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.chat.ChatModule;
@@ -40,7 +41,11 @@ public final class OpenMinetopia extends JavaPlugin {
     @Setter
     private static DefaultConfiguration defaultConfiguration;
     @Getter
+    @Setter
     private static MessageConfiguration messageConfiguration;
+    @Getter
+    @Setter
+    private static LevelcheckConfiguration levelcheckConfiguration;
 
     @Override
     public void onEnable() {
@@ -56,6 +61,9 @@ public final class OpenMinetopia extends JavaPlugin {
 
         messageConfiguration = new MessageConfiguration(getDataFolder());
         messageConfiguration.saveConfiguration();
+
+        levelcheckConfiguration = new LevelcheckConfiguration(getDataFolder());
+        levelcheckConfiguration.saveConfiguration();
 
         moduleManager.register(
                 new CoreModule(),

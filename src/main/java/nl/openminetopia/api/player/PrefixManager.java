@@ -28,11 +28,7 @@ public class PrefixManager {
      */
 
     public void addPrefix(MinetopiaPlayer player, Prefix prefix) {
-        dataModule.getAdapter().addPrefix(player, prefix).whenComplete((unused, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-            }
-        });
+        dataModule.getAdapter().addPrefix(player, prefix);
     }
 
     public void setActivePrefix(MinetopiaPlayer player, Prefix prefix) {

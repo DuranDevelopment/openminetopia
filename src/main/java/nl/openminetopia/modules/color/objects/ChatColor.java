@@ -18,4 +18,10 @@ public class ChatColor extends OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
+
+    public ChatColor(String color, long expiresAt) {
+        super(OwnableColorType.CHAT, color, expiresAt);
+        this.color = color;
+        this.expiresAt = expiresAt;
+    }
 }

@@ -61,6 +61,11 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
     }
 
     @Override
+    public int getCalculatedLevel() {
+        return 0;
+    }
+
+    @Override
     public List<Prefix> getPrefixes() {
         return List.of();
     }

@@ -26,35 +26,14 @@ public class DataModule extends Module {
 
         adapter = AdapterUtil.getAdapter(type);
         adapter.connect();
-
-        if (type != DatabaseType.MONGO) {
-            try {
-                registerStormModel(new PlayerModel());
-                registerStormModel(new FitnessModel());
-                registerStormModel(new FitnessBoosterModel());
-                registerStormModel(new PrefixModel());
-                registerStormModel(new ColorModel());
-                registerStormModel(new WorldModel());
-                registerStormModel(new CityModel());
-            } catch (Exception e) {
-                OpenMinetopia.getInstance().getLogger().severe("Failed to connect to " + type.name() + " database: " + e.getMessage());
-                OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
-                OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
-            }
-        }
     }
+
+
 
     @Override
     public void disable() {
         if (adapter != null) {
             adapter.disconnect();
         }
-    }
-
-    @SneakyThrows
-    private void registerStormModel(StormModel model) {
-        Storm storm = StormDatabase.getInstance().getStorm();
-        storm.registerModel(model);
-        storm.runMigrations();
     }
 }

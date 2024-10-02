@@ -25,24 +25,31 @@ public class ChatUtils {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
 
+        int levelUps = minetopiaPlayer.getCalculatedLevel() - minetopiaPlayer.getLevel();
+
         message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
+                .replace("<calculated_level>", minetopiaPlayer.getCalculatedLevel() + "")
+                .replace("<levelups>", levelUps == 0 ? "<gold>0" : (levelUps > 0 ? "<green>+" + levelUps : "<red>" + levelUps))
                 .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor())
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
                 .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColor())
                 .replace("<name>", player.getName())
                 .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).getColor())
-                .replace("<world_title>", minetopiaPlayer.getWorld().getTitle())
-                .replace("<world_loadingname>", minetopiaPlayer.getWorld().getLoadingName())
-                .replace("<world_name>", minetopiaPlayer.getWorld().getName())
-                .replace("<world_color>", minetopiaPlayer.getWorld().getColor())
-                .replace("<city_title>", minetopiaPlayer.getPlace().getTitle()) // Defaults to the world name if the player is not in a city
-                .replace("<city_loadingname>", minetopiaPlayer.getPlace().getLoadingName()) // Defaults to the world loading name if the player is not in a city
-                .replace("<city_name>", minetopiaPlayer.getPlace().getName()) // Defaults to the world name if the player is not in a city
-                .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "") // Defaults to the world temperature if the player is not in a city
-                .replace("<city_color>", minetopiaPlayer.getPlace().getColor()) // Defaults to the world color if the player is not in a city
                 .replace("<date>", new SimpleDateFormat("dd-MM-yyyy").format(new Date()))
                 .replace("<time>", new SimpleDateFormat("HH:mm").format(new Date()));
+
+        if (minetopiaPlayer.isInPlace()) {
+            message = message.replace("<world_title>", minetopiaPlayer.getWorld().getTitle())
+                    .replace("<world_loadingname>", minetopiaPlayer.getWorld().getLoadingName())
+                    .replace("<world_name>", minetopiaPlayer.getWorld().getName())
+                    .replace("<world_color>", minetopiaPlayer.getWorld().getColor())
+                    .replace("<city_title>", minetopiaPlayer.getPlace().getTitle()) // Defaults to the world name if the player is not in a city
+                    .replace("<city_loadingname>", minetopiaPlayer.getPlace().getLoadingName()) // Defaults to the world loading name if the player is not in a city
+                    .replace("<city_name>", minetopiaPlayer.getPlace().getName()) // Defaults to the world name if the player is not in a city
+                    .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "") // Defaults to the world temperature if the player is not in a city
+                    .replace("<city_color>", minetopiaPlayer.getPlace().getColor()); // Defaults to the world color if the player is not in a city
+        }
 
         if (minetopiaPlayer.getFitness().getStatistics() != null && !minetopiaPlayer.getFitness().getStatistics().isEmpty()) {
             message = message.replace("<fitness>", minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained() + "")
