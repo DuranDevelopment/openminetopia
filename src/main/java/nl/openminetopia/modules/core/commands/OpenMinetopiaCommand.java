@@ -1,15 +1,16 @@
 package nl.openminetopia.modules.core.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.LevelcheckConfiguration;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 
-@CommandAlias("openminetopia")
+@CommandAlias("openminetopia|sdb|minetopia|omt")
 public class OpenMinetopiaCommand extends BaseCommand {
 
     @Subcommand("reload")
@@ -18,6 +19,13 @@ public class OpenMinetopiaCommand extends BaseCommand {
     public void onReload(Player player) {
         OpenMinetopia.getDefaultConfiguration().getLoader().load();
         OpenMinetopia.setDefaultConfiguration(new DefaultConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+
+        OpenMinetopia.getMessageConfiguration().getLoader().load();
+        OpenMinetopia.setMessageConfiguration(new MessageConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+
+        OpenMinetopia.getLevelcheckConfiguration().getLoader().load();
+        OpenMinetopia.setLevelcheckConfiguration(new LevelcheckConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+
         player.sendMessage(ChatUtils.color("<gold>De configuratiebestanden zijn succesvol herladen!"));
     }
 

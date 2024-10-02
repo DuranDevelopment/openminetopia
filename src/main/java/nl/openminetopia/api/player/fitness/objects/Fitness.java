@@ -76,13 +76,11 @@ public class Fitness {
         dataModule.getAdapter().saveFitnessBoosters(this).whenComplete((unused, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
-                return;
             }
         });
         dataModule.getAdapter().saveStatistics(this).whenComplete((unused, throwable) -> {
             if (throwable != null) {
                 throwable.printStackTrace();
-                return;
             }
         });
 
@@ -99,12 +97,18 @@ public class Fitness {
     }
 
     public void addBooster(FitnessBooster booster) {
-        boosters.add(booster);
-        dataModule.getAdapter().addFitnessBooster(this, booster);
+        dataModule.getAdapter().addFitnessBooster(this, booster).whenComplete((id, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                return;
+            }
+
+            boosters.add(new FitnessBooster(id, booster.getAmount(), booster.getExpiresAt()));
+            runnable.run();
+        });
     }
 
     public void removeBooster(FitnessBooster booster) {
-        System.out.println("removing booster " + booster.getAmount() + " - " + booster.getId());
         boosters.remove(booster);
         dataModule.getAdapter().removeFitnessBooster(this, booster);
     }

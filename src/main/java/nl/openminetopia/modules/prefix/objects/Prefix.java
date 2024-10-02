@@ -11,9 +11,18 @@ public class Prefix {
     private String prefix;
     private long expiresAt;
 
+    public Prefix(String prefix, long expiresAt) {
+        this.prefix = prefix;
+        this.expiresAt = expiresAt;
+    }
+
     public Prefix(int id, String prefix, long expiresAt) {
         this.id = id;
         this.prefix = prefix;
         this.expiresAt = expiresAt;
+    }
+
+    public boolean isExpired() {
+        return expiresAt != -1 && System.currentTimeMillis() >= expiresAt;
     }
 }

@@ -1,6 +1,7 @@
 package nl.openminetopia.modules.data.adapters;
 
 import com.craftmend.storm.Storm;
+import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.builders.QueryBuilder;
 import com.craftmend.storm.api.enums.Where;
 import com.craftmend.storm.connection.hikaricp.HikariDriver;
@@ -24,11 +25,10 @@ import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.modules.prefix.objects.Prefix;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -54,11 +54,27 @@ public class MySQLAdapter implements DatabaseAdapter {
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
             StormDatabase.getInstance().setStorm(new Storm(new HikariDriver(config)));
+
+            registerStormModel(new PlayerModel());
+            registerStormModel(new FitnessModel());
+            registerStormModel(new FitnessBoosterModel());
+            registerStormModel(new PrefixModel());
+            registerStormModel(new ColorModel());
+            registerStormModel(new WorldModel());
+            registerStormModel(new CityModel());
+
         } catch (Exception e) {
             OpenMinetopia.getInstance().getLogger().severe("Failed to connect to MySQL database: " + e.getMessage());
             OpenMinetopia.getInstance().getLogger().severe("Disabling the plugin...");
             OpenMinetopia.getInstance().getServer().getPluginManager().disablePlugin(OpenMinetopia.getInstance());
         }
+    }
+
+    @SneakyThrows
+    private void registerStormModel(StormModel model) {
+        Storm storm = StormDatabase.getInstance().getStorm();
+        storm.registerModel(model);
+        storm.runMigrations();
     }
 
     @Override
@@ -68,24 +84,42 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     /* Player related database queries */
 
+    private CompletableFuture<Optional<PlayerModel>> findPlayerModel(@NotNull UUID uuid) {
+        CompletableFuture<Optional<PlayerModel>> completableFuture = new CompletableFuture<>();
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                Collection<PlayerModel> playerModel = StormDatabase.getInstance().getStorm().buildQuery(PlayerModel.class).where("uuid", Where.EQUAL, uuid.toString()).limit(1).execute().join();
+                Bukkit.getScheduler().runTaskLaterAsynchronously(OpenMinetopia.getInstance(), () -> completableFuture.complete(playerModel.stream().findFirst()), 1L);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                completableFuture.completeExceptionally(exception);
+            }
+        });
+        return completableFuture;
+    }
+
     @Override
     public CompletableFuture<PlayerModel> loadPlayer(UUID uuid) {
-        CompletableFuture<PlayerModel> future = StormDatabase.getInstance().loadPlayerModel(uuid);
-        future.whenComplete((playerModel, throwable) -> {
-            if (throwable != null) {
-                future.completeExceptionally(throwable);
-                OpenMinetopia.getInstance().getLogger().warning("Error loading player model: " + throwable.getMessage());
+        CompletableFuture<PlayerModel> completableFuture = new CompletableFuture<>();
+        findPlayerModel(uuid).thenAccept(playerModel -> {
+            PlayerManager.getInstance().getPlayerModels().remove(uuid);
+
+            if (playerModel.isEmpty()) {
+                PlayerModel createdModel = new PlayerModel();
+                createdModel.setUniqueId(uuid);
+
+                PlayerManager.getInstance().getPlayerModels().put(uuid, createdModel);
+                completableFuture.complete(createdModel);
+
+                StormDatabase.getInstance().saveStormModel(createdModel);
                 return;
             }
 
-            if (playerModel == null) {
-                future.completeExceptionally(new NullPointerException("Player model is null"));
-                return;
-            }
-            PlayerManager.getInstance().getPlayerModels().put(uuid, playerModel);
-            future.complete(playerModel);
+            PlayerManager.getInstance().getPlayerModels().put(uuid, playerModel.get());
+            completableFuture.complete(playerModel.get());
         });
-        return future;
+
+        return completableFuture;
     }
 
     @Override
@@ -242,16 +276,16 @@ public class MySQLAdapter implements DatabaseAdapter {
     /* Prefix related database queries */
 
     @Override
-    public CompletableFuture<Void> addPrefix(MinetopiaPlayer player, Prefix prefix) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<Integer> addPrefix(MinetopiaPlayer player, Prefix prefix) {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
         StormDatabase.getExecutorService().submit(() -> {
             PrefixModel prefixModel = new PrefixModel();
             prefixModel.setPlayerId(player.getPlayerModel().getId());
             prefixModel.setPrefix(prefix.getPrefix());
             prefixModel.setExpiresAt(prefix.getExpiresAt());
 
-            StormDatabase.getInstance().saveStormModel(prefixModel);
-            completableFuture.complete(null);
+            int id = StormDatabase.getInstance().saveStormModel(prefixModel).join();
+            completableFuture.complete(id);
         });
         return completableFuture;
     }
@@ -349,8 +383,8 @@ public class MySQLAdapter implements DatabaseAdapter {
     /* Color related database queries */
 
     @Override
-    public CompletableFuture<Void> addColor(MinetopiaPlayer player, OwnableColor color) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<Integer> addColor(MinetopiaPlayer player, OwnableColor color) {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
             ColorModel colorModel = new ColorModel();
@@ -359,9 +393,9 @@ public class MySQLAdapter implements DatabaseAdapter {
             colorModel.setExpiresAt(color.getExpiresAt());
             colorModel.setType(color.getType().toString().toLowerCase());
 
-            StormDatabase.getInstance().saveStormModel(colorModel);
+            int id = StormDatabase.getInstance().saveStormModel(colorModel).join();
+            completableFuture.complete(id);
         });
-        completableFuture.complete(null);
         return completableFuture;
     }
 
@@ -760,15 +794,29 @@ public class MySQLAdapter implements DatabaseAdapter {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
-            fitness.getBoosters().forEach(booster -> {
-                FitnessBoosterModel model = new FitnessBoosterModel();
-                model.setFitnessId(fitness.getFitnessModel().getId());
-                model.setFitness(booster.getAmount());
-                model.setExpiresAt(booster.getExpiresAt());
 
-                StormDatabase.getInstance().saveStormModel(model);
-            });
-            completableFuture.complete(null);
+            try {
+                Collection<FitnessBoosterModel> fitnessBoosterModels = StormDatabase.getInstance().getStorm().buildQuery(FitnessBoosterModel.class)
+                        .where("fitness_id", Where.EQUAL, fitness.getFitnessModel().getId())
+                        .execute()
+                        .join();
+
+                // loop through fitness.getBoosters() and see if the booster is already in the database
+                // if it is not, add it to the database
+                fitness.getBoosters().forEach(booster -> {
+                    if (fitnessBoosterModels.stream().noneMatch(model -> model.getId().equals(booster.getId()))) {
+                        FitnessBoosterModel model = new FitnessBoosterModel();
+                        model.setFitnessId(fitness.getFitnessModel().getId());
+                        model.setFitness(booster.getAmount());
+                        model.setExpiresAt(booster.getExpiresAt());
+                        StormDatabase.getInstance().saveStormModel(model);
+                    }
+                });
+                completableFuture.complete(null);
+            } catch (Exception e) {
+                completableFuture.completeExceptionally(e);
+                e.printStackTrace();
+            }
         });
 
         return completableFuture;
@@ -788,8 +836,8 @@ public class MySQLAdapter implements DatabaseAdapter {
     }
 
     @Override
-    public CompletableFuture<FitnessBoosterModel> addFitnessBooster(Fitness fitness, FitnessBooster booster) {
-        CompletableFuture<FitnessBoosterModel> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<Integer> addFitnessBooster(Fitness fitness, FitnessBooster booster) {
+        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
             FitnessBoosterModel fitnessBoosterModel = new FitnessBoosterModel();
@@ -797,8 +845,8 @@ public class MySQLAdapter implements DatabaseAdapter {
             fitnessBoosterModel.setFitness(booster.getAmount());
             fitnessBoosterModel.setExpiresAt(booster.getExpiresAt());
 
-            StormDatabase.getInstance().saveStormModel(fitnessBoosterModel);
-            completableFuture.complete(fitnessBoosterModel);
+            int id = StormDatabase.getInstance().saveStormModel(fitnessBoosterModel).join();
+            completableFuture.complete(id);
         });
 
         return completableFuture;

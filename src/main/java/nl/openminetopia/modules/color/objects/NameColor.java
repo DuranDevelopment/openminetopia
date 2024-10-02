@@ -18,4 +18,10 @@ public class NameColor extends OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
+
+    public NameColor(String color, long expiresAt) {
+        super(OwnableColorType.NAME, color, expiresAt);
+        this.color = color;
+        this.expiresAt = expiresAt;
+    }
 }

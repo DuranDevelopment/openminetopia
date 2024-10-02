@@ -20,6 +20,12 @@ public abstract class OwnableColor {
         this.expiresAt = expiresAt;
     }
 
+    public OwnableColor(OwnableColorType type, String color, long expiresAt) {
+        this.type = type;
+        this.color = color;
+        this.expiresAt = expiresAt;
+    }
+
     public boolean isExpired() {
         return expiresAt != -1 && System.currentTimeMillis() > expiresAt;
     }

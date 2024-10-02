@@ -41,45 +41,6 @@ public class StormDatabase {
         return instance;
     }
 
-    public CompletableFuture<Optional<PlayerModel>> findPlayerModel(@NotNull UUID uuid) {
-        CompletableFuture<Optional<PlayerModel>> completableFuture = new CompletableFuture<>();
-        executorService.submit(() -> {
-            try {
-                Collection<PlayerModel> playerModel;
-                playerModel = storm.buildQuery(PlayerModel.class).where("uuid", Where.EQUAL, uuid.toString()).limit(1).execute().join();
-                Bukkit.getScheduler().runTaskLaterAsynchronously(OpenMinetopia.getInstance(), () -> completableFuture.complete(playerModel.stream().findFirst()), 1L);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
-            }
-        });
-        return completableFuture;
-    }
-
-    public CompletableFuture<PlayerModel> loadPlayerModel(UUID uuid) {
-        CompletableFuture<PlayerModel> completableFuture = new CompletableFuture<>();
-        StormDatabase.getInstance().findPlayerModel(uuid).thenAccept(playerModel -> {
-            PlayerManager.getInstance().getPlayerModels().remove(uuid);
-
-            if (playerModel.isEmpty()) {
-                PlayerModel createdModel = new PlayerModel();
-                createdModel.setUniqueId(uuid);
-                createdModel.setLevel(1);
-
-                PlayerManager.getInstance().getPlayerModels().put(uuid, createdModel);
-                completableFuture.complete(createdModel);
-
-                saveStormModel(createdModel);
-                return;
-            }
-
-            PlayerManager.getInstance().getPlayerModels().put(uuid, playerModel.get());
-            completableFuture.complete(playerModel.get());
-        });
-
-        return completableFuture;
-    }
-
     public CompletableFuture<Integer> saveStormModel(StormModel stormModel) {
         CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
         executorService.submit(() -> {

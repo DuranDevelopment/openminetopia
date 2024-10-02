@@ -18,4 +18,10 @@ public class LevelColor extends OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
+
+    public LevelColor(String color, long expiresAt) {
+        super(OwnableColorType.LEVEL, color, expiresAt);
+        this.color = color;
+        this.expiresAt = expiresAt;
+    }
 }

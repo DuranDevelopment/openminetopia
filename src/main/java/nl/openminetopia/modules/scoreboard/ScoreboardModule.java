@@ -14,11 +14,11 @@ import nl.openminetopia.modules.scoreboard.listeners.PlayerQuitListener;
 @Getter
 public class ScoreboardModule extends Module {
 
-    private final DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
     private ScoreboardLibrary scoreboardLibrary;
 
     @Override
     public void enable() {
+        DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
         if (!configuration.isScoreboardEnabled()) return;
 
         registerListener(new PlayerJoinListener());
