@@ -20,7 +20,7 @@ public class ColorModel extends StormModel {
     )
     private Integer playerId;
 
-    @Column(name = "color", defaultValue = "<gray>")
+    @Column(name = "color")
     private String color;
 
     @Column(name = "type")

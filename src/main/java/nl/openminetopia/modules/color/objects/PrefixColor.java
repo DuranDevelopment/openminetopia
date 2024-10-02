@@ -8,10 +8,6 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 @Setter
 public class PrefixColor extends OwnableColor {
 
-    private int id;
-    private String color;
-    private long expiresAt;
-
     public PrefixColor(int id, String color, long expiresAt) {
         super(OwnableColorType.PREFIX, id, color, expiresAt);
         this.id = id;
@@ -24,4 +20,5 @@ public class PrefixColor extends OwnableColor {
         this.color = color;
         this.expiresAt = expiresAt;
     }
+
 }

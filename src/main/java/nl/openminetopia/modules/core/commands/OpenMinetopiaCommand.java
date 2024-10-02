@@ -4,6 +4,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.ColorsConfiguration;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.LevelcheckConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
@@ -25,6 +26,9 @@ public class OpenMinetopiaCommand extends BaseCommand {
 
         OpenMinetopia.getLevelcheckConfiguration().getLoader().load();
         OpenMinetopia.setLevelcheckConfiguration(new LevelcheckConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+
+        OpenMinetopia.getColorsConfiguration().getLoader().load();
+        OpenMinetopia.setColorsConfiguration(new ColorsConfiguration(OpenMinetopia.getInstance().getDataFolder()));
 
         player.sendMessage(ChatUtils.color("<gold>De configuratiebestanden zijn succesvol herladen!"));
     }

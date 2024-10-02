@@ -3,6 +3,7 @@ package nl.openminetopia.modules.color.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import net.kyori.adventure.text.Component;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
@@ -25,9 +26,15 @@ public class ColorAddCommand extends BaseCommand {
     @CommandCompletion("@players")
     @CommandPermission("openminetopia.color.add")
     @Description("Add a color to a player.")
-    public void onPrefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String color) {
+    public void onPrefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String draftColor) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage(ChatUtils.color("<red>Deze speler bestaat niet."));
+            return;
+        }
+
+        final String color = draftColor.toLowerCase();
+        if (!OpenMinetopia.getColorsConfiguration().exists(color)) {
+            player.sendMessage(ChatUtils.color("<red>Deze kleur bestaat niet."));
             return;
         }
 
