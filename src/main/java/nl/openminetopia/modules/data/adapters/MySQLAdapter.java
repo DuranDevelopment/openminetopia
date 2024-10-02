@@ -686,8 +686,8 @@ public class MySQLAdapter implements DatabaseAdapter {
                         model.setLuxuryFood(0);
                         model.setCheapFood(0);
                         StormDatabase.getInstance().saveStormModel(model);
+                        getStatistics(fitness);
                     }
-                    saveStatistics(fitness);
                     completableFuture.complete(model);
                 });
             } catch (Exception e) {

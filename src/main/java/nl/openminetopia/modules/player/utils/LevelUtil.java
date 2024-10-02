@@ -3,6 +3,7 @@ package nl.openminetopia.modules.player.utils;
 import lombok.experimental.UtilityClass;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
+import nl.openminetopia.api.player.fitness.statistics.types.TotalStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.LevelcheckConfiguration;
 import nl.openminetopia.utils.WorldGuardUtils;
@@ -19,12 +20,14 @@ public class LevelUtil {
         // TODO: Add points per 5k balance
 
         // Points for having a prefix
-        if (!minetopiaPlayer.getPrefixes().isEmpty()) {
+        if (minetopiaPlayer.getPrefixes() != null && !minetopiaPlayer.getPrefixes().isEmpty()) {
             points += configuration.getPointsForPrefix();
         }
 
         // Points per 20 fitness
-        for (int fitness = minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained(); fitness >= 20; fitness -= 20) {
+        TotalStatistic totalStatistic = (TotalStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL);
+        if (totalStatistic == null) return 0;
+        for (int fitness = totalStatistic.getFitnessGained(); fitness >= 20; fitness -= 20) {
             points += configuration.getPointsPer20Fitness();
         }
 

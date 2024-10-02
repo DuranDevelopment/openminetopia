@@ -14,6 +14,7 @@ public class LevelcheckRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
+        if (!player.isInPlace()) return;
         int calculatedLevel = LevelUtil.calculateLevel(player);
         player.setCalculatedLevel(calculatedLevel);
     }

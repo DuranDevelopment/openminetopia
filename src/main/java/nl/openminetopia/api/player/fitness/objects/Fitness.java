@@ -93,6 +93,16 @@ public class Fitness {
     }
 
     public FitnessStatistic getStatistic(FitnessStatisticType type) {
+        if (statistics == null) {
+            dataModule.getAdapter().getStatistics(this).whenComplete((statistics, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                    return;
+                }
+                this.statistics = statistics;
+            });
+        };
+
         return statistics.stream().filter(statistic -> statistic.getType().equals(type)).findFirst().orElse(null);
     }
 
