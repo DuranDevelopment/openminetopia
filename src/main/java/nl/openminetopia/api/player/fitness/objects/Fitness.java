@@ -101,7 +101,7 @@ public class Fitness {
                 }
                 this.statistics = statistics;
             });
-        };
+        }
 
         return statistics.stream().filter(statistic -> statistic.getType().equals(type)).findFirst().orElse(null);
     }

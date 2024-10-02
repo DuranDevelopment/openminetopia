@@ -25,6 +25,7 @@ public class PlotModule extends Module {
         registerCommand(new PlotDeleteCommand());
         registerCommand(new PlotDescriptionCommand());
         registerCommand(new PlotListCommand());
+        registerCommand(new PlotTeleportCommand());
 
         loadFlags();
     }
