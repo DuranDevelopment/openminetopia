@@ -23,7 +23,7 @@ public class ColorAddCommand extends BaseCommand {
     @CommandCompletion("@players")
     @CommandPermission("openminetopia.color.add")
     @Description("Add a color to a player.")
-    public void onPrefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String draftColor) {
+    public void prefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String draftColor) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage(ChatUtils.color("<red>Deze speler bestaat niet."));
             return;

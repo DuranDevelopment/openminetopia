@@ -1,24 +1,29 @@
 package nl.openminetopia.configuration;
 
-import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.components.ColorComponent;
+import nl.openminetopia.modules.color.objects.OwnableColor;
 import nl.openminetopia.utils.ConfigurateConfig;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ColorsConfiguration extends ConfigurateConfig {
 
     private final Map<String, ColorComponent> components = new HashMap<>();
+    private final ConfigurationNode colorsNode;
 
     public ColorsConfiguration(File file) {
         super(file, "colors.yml");
 
-        ConfigurationNode colorsNode = rootNode.node("colors");
-        colorsNode.childrenMap().forEach((o, colorNode) -> {
-            String identifier = (String) o;
+        this.colorsNode = rootNode.node("colors");
+        colorsNode.childrenMap().forEach((s, colorNode) -> {
+            String identifier = ((String) s).toLowerCase();
             String displayName = colorNode.node("display_name").getString();
             String colorPrefix = colorNode.node("color_prefix").getString();
 
@@ -26,12 +31,38 @@ public class ColorsConfiguration extends ConfigurateConfig {
         });
     }
 
+    public void createColor(String identifier, String displayName, String colorPrefix) {
+        components.put(identifier, new ColorComponent(identifier.toLowerCase(), displayName, colorPrefix));
+
+        ConfigurationNode colorNode = colorsNode.node(identifier);
+        try {
+            colorNode.node("color_prefix").set(colorNode);
+            colorNode.node("display_name").set(displayName);
+        } catch (SerializationException e) {
+            OpenMinetopia.getInstance().getLogger().warning("Serialization went wrong while adding color: " + identifier);
+        }
+
+        this.saveConfiguration();
+    }
+
+    public List<ColorComponent> lockedColors(List<OwnableColor> ownedColors) {
+        List<String> colorStrings = ownedColors.stream().map(OwnableColor::getColorId).map(String::toLowerCase).toList();
+        List<ColorComponent> lockedColors = new ArrayList<>();
+
+        components.forEach((identifier, component) -> {
+            if (colorStrings.contains(identifier)) return;
+            lockedColors.add(component);
+        });
+
+        return lockedColors;
+    }
+
     public ColorComponent color(String identifier) {
-        return components.get(identifier);
+        return components.get(identifier.toLowerCase());
     }
 
     public boolean exists(String identifier) {
-        return components.containsKey(identifier);
+        return components.containsKey(identifier.toLowerCase());
     }
 
 }
