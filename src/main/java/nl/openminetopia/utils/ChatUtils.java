@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
@@ -16,11 +17,11 @@ import java.util.Date;
 @UtilityClass
 public class ChatUtils {
 
-    public static Component color(String message) {
+    public Component color(String message) {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
-    public static Component format(MinetopiaPlayer minetopiaPlayer, String message) {
+    public Component format(MinetopiaPlayer minetopiaPlayer, String message) {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
 
@@ -55,7 +56,33 @@ public class ChatUtils {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
-    public static String stripMiniMessage(Component component) {
+    public void sendMessage(Player player, String message) {
+        Component component = color(message.replaceFirst("\\[(title|action)]", ""));
+        decideMessage(player, component, message);
+    }
+
+    public void sendFormattedMessage(MinetopiaPlayer minetopiaPlayer, String message) {
+        Component component = format(minetopiaPlayer,
+                message.replaceFirst("\\[(title|action)]", ""));
+
+        Player player = minetopiaPlayer.getBukkit().getPlayer();
+        if (player == null) return;
+
+        decideMessage(player, component, message);
+    }
+
+    public String stripMiniMessage(Component component) {
         return MiniMessage.miniMessage().serialize(component);
     }
+
+    private void decideMessage(Player player, Component component, String message) {
+        if (message.startsWith("[title]")) {
+            player.showTitle(Title.title(component, Component.empty()));
+        } else if (message.startsWith("[action]")) {
+            player.sendActionBar(component);
+        } else {
+            player.sendMessage(component);
+        }
+    }
+
 }
