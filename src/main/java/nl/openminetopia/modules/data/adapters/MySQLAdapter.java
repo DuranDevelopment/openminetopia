@@ -5,19 +5,19 @@ import com.craftmend.storm.api.builders.QueryBuilder;
 import com.craftmend.storm.api.enums.Where;
 import com.craftmend.storm.connection.hikaricp.HikariDriver;
 import com.zaxxer.hikari.HikariConfig;
-import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTCity;
 import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
-import nl.openminetopia.api.player.fitness.statistics.*;
+import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
@@ -259,13 +259,9 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public CompletableFuture<Void> removePrefix(MinetopiaPlayer player, Prefix prefix) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-        StormUtils.deleteModelData(PrefixModel.class,
+        return StormUtils.deleteModelData(PrefixModel.class,
                 query -> query.where("id", Where.EQUAL, prefix.getId())
         );
-        completableFuture.complete(null);
-        return completableFuture;
     }
 
     @Override
@@ -368,13 +364,9 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public CompletableFuture<Void> removeColor(MinetopiaPlayer player, OwnableColor color) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-        StormUtils.deleteModelData(ColorModel.class,
+        return StormUtils.deleteModelData(ColorModel.class,
                 query -> query.where("id", Where.EQUAL, color.getId())
         );
-        completableFuture.complete(null);
-        return completableFuture;
     }
 
     @Override
@@ -485,13 +477,9 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public CompletableFuture<Void> deleteWorld(MTWorld world) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-        StormUtils.deleteModelData(WorldModel.class,
+        return StormUtils.deleteModelData(WorldModel.class,
                 query -> query.where("world_name", Where.EQUAL, world.getName())
         );
-        completableFuture.complete(null);
-        return completableFuture;
     }
 
     @Override
@@ -566,13 +554,9 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public CompletableFuture<Void> deleteCity(MTCity city) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-        StormUtils.deleteModelData(CityModel.class,
+        return StormUtils.deleteModelData(CityModel.class,
                 query -> query.where("city_name", Where.EQUAL, city.getName())
         );
-        completableFuture.complete(null);
-        return completableFuture;
     }
 
     @Override
@@ -808,18 +792,14 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-        StormUtils.deleteModelData(FitnessBoosterModel.class,
+        return StormUtils.deleteModelData(FitnessBoosterModel.class,
                 query -> query.where("id", Where.EQUAL, booster.getId())
         );
-        completableFuture.complete(null);
-        return completableFuture;
     }
 
     @Override
-    public CompletableFuture<Integer> createBankAccount(UUID uuid, AccountType type, long balance, String name, boolean frozen) {
-        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, long balance, String name, boolean frozen) {
+        CompletableFuture<BankAccountModel> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {
             BankAccountModel accountModel = new BankAccountModel();
@@ -829,15 +809,54 @@ public class MySQLAdapter implements DatabaseAdapter {
             accountModel.setName(name);
             accountModel.setFrozen(frozen);
 
-            int id = StormDatabase.getInstance().saveStormModel(accountModel).join();
-            completableFuture.complete(id);
+            StormDatabase.getInstance().saveStormModel(accountModel);
+            completableFuture.complete(accountModel);
         });
 
         return completableFuture;
     }
 
     @Override
-    public CompletableFuture<Integer> createBankPermission(BankPermissionModel accountModel) {
-        return null;
+    public CompletableFuture<Void> deleteBankAccount(UUID accountUuid) {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            StormUtils.deleteModelData(BankAccountModel.class,
+                    query -> query.where("uuid", Where.EQUAL, accountUuid.toString())
+            ).join();
+
+            StormUtils.deleteModelData(BankPermissionModel.class,
+                    query -> query.where("account", Where.EQUAL, accountUuid.toString())
+            ).join();
+
+            completableFuture.complete(null);
+        });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<BankPermissionModel> createBankPermission(UUID player, UUID accountId, AccountPermission permission) {
+        CompletableFuture<BankPermissionModel> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            BankPermissionModel permissionModel = new BankPermissionModel();
+            permissionModel.setUuid(player);
+            permissionModel.setAccount(accountId);
+            permissionModel.setPermission(permission);
+
+            StormDatabase.getInstance().saveStormModel(permissionModel);
+            completableFuture.complete(permissionModel);
+        });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Void> deleteBankPermission(UUID accountUuid, UUID playerUuid) {
+        return StormUtils.deleteModelData(BankPermissionModel.class, query -> {
+            query.where("uuid", Where.EQUAL, playerUuid.toString());
+            query.where("account", Where.EQUAL, accountUuid.toString());
+        });
     }
 }

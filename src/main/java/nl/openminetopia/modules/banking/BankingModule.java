@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
-import nl.openminetopia.modules.banking.commands.BankingCreateCommand;
-import nl.openminetopia.modules.banking.commands.BankingOpenCommand;
-import nl.openminetopia.modules.banking.commands.BankingUsersCommand;
+import nl.openminetopia.modules.banking.commands.*;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
@@ -61,8 +59,11 @@ public class BankingModule extends Module {
         }, 20L);
 
         registerCommand(new BankingCreateCommand());
+        registerCommand(new BankingDeleteCommand());
         registerCommand(new BankingUsersCommand());
         registerCommand(new BankingOpenCommand());
+        registerCommand(new BankingFreezeCommand());
+        registerCommand(new BankingInfoCommand());
     }
 
     @Override
