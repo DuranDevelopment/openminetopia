@@ -32,6 +32,14 @@ public class PrefixAddCommand extends BaseCommand {
 
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer.getPlayer());
         if (minetopiaPlayer == null) return;
+
+        for (Prefix prefix1 : minetopiaPlayer.getPrefixes()) {
+            if (prefix1.getPrefix().equalsIgnoreCase(prefix)) {
+                player.sendMessage("This player already has this prefix.");
+                return;
+            }
+        }
+
         player.sendMessage("Added the prefix to the player.");
 
         long expiresAtMillis = System.currentTimeMillis() + (expiresAt * 60 * 1000);

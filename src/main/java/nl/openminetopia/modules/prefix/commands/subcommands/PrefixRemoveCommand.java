@@ -13,11 +13,11 @@ import org.bukkit.entity.Player;
 public class PrefixRemoveCommand extends BaseCommand {
 
     @Subcommand("remove")
-    @Syntax("<player> <id>")
+    @Syntax("<player> <prefix>")
     @CommandPermission("openminetopia.prefix.remove")
     @CommandCompletion("@players")
     @Description("Remove a prefix from a player.")
-    public static void removePrefix(Player player, OfflinePlayer offlinePlayer, Integer id) {
+    public static void removePrefix(Player player, OfflinePlayer offlinePlayer, String prefixName) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage("This player does not exist.");
             return;
@@ -27,12 +27,12 @@ public class PrefixRemoveCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
 
         for (Prefix prefix : minetopiaPlayer.getPrefixes()) {
-            if (prefix.getId() == id) {
+            if (prefix.getPrefix().equalsIgnoreCase(prefixName)) {
+                player.sendMessage("Removed the prefix from the player.");
                 minetopiaPlayer.removePrefix(prefix);
-                player.sendMessage(ChatUtils.color("<red>Removed the prefix from the player."));
                 return;
             }
         }
-        player.sendMessage(ChatUtils.color("<red>This player does not have a prefix with this id."));
+        player.sendMessage(ChatUtils.color("<red>This player does not have this prefix."));
     }
 }
