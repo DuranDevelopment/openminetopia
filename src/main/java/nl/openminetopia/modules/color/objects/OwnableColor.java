@@ -2,12 +2,10 @@ package nl.openminetopia.modules.color.objects;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.ColorsConfiguration;
 import nl.openminetopia.configuration.components.ColorComponent;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
-import nl.openminetopia.utils.ChatUtils;
 
 @Getter
 @Setter
@@ -15,19 +13,19 @@ public abstract class OwnableColor {
 
     private OwnableColorType type;
     public int id;
-    public String color;
+    public String colorId;
     public long expiresAt;
 
-    public OwnableColor(OwnableColorType type, int id, String color, long expiresAt) {
+    public OwnableColor(OwnableColorType type, int id, String colorId, long expiresAt) {
         this.type = type;
         this.id = id;
-        this.color = color;
+        this.colorId = colorId;
         this.expiresAt = expiresAt;
     }
 
-    public OwnableColor(OwnableColorType type, String color, long expiresAt) {
+    public OwnableColor(OwnableColorType type, String colorId, long expiresAt) {
         this.type = type;
-        this.color = color;
+        this.colorId = colorId;
         this.expiresAt = expiresAt;
     }
 
@@ -36,14 +34,14 @@ public abstract class OwnableColor {
     }
 
     public String displayName() {
-        ColorComponent component = config().color(color);
+        ColorComponent component = config().color(colorId);
         if (component == null) component = new ColorComponent(null, "<gray>Default", "<gray>");
 
         return component.displayName();
     }
 
     public String color() {
-        ColorComponent component = config().color(color);
+        ColorComponent component = config().color(colorId);
         if (component == null) component = new ColorComponent(null, "<gray>Default", "<gray>");
 
         return component.colorPrefix();

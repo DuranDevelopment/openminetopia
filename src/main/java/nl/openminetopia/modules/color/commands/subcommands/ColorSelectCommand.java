@@ -15,13 +15,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Objects;
 
 @CommandAlias("color")
 public class ColorSelectCommand extends BaseCommand {
 
     @Subcommand("select")
-    public void onPrefix(CommandSender sender, OwnableColorType ownableColorType, String colorName) {
+    public void onPrefix(CommandSender sender, OwnableColorType ownableColorType, String draftColor) {
 
         Player player = (Player) sender;
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
@@ -30,10 +29,10 @@ public class ColorSelectCommand extends BaseCommand {
             return;
         }
 
-        final String draftColor = colorName.toLowerCase();
+        final String colorId = draftColor.toLowerCase();
         switch (ownableColorType) {
             case PREFIX:
-                if (draftColor.equals("default")) {
+                if (colorId.equals("default")) {
                     minetopiaPlayer.setActiveColor(new PrefixColor(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor(), -1), OwnableColorType.PREFIX);
                     player.sendMessage("You selected the default prefix color!");
                     return;
@@ -42,22 +41,22 @@ public class ColorSelectCommand extends BaseCommand {
                         .filter(color -> color instanceof PrefixColor)
                         .map(color -> (PrefixColor) color)
                         .toList();
-                if (prefixColors.stream().noneMatch(color -> color.getColor().equals(draftColor))) {
-                    player.sendMessage("You don't have a prefix color with id " + draftColor + "!");
+                if (prefixColors.stream().noneMatch(color -> color.getColorId().equals(colorId))) {
+                    player.sendMessage("You don't have a prefix color with id " + colorId + "!");
                     // send available prefixes:
                     player.sendMessage("Available prefix colors:");
                     player.sendMessage("Default - " + OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor().replace("<", "").replace(">", ""));
-                    prefixColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColor()));
+                    prefixColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColorId()));
                     return;
                 }
 
-                PrefixColor prefixColor = prefixColors.stream().filter(p -> p.getColor().equals(draftColor)).findFirst().orElse(null);
+                PrefixColor prefixColor = prefixColors.stream().filter(p -> p.getColorId().equals(colorId)).findFirst().orElse(null);
                 minetopiaPlayer.setActiveColor(prefixColor, OwnableColorType.PREFIX);
-                player.sendMessage("You selected prefix color with id " + draftColor + "!");
+                player.sendMessage("You selected prefix color with id " + colorId + "!");
                 break;
 
             case CHAT:
-                if (draftColor.equals("default")) {
+                if (colorId.equals("default")) {
                     minetopiaPlayer.setActiveColor(new ChatColor(-1, OpenMinetopia.getDefaultConfiguration().getDefaultChatColor(), -1), OwnableColorType.CHAT);
                     player.sendMessage("You selected the default chat color!");
                     return;
@@ -66,22 +65,22 @@ public class ColorSelectCommand extends BaseCommand {
                         .filter(color -> color instanceof ChatColor)
                         .map(color -> (ChatColor) color)
                         .toList();
-                if (chatColors.stream().noneMatch(color -> color.getColor().equals(draftColor))) {
-                    player.sendMessage("You don't have a chat color with id " + draftColor + "!");
+                if (chatColors.stream().noneMatch(color -> color.getColorId().equals(colorId))) {
+                    player.sendMessage("You don't have a chat color with id " + colorId + "!");
                     // send available chat colors:
                     player.sendMessage("Available prefix colors:");
                     player.sendMessage("Default - " + OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor().replace("<", "").replace(">", ""));
-                    chatColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColor()));
+                    chatColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColorId()));
                     return;
                 }
 
-                ChatColor chatColor = chatColors.stream().filter(c -> c.getColor().equals(draftColor)).findFirst().orElse(null);
+                ChatColor chatColor = chatColors.stream().filter(c -> c.getColorId().equals(colorId)).findFirst().orElse(null);
                 minetopiaPlayer.setActiveColor(chatColor, OwnableColorType.CHAT);
-                player.sendMessage("You selected chat color with id " + draftColor + "!");
+                player.sendMessage("You selected chat color with id " + colorId + "!");
                 break;
 
             case NAME:
-                if (draftColor.equals("default")) {
+                if (colorId.equals("default")) {
                     minetopiaPlayer.setActiveColor(new NameColor(-1, OpenMinetopia.getDefaultConfiguration().getDefaultNameColor(), -1), OwnableColorType.NAME);
                     player.sendMessage("You selected the default name color!");
                     return;
@@ -90,22 +89,22 @@ public class ColorSelectCommand extends BaseCommand {
                         .filter(color -> color instanceof NameColor)
                         .map(color -> (NameColor) color)
                         .toList();
-                if (nameColors.stream().noneMatch(color -> color.getColor().equals(draftColor))) {
-                    player.sendMessage("You don't have a name color with id " + draftColor + "!");
+                if (nameColors.stream().noneMatch(color -> color.getColorId().equals(colorId))) {
+                    player.sendMessage("You don't have a name color with id " + colorId + "!");
                     // send available name colors:
                     player.sendMessage("Available prefix colors:");
                     player.sendMessage("Default - " + OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor().replace("<", "").replace(">", ""));
-                    nameColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColor()));
+                    nameColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColorId()));
                     return;
                 }
 
-                NameColor nameColor = nameColors.stream().filter(n -> n.getColor().equals(draftColor)).findFirst().orElse(null);
+                NameColor nameColor = nameColors.stream().filter(n -> n.getColorId().equals(colorId)).findFirst().orElse(null);
                 minetopiaPlayer.setActiveColor(nameColor, OwnableColorType.NAME);
-                player.sendMessage("You selected name color with id " + draftColor + "!");
+                player.sendMessage("You selected name color with id " + colorId + "!");
                 break;
 
             case LEVEL:
-                if (draftColor.equals("default")) {
+                if (colorId.equals("default")) {
                     minetopiaPlayer.setActiveColor(new LevelColor(-1, OpenMinetopia.getDefaultConfiguration().getDefaultLevelColor(), -1), OwnableColorType.LEVEL);
                     player.sendMessage("You selected the default level color!");
                     return;
@@ -114,18 +113,18 @@ public class ColorSelectCommand extends BaseCommand {
                         .filter(color -> color instanceof LevelColor)
                         .map(color -> (LevelColor) color)
                         .toList();
-                if (levelColors.stream().noneMatch(color -> color.getColor().equals(draftColor))) {
-                    player.sendMessage("You don't have a level color with id " + draftColor + "!");
+                if (levelColors.stream().noneMatch(color -> color.getColorId().equals(colorId))) {
+                    player.sendMessage("You don't have a level color with id " + colorId + "!");
                     // send available level colors:
                     player.sendMessage("Available prefix colors:");
                     player.sendMessage("Default - " + OpenMinetopia.getDefaultConfiguration().getDefaultPrefixColor().replace("<", "").replace(">", ""));
-                    levelColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColor()));
+                    levelColors.forEach(color -> player.sendMessage(color.getId() + " - " + color.getColorId()));
                     return;
                 }
 
-                LevelColor levelColor = levelColors.stream().filter(l -> l.getColor().equals(draftColor)).findFirst().orElse(null);
+                LevelColor levelColor = levelColors.stream().filter(l -> l.getColorId().equals(colorId)).findFirst().orElse(null);
                 minetopiaPlayer.setActiveColor(levelColor, OwnableColorType.LEVEL);
-                player.sendMessage("You selected level color with id " + draftColor + "!");
+                player.sendMessage("You selected level color with id " + colorId + "!");
                 break;
         }
 

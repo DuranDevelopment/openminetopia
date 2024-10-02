@@ -8,16 +8,12 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 @Setter
 public class LevelColor extends OwnableColor {
 
-    public LevelColor(int id, String color, long expiresAt) {
-        super(OwnableColorType.LEVEL, id, color, expiresAt);
-        this.id = id;
-        this.color = color;
-        this.expiresAt = expiresAt;
+    public LevelColor(int id, String colorId, long expiresAt) {
+        super(OwnableColorType.LEVEL, id, colorId, expiresAt);
     }
 
-    public LevelColor(String color, long expiresAt) {
-        super(OwnableColorType.LEVEL, color, expiresAt);
-        this.color = color;
-        this.expiresAt = expiresAt;
+    public LevelColor(String colorId, long expiresAt) {
+        super(OwnableColorType.LEVEL, colorId, expiresAt);
     }
+
 }
