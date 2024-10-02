@@ -29,13 +29,6 @@ public class LevelcheckConfiguration extends ConfigurateConfig {
 
         this.maxLevel = levelCheckNode.node("max-level").getInt(100);
 
-        for (int i = 1; i <= maxLevel; i++) {
-            if (!levelsNode.node(i).virtual()) {
-                levelsNode.node(i, "cost").getInt(0);
-                levelsNode.node(i, "wage").getInt(0);
-            }
-        }
-
         this.pointsNeededForLevelUp = levelCheckNode.node("points-needed-for-level-up").getInt(2500);
 
         this.pointsPerPlot = levelCheckNode.node("points-per-plot").getInt(4000);
@@ -44,6 +37,11 @@ public class LevelcheckConfiguration extends ConfigurateConfig {
         this.pointsForPrefix = levelCheckNode.node("points-for-prefix").getInt(1750);
         this.pointsPerHourPlayed = levelCheckNode.node("points-per-hour-played").getInt(350);
         this.pointsPer20Fitness = levelCheckNode.node("points-per-fitness").getInt(1500);
+
+        for (int i = 1; i <= maxLevel; i++) {
+            levelsNode.node(i, "cost").getInt(0);
+            levelsNode.node(i, "wage").getInt(0);
+        }
     }
 
     public int getLevelUpCost(int level) {

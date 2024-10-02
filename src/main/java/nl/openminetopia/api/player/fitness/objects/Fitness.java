@@ -104,6 +104,7 @@ public class Fitness {
             }
 
             boosters.add(new FitnessBooster(id, booster.getAmount(), booster.getExpiresAt()));
+            runnable.run();
         });
     }
 
