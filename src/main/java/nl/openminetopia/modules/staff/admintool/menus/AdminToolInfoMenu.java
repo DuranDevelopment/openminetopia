@@ -34,7 +34,7 @@ public class AdminToolInfoMenu extends Menu {
                 .setName("<gold>Profielinformatie")
                 .addLoreLine(" ")
                 .addLoreLine("<gold>UUID: <yellow>" + offlinePlayer.getUniqueId())
-                .addLoreLine("<gold>Naam: <yellow>" + offlinePlayer.getName()) // TODO: Set name color
+                .addLoreLine("<gold>Naam: " + minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColor() + offlinePlayer.getName())
                 .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
                 .addLoreLine("<gold>Online tijd: <yellow>" + PlaytimeUtil.formatPlaytime(minetopiaPlayer.getPlaytime()))
                 .addLoreLine(" ")
@@ -50,8 +50,6 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine("");
 
         Icon targetColorIcon = new Icon(11, colorItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 
@@ -68,9 +66,6 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine("<yellow>Linkermuisklik <gold>om het level te verlagen.");
 
         Icon targetLevelIcon = new Icon(12, levelItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
-
             minetopiaPlayer.setLevel(event.isRightClick() ? minetopiaPlayer.getLevel() + 1 : minetopiaPlayer.getLevel() - 1);
             player.sendMessage(ChatUtils.color("<gold>Je hebt het level van <yellow>" + offlinePlayer.getName() + " <gold>aangepast naar <yellow>" + minetopiaPlayer.getLevel() + "<gold>."));
             new AdminToolInfoMenu(player, offlinePlayer).open((Player) event.getWhoClicked());
@@ -86,8 +81,6 @@ public class AdminToolInfoMenu extends Menu {
 
 
         Icon targetFitnessIcon = new Icon(13, fitnessItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolFitnessMenu menu = new AdminToolFitnessMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
         });
@@ -100,8 +93,6 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine("<gold>Klik <yellow>hier <gold>om de <yellow>bank <gold>van de speler te openen.");
 
         Icon targetBankIcon = new Icon(14, bankItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 
@@ -112,8 +103,6 @@ public class AdminToolInfoMenu extends Menu {
                 .setName("<gray>Terug");
 
         Icon backIcon = new Icon(22, backItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolMenu menu = new AdminToolMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 

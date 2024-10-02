@@ -47,7 +47,6 @@ public class PrefixMenu extends PaginatedMenu {
                 event -> event.setCancelled(true));
         this.addItem(selectedPrefix);
 
-        int i = 1;
         for (Prefix prefix : prefixes) {
             var builder = new ItemBuilder(Material.PAPER)
                     .setName("<white>" + prefix.getPrefix())
@@ -59,7 +58,7 @@ public class PrefixMenu extends PaginatedMenu {
             if (prefix.getExpiresAt() != -1 && prefix.getExpiresAt() - System.currentTimeMillis() > -1) builder.addLoreLine("<gold>Deze prefix vervalt over <yellow>" + millisToTime(prefix.getExpiresAt() - System.currentTimeMillis()) + "<gold>.");
             if (prefix.getExpiresAt() == -1) builder.addLoreLine("<gold>Deze prefix vervalt <yellow>nooit<gold>.");
 
-            Icon prefixIcon = new Icon(i, builder.toItemStack(),
+            Icon prefixIcon = new Icon(builder.toItemStack(),
                     event -> {
                         event.setCancelled(true);
                         minetopiaPlayer.setActivePrefix(prefix.getId() == -1 ? new Prefix(-1, OpenMinetopia.getDefaultConfiguration().getDefaultPrefix(), -1) : prefix);
@@ -67,7 +66,6 @@ public class PrefixMenu extends PaginatedMenu {
                         new PrefixMenu(player, offlinePlayer).open(player);
                     });
             this.addItem(prefixIcon);
-            i++;
         }
     }
 

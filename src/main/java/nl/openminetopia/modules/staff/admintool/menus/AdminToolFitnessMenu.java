@@ -156,8 +156,6 @@ public class AdminToolFitnessMenu extends Menu {
                 .setName("<gray>Terug");
 
         Icon backIcon = new Icon(22, backItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolInfoMenu menu = new AdminToolInfoMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 
