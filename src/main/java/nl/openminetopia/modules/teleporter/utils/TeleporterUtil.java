@@ -11,10 +11,7 @@ import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.teleporter.utils.enums.PressurePlate;
 import nl.openminetopia.utils.item.ItemBuilder;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
@@ -120,6 +117,7 @@ public final class TeleporterUtil {
     }
 
     public boolean isTeleporterItem(ItemStack item) {
+        if (item == null || item.getType().equals(Material.AIR)) return false;
         return PersistentData.getDouble(item, "teleporter.x") != null;
     }
 
