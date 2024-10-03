@@ -5,8 +5,8 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
-import nl.openminetopia.modules.plots.commands.*;
 import nl.openminetopia.modules.Module;
+import nl.openminetopia.modules.plots.commands.*;
 
 public class PlotModule extends Module {
 

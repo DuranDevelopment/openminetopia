@@ -8,8 +8,8 @@ import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
-import nl.openminetopia.modules.color.objects.*;
-import nl.openminetopia.modules.data.storm.models.*;
+import nl.openminetopia.modules.color.objects.OwnableColor;
+import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
 import java.util.List;

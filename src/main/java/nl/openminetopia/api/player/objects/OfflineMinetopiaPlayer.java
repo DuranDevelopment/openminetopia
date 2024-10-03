@@ -13,7 +13,6 @@ import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
-import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 

@@ -3,15 +3,10 @@ package nl.openminetopia.modules.player.listeners;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.modules.data.DataModule;
-import nl.openminetopia.modules.data.adapters.utils.AdapterUtil;
-import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-
-import java.util.concurrent.CompletableFuture;
 
 public class PlayerPreLoginListener implements Listener {
 

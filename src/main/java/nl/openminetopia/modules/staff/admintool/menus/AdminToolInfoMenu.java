@@ -8,8 +8,8 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.fitness.statistics.types.TotalStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
-import nl.openminetopia.modules.staff.admintool.menus.colors.AdminToolColorMenu;
 import nl.openminetopia.modules.player.utils.PlaytimeUtil;
+import nl.openminetopia.modules.staff.admintool.menus.colors.AdminToolColorMenu;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
