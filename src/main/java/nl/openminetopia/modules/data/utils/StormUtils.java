@@ -4,7 +4,6 @@ import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.builders.QueryBuilder;
 import lombok.experimental.UtilityClass;
 import nl.openminetopia.modules.data.storm.StormDatabase;
-import nl.openminetopia.modules.data.storm.models.FitnessModel;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -156,33 +155,6 @@ public class StormUtils {
             } catch (Exception exception) {
                 exception.printStackTrace();
                 completableFuture.completeExceptionally(exception);  // Handle errors
-            }
-        });
-
-        return completableFuture;
-    }
-
-
-    public <M extends StormModel> CompletableFuture<Integer> getNextId(Class<M> modelClass, Function<M, Integer> idGetter) {
-        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
-
-        StormDatabase.getExecutorService().submit(() -> {
-            try {
-                // Fetch all models of the given class
-                Collection<M> models = StormDatabase.getInstance().getStorm().buildQuery(modelClass)
-                        .execute()
-                        .join();
-
-                // Use the stream to find the maximum ID using the idGetter function
-                int nextId = models.stream()
-                        .mapToInt(idGetter::apply) // Use the idGetter to get the ID
-                        .max()
-                        .orElse(0) + 1;
-
-                completableFuture.complete(nextId);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-                completableFuture.completeExceptionally(exception);
             }
         });
 

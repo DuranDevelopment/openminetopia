@@ -10,6 +10,9 @@ import nl.openminetopia.modules.Module;
 
 public class PlotModule extends Module {
 
+    public static StateFlag PLOT_FLAG = new StateFlag("openmt-plot", true);
+    public static StringFlag PLOT_DESCRIPTION = new StringFlag("openmt-description");
+
     @Override
     public void enable() {
         registerCommand(new PlotInfoCommand());
@@ -22,6 +25,7 @@ public class PlotModule extends Module {
         registerCommand(new PlotDeleteCommand());
         registerCommand(new PlotDescriptionCommand());
         registerCommand(new PlotListCommand());
+        registerCommand(new PlotTeleportCommand());
 
         loadFlags();
     }
@@ -30,9 +34,6 @@ public class PlotModule extends Module {
     public void disable() {
 
     }
-
-    public static StateFlag PLOT_FLAG = new StateFlag("openmt-plot", true);
-    public static StringFlag PLOT_DESCRIPTION = new StringFlag("openmt-description");
 
     public void loadFlags() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();

@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
@@ -16,32 +17,39 @@ import java.util.Date;
 @UtilityClass
 public class ChatUtils {
 
-    public static Component color(String message) {
+    public Component color(String message) {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
-    public static Component format(MinetopiaPlayer minetopiaPlayer, String message) {
+    public Component format(MinetopiaPlayer minetopiaPlayer, String message) {
         Player player = minetopiaPlayer.getBukkit().getPlayer();
         if (player == null) return Component.empty();
 
-        message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).getColor())
+        int levelUps = minetopiaPlayer.getCalculatedLevel() - minetopiaPlayer.getLevel();
+
+        message = message.replace("<level_color>", minetopiaPlayer.getActiveColor(OwnableColorType.LEVEL).color())
                 .replace("<level>", minetopiaPlayer.getLevel() + "")
-                .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor())
+                .replace("<calculated_level>", minetopiaPlayer.getCalculatedLevel() + "")
+                .replace("<levelups>", levelUps == 0 ? "<gold>0" : (levelUps > 0 ? "<green>+" + levelUps : "<red>" + levelUps))
+                .replace("<prefix_color>", minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).color())
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
-                .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColor())
+                .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).color())
                 .replace("<name>", player.getName())
-                .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).getColor())
-                .replace("<world_title>", minetopiaPlayer.getWorld().getTitle())
-                .replace("<world_loadingname>", minetopiaPlayer.getWorld().getLoadingName())
-                .replace("<world_name>", minetopiaPlayer.getWorld().getName())
-                .replace("<world_color>", minetopiaPlayer.getWorld().getColor())
-                .replace("<city_title>", minetopiaPlayer.getPlace().getTitle()) // Defaults to the world name if the player is not in a city
-                .replace("<city_loadingname>", minetopiaPlayer.getPlace().getLoadingName()) // Defaults to the world loading name if the player is not in a city
-                .replace("<city_name>", minetopiaPlayer.getPlace().getName()) // Defaults to the world name if the player is not in a city
-                .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "") // Defaults to the world temperature if the player is not in a city
-                .replace("<city_color>", minetopiaPlayer.getPlace().getColor()) // Defaults to the world color if the player is not in a city
+                .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).color())
                 .replace("<date>", new SimpleDateFormat("dd-MM-yyyy").format(new Date()))
                 .replace("<time>", new SimpleDateFormat("HH:mm").format(new Date()));
+
+        if (minetopiaPlayer.isInPlace()) {
+            message = message.replace("<world_title>", minetopiaPlayer.getWorld().getTitle())
+                    .replace("<world_loadingname>", minetopiaPlayer.getWorld().getLoadingName())
+                    .replace("<world_name>", minetopiaPlayer.getWorld().getName())
+                    .replace("<world_color>", minetopiaPlayer.getWorld().getColor())
+                    .replace("<city_title>", minetopiaPlayer.getPlace().getTitle()) // Defaults to the world name if the player is not in a city
+                    .replace("<city_loadingname>", minetopiaPlayer.getPlace().getLoadingName()) // Defaults to the world loading name if the player is not in a city
+                    .replace("<city_name>", minetopiaPlayer.getPlace().getName()) // Defaults to the world name if the player is not in a city
+                    .replace("<temperature>", minetopiaPlayer.getPlace().getTemperature() + "") // Defaults to the world temperature if the player is not in a city
+                    .replace("<city_color>", minetopiaPlayer.getPlace().getColor()); // Defaults to the world color if the player is not in a city
+        }
 
         if (minetopiaPlayer.getFitness().getStatistics() != null && !minetopiaPlayer.getFitness().getStatistics().isEmpty()) {
             message = message.replace("<fitness>", minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained() + "")
@@ -55,7 +63,33 @@ public class ChatUtils {
         return MiniMessage.miniMessage().deserialize(message);
     }
 
-    public static String stripMiniMessage(Component component) {
+    public void sendMessage(Player player, String message) {
+        Component component = color(message.replaceFirst("\\[(title|action)]", ""));
+        decideMessage(player, component, message);
+    }
+
+    public void sendFormattedMessage(MinetopiaPlayer minetopiaPlayer, String message) {
+        Component component = format(minetopiaPlayer,
+                message.replaceFirst("\\[(title|action)]", ""));
+
+        Player player = minetopiaPlayer.getBukkit().getPlayer();
+        if (player == null) return;
+
+        decideMessage(player, component, message);
+    }
+
+    public String stripMiniMessage(Component component) {
         return MiniMessage.miniMessage().serialize(component);
     }
+
+    private void decideMessage(Player player, Component component, String message) {
+        if (message.startsWith("[title]")) {
+            player.showTitle(Title.title(component, Component.empty()));
+        } else if (message.startsWith("[action]")) {
+            player.sendActionBar(component);
+        } else {
+            player.sendMessage(component);
+        }
+    }
+
 }

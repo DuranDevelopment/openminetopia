@@ -3,7 +3,6 @@ package nl.openminetopia.modules.staff.admintool.menus;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import lombok.Getter;
-import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.TotalStatistic;
@@ -36,7 +35,7 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine(" ")
                 .addLoreLine("<gold>UUID: <yellow>" + offlinePlayer.getUniqueId())
                 .addLoreLine("<gold>Naam: <yellow>" + offlinePlayer.getName()) // TODO: Set name color
-                .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColor() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
+                .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColorId() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
                 .addLoreLine("<gold>Online tijd: <yellow>" + PlaytimeUtil.formatPlaytime(minetopiaPlayer.getPlaytime()))
                 .addLoreLine(" ")
                 .setSkullOwner(offlinePlayer);

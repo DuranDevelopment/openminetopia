@@ -47,6 +47,13 @@ public class WorldGuardUtils {
         return manager.getRegions().values().stream().filter(protectedRegion -> priorityPredicate.test(protectedRegion.getPriority())).toList();
     }
 
+    public int getOwnedRegions(Player player) {
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager manager = container.get(BukkitAdapter.adapt(player.getWorld()));
+        if (manager == null) return 0;
+        return (int) manager.getRegions().values().stream().filter(protectedRegion -> protectedRegion.isOwner(WorldGuardPlugin.inst().wrapPlayer(player))).count();
+    }
+
     public boolean isRegionOwner(ProtectedRegion protectedRegion, Player player) {
         return protectedRegion != null && protectedRegion.isOwner(WorldGuardPlugin.inst().wrapPlayer(player));
     }

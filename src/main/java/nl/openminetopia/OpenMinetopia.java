@@ -7,7 +7,9 @@ import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import lombok.Setter;
+import nl.openminetopia.configuration.ColorsConfiguration;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.LevelcheckConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.banking.BankingModule;
@@ -41,11 +43,17 @@ public final class OpenMinetopia extends JavaPlugin {
     @Setter
     private static DefaultConfiguration defaultConfiguration;
     @Getter
+    @Setter
     private static MessageConfiguration messageConfiguration;
+    @Getter
+    @Setter
+    private static LevelcheckConfiguration levelcheckConfiguration;
+    @Getter
+    @Setter
+    private static ColorsConfiguration colorsConfiguration;
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
 
         commandManager = new PaperCommandManager(this);
@@ -58,6 +66,12 @@ public final class OpenMinetopia extends JavaPlugin {
 
         messageConfiguration = new MessageConfiguration(getDataFolder());
         messageConfiguration.saveConfiguration();
+
+        levelcheckConfiguration = new LevelcheckConfiguration(getDataFolder());
+        levelcheckConfiguration.saveConfiguration();
+
+        colorsConfiguration = new ColorsConfiguration(getDataFolder());
+        colorsConfiguration.saveConfiguration();
 
         moduleManager.register(
                 new CoreModule(),
