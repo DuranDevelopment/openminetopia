@@ -392,7 +392,7 @@ public class MySQLAdapter implements DatabaseAdapter {
         StormDatabase.getExecutorService().submit(() -> {
             ColorModel colorModel = new ColorModel();
             colorModel.setPlayerId(player.getPlayerModel().getId());
-            colorModel.setColor(color.getColor());
+            colorModel.setColorId(color.getColorId());
             colorModel.setExpiresAt(color.getExpiresAt());
             colorModel.setType(color.getType().toString().toLowerCase());
 
@@ -427,10 +427,10 @@ public class MySQLAdapter implements DatabaseAdapter {
                 null,
                 colorModel -> switch (type) {
                     case PREFIX ->
-                            new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
-                    case CHAT -> new ChatColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
-                    case NAME -> new NameColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
-                    case LEVEL -> new LevelColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
+                            new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                    case CHAT -> new ChatColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                    case NAME -> new NameColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                    case LEVEL -> new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                 },
                 null
         ).whenComplete((color, ex) -> {
@@ -451,10 +451,10 @@ public class MySQLAdapter implements DatabaseAdapter {
 
         StormDatabase.getExecutorService().submit(() -> {
             List<OwnableColor> colors = player.getPlayerModel().getColors().stream().map(colorModel -> switch (colorModel.getType()) {
-                case "prefix" -> new PrefixColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
-                case "name" -> new NameColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
-                case "chat" -> new ChatColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
-                case "level" -> new LevelColor(colorModel.getId(), colorModel.getColor(), colorModel.getExpiresAt());
+                case "prefix" -> new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                case "name" -> new NameColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                case "chat" -> new ChatColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                case "level" -> new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                 default -> null;
             }).collect(Collectors.toList());
             completableFuture.complete(colors);

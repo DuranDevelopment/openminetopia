@@ -7,7 +7,7 @@ import org.spongepowered.configurate.ConfigurationNode;
 import java.io.File;
 
 @Getter
-public class LevelcheckConfiguration extends ConfigurateConfig {
+public class LevelCheckConfiguration extends ConfigurateConfig {
 
     private final ConfigurationNode levelsNode = rootNode.node("levels");
 
@@ -22,7 +22,7 @@ public class LevelcheckConfiguration extends ConfigurateConfig {
     private final int pointsPerHourPlayed;
     private final int pointsPer20Fitness;
 
-    public LevelcheckConfiguration(File file) {
+    public LevelCheckConfiguration(File file) {
         super(file, "levelcheck.yml");
 
         ConfigurationNode levelCheckNode = rootNode.node("levelcheck");

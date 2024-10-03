@@ -15,7 +15,7 @@ import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.PlayerModel;
 import nl.openminetopia.modules.fitness.runnables.HealthStatisticRunnable;
-import nl.openminetopia.modules.player.runnables.LevelcheckRunnable;
+import nl.openminetopia.modules.player.runnables.LevelCheckRunnable;
 import nl.openminetopia.modules.player.runnables.PlaytimeRunnable;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 import nl.openminetopia.utils.ChatUtils;
@@ -42,7 +42,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     private int level;
     private @Setter int calculatedLevel;
-    private LevelcheckRunnable levelcheckRunnable;
+    private LevelCheckRunnable levelcheckRunnable;
 
     private boolean staffchatEnabled;
     private boolean commandSpyEnabled;
@@ -120,6 +120,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.colors = colors;
         });
 
+        this.calculatedLevel = configuration.getDefaultLevel();
         dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
             if (level == null) {
                 this.level = configuration.getDefaultLevel();
@@ -176,7 +177,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         this.playtimeRunnable = new PlaytimeRunnable(getBukkit());
         playtimeRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L);
 
-        this.levelcheckRunnable = new LevelcheckRunnable(this);
+        this.levelcheckRunnable = new LevelCheckRunnable(this);
         levelcheckRunnable.runTaskTimer(OpenMinetopia.getInstance(), 0, 20L * 30);
 
         this.healthStatisticRunnable = new HealthStatisticRunnable(this);
@@ -320,10 +321,10 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             }
 
             switch (color.getType()) {
-                case PREFIX -> colors.add(new PrefixColor(id, color.getColor(), color.getExpiresAt()));
-                case NAME -> colors.add(new NameColor(id, color.getColor(), color.getExpiresAt()));
-                case CHAT -> colors.add(new ChatColor(id, color.getColor(), color.getExpiresAt()));
-                case LEVEL -> colors.add(new LevelColor(id, color.getColor(), color.getExpiresAt()));
+                case PREFIX -> colors.add(new PrefixColor(id, color.getColorId(), color.getExpiresAt()));
+                case NAME -> colors.add(new NameColor(id, color.getColorId(), color.getExpiresAt()));
+                case CHAT -> colors.add(new ChatColor(id, color.getColorId(), color.getExpiresAt()));
+                case LEVEL -> colors.add(new LevelColor(id, color.getColorId(), color.getExpiresAt()));
             }
         });
     }
@@ -367,7 +368,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         }
 
         if (color.isExpired()) {
-            getBukkit().sendMessage(ChatUtils.color("<red>Je " + type.name().toLowerCase() + " kleur <dark_red>" + color.getColor() + " is verlopen!"));
+            getBukkit().sendMessage(ChatUtils.color("<red>Je " + type.name().toLowerCase() + " kleur <dark_red>" + color.getColorId() + " is verlopen!"));
             removeColor(color);
             setActiveColor(getDefaultColor(type), type);
         }
