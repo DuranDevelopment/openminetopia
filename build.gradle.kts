@@ -50,7 +50,7 @@ dependencies {
     compileOnly("org.spongepowered:configurate-core:4.1.2")
 
     /* Database */
-    compileOnly("com.zaxxer:HikariCP:5.1.0")
+    compileOnly("com.zaxxer:HikariCP:6.0.0")
     compileOnly("mysql:mysql-connector-java:8.0.33")
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.4.1")
     compileOnly("org.xerial:sqlite-jdbc:3.46.1.0")
