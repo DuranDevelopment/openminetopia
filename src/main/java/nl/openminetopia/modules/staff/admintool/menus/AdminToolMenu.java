@@ -47,7 +47,5 @@ public class AdminToolMenu extends Menu {
         });
 
         if (offlinePlayer.isOnline()) this.addItem(targetEnderchestIcon);
-
-        this.open(player);
     }
 }

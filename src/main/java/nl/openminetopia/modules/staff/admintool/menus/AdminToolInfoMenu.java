@@ -34,7 +34,7 @@ public class AdminToolInfoMenu extends Menu {
                 .setName("<gold>Profielinformatie")
                 .addLoreLine(" ")
                 .addLoreLine("<gold>UUID: <yellow>" + offlinePlayer.getUniqueId())
-                .addLoreLine("<gold>Naam: <yellow>" + offlinePlayer.getName()) // TODO: Set name color
+                .addLoreLine("<gold>Naam: " + minetopiaPlayer.getActiveColor(OwnableColorType.NAME).getColorId() + offlinePlayer.getName())
                 .addLoreLine("<gold>Prefix: <dark_gray>[" + minetopiaPlayer.getActiveColor(OwnableColorType.PREFIX).getColorId() + minetopiaPlayer.getActivePrefix().getPrefix() + "<dark_gray>]")
                 .addLoreLine("<gold>Online tijd: <yellow>" + PlaytimeUtil.formatPlaytime(minetopiaPlayer.getPlaytime()))
                 .addLoreLine(" ")
@@ -50,8 +50,6 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine("");
 
         Icon targetColorIcon = new Icon(11, colorItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 
@@ -62,14 +60,15 @@ public class AdminToolInfoMenu extends Menu {
                 .setName("<gold>Level")
                 .addLoreLine("<gold>Level: " + minetopiaPlayer.getLevel())
                 .addLoreLine("")
-                .addLoreLine("<gold>Klik <yellow>hier <gold>om het <yellow>level <gold>van de speler aan te passen.");
+                .addLoreLine("<gold>Klik <yellow>hier <gold>om het <yellow>level <gold>van de speler aan te passen.")
+                .addLoreLine("")
+                .addLoreLine("<yellow>Rechtermuisklik <gold>om het level te verhogen.")
+                .addLoreLine("<yellow>Linkermuisklik <gold>om het level te verlagen.");
 
         Icon targetLevelIcon = new Icon(12, levelItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
-            AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
-            menu.open((Player) event.getWhoClicked());
-
+            minetopiaPlayer.setLevel(event.isRightClick() ? minetopiaPlayer.getLevel() + 1 : minetopiaPlayer.getLevel() - 1);
+            player.sendMessage(ChatUtils.color("<gold>Je hebt het level van <yellow>" + offlinePlayer.getName() + " <gold>aangepast naar <yellow>" + minetopiaPlayer.getLevel() + "<gold>."));
+            new AdminToolInfoMenu(player, offlinePlayer).open((Player) event.getWhoClicked());
         });
         this.addItem(targetLevelIcon);
 
@@ -82,11 +81,8 @@ public class AdminToolInfoMenu extends Menu {
 
 
         Icon targetFitnessIcon = new Icon(13, fitnessItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolFitnessMenu menu = new AdminToolFitnessMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
-
         });
         this.addItem(targetFitnessIcon);
 
@@ -97,8 +93,6 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine("<gold>Klik <yellow>hier <gold>om de <yellow>bank <gold>van de speler te openen.");
 
         Icon targetBankIcon = new Icon(14, bankItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 
@@ -109,14 +103,10 @@ public class AdminToolInfoMenu extends Menu {
                 .setName("<gray>Terug");
 
         Icon backIcon = new Icon(22, backItemBuilder.toItemStack(), event -> {
-            Player targetPlayer = offlinePlayer.getPlayer();
-            if (targetPlayer == null) return;
             AdminToolMenu menu = new AdminToolMenu(player, offlinePlayer);
             menu.open((Player) event.getWhoClicked());
 
         });
         this.addItem(backIcon);
-
-        this.open(player);
     }
 }
