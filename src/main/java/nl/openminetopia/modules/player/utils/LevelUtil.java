@@ -14,7 +14,7 @@ public class LevelUtil {
 
     public static int calculateLevel(MinetopiaPlayer minetopiaPlayer) {
         LevelcheckConfiguration configuration = OpenMinetopia.getLevelcheckConfiguration();
-        int points = 0;
+        double points = 0;
 
         // TODO: Add points per vehicle
         // TODO: Add points per 5k balance
@@ -38,30 +38,17 @@ public class LevelUtil {
 
         // Points per plot
         Player player = minetopiaPlayer.getBukkit().getPlayer();
-        if (player == null) return points;
+        if (player == null) return OpenMinetopia.getDefaultConfiguration().getDefaultLevel();
 
         for (int plots = WorldGuardUtils.getOwnedRegions(player); plots >= 1; plots--) {
             points += configuration.getPointsPerPlot();
         }
-
-        // Check points needed for a level up (for example 2500 points per level)
-        int level = 0;
+        
         int neededPoints = configuration.getPointsNeededForLevelUp();
-        while (points >= neededPoints) {
-            points -= neededPoints;
-            level++;
-            neededPoints += configuration.getPointsNeededForLevelUp();
-        }
+        int level = (int) Math.floor(points / neededPoints);
 
-        // Check if level isn't greater than the max level
-        if (level > OpenMinetopia.getLevelcheckConfiguration().getMaxLevel()) {
-            level = OpenMinetopia.getLevelcheckConfiguration().getMaxLevel();
-        }
-
-        // Check if level isn't lower than the default level
-        if (level < OpenMinetopia.getDefaultConfiguration().getDefaultLevel()) {
-            level = OpenMinetopia.getDefaultConfiguration().getDefaultLevel();
-        }
+        level = Math.max(OpenMinetopia.getDefaultConfiguration().getDefaultLevel(),
+                Math.min(level, OpenMinetopia.getLevelcheckConfiguration().getMaxLevel()));
 
         return level;
     }
