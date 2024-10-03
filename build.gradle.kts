@@ -4,7 +4,7 @@ plugins {
     java
     id("io.freefair.lombok") version "8.10"
     id("com.gradleup.shadow") version "8.3.0"
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("io.papermc.paperweight.userdev") version "1.7.3"
 }
 
 group = "nl.openminetopia"
