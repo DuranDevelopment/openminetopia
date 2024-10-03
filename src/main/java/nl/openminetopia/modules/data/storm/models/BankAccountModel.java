@@ -26,7 +26,7 @@ public class BankAccountModel extends StormModel {
     private AccountType type;
 
     @Column(name = "balance", defaultValue = "0")
-    private Long balance;
+    private Double balance;
 
     @Column(name = "name", defaultValue = "Rekening")
     private String name;

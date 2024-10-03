@@ -858,7 +858,7 @@ public class MySQLAdapter implements DatabaseAdapter {
     }
 
     @Override
-    public CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, long balance, String name, boolean frozen) {
+    public CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, double balance, String name, boolean frozen) {
         CompletableFuture<BankAccountModel> completableFuture = new CompletableFuture<>();
 
         StormDatabase.getExecutorService().submit(() -> {

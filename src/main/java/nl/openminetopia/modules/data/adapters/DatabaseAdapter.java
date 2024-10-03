@@ -113,7 +113,7 @@ public interface DatabaseAdapter {
 
     /* Banking related database queries */
 
-    CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, long balance, String name, boolean frozen);
+    CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, double balance, String name, boolean frozen);
 
     CompletableFuture<Void> deleteBankAccount(UUID accountUuid);
 
