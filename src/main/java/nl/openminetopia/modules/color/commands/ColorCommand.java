@@ -24,22 +24,22 @@ public class ColorCommand extends BaseCommand {
     }
 
 
-    @CommandAlias("prefixcolor")
+    @CommandAlias("prefixcolor|prefixkleur")
     public void onPrefixColor(Player player) {
         new ColorSelectMenu(player, OwnableColorType.PREFIX).open(player);
     }
 
-    @CommandAlias("chatcolor")
+    @CommandAlias("chatcolor|chatkleur")
     public void onChatColor(Player player) {
         new ColorSelectMenu(player, OwnableColorType.CHAT).open(player);
     }
 
-    @CommandAlias("namecolor")
+    @CommandAlias("namecolor|naamkleur")
     public void onNameColor(Player player) {
         new ColorSelectMenu(player, OwnableColorType.NAME).open(player);
     }
 
-    @CommandAlias("levelcolor")
+    @CommandAlias("levelcolor|levelkleur")
     public void onLevelColor(Player player) {
         new ColorSelectMenu(player, OwnableColorType.LEVEL).open(player);
     }
