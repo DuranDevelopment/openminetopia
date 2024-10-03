@@ -3,8 +3,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     java
     id("io.freefair.lombok") version "8.10"
-    id("com.gradleup.shadow") version "8.3.0"
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("com.gradleup.shadow") version "8.3.3"
+    id("io.papermc.paperweight.userdev") version "1.7.3"
 }
 
 group = "nl.openminetopia"
@@ -50,10 +50,10 @@ dependencies {
     compileOnly("org.spongepowered:configurate-core:4.1.2")
 
     /* Database */
-    compileOnly("com.zaxxer:HikariCP:5.1.0")
+    compileOnly("com.zaxxer:HikariCP:6.0.0")
     compileOnly("mysql:mysql-connector-java:8.0.33")
     compileOnly("org.mariadb.jdbc:mariadb-java-client:3.4.1")
-    compileOnly("org.xerial:sqlite-jdbc:3.46.1.0")
+    compileOnly("org.xerial:sqlite-jdbc:3.46.1.3")
     implementation("com.github.Mindgamesnl:storm:e1f961b480")
 
     /* Command Framework */
