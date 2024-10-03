@@ -4,7 +4,6 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.DrinkingStatistic;
-import nl.openminetopia.api.player.fitness.statistics.types.HealthStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import org.bukkit.Material;
@@ -13,9 +12,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionType;
-
-import java.util.Objects;
 
 public class PlayerDrinkListener implements Listener {
 

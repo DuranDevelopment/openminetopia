@@ -1,8 +1,8 @@
 package nl.openminetopia.api.player.fitness;
 
 import nl.openminetopia.api.player.fitness.objects.Fitness;
-import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
+import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -2,9 +2,7 @@ package nl.openminetopia.modules.chat.utils;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
-import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;

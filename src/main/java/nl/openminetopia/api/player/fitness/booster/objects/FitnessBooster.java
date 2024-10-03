@@ -1,6 +1,5 @@
 package nl.openminetopia.api.player.fitness.booster.objects;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

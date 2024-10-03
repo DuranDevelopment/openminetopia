@@ -2,14 +2,13 @@ package nl.openminetopia.modules.fitness.runnables;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.*;
-import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
-import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;

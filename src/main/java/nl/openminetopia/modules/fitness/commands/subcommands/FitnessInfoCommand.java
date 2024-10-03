@@ -2,12 +2,10 @@ package nl.openminetopia.modules.fitness.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;

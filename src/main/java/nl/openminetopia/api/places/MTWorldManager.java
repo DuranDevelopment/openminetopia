@@ -1,6 +1,5 @@
 package nl.openminetopia.api.places;
 
-import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTWorld;
@@ -8,7 +7,6 @@ import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.WorldModel;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;

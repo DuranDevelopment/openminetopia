@@ -2,7 +2,6 @@ package nl.openminetopia.modules.player.runnables;
 
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
