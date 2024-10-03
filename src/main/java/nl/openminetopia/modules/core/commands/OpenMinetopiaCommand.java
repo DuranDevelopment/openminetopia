@@ -23,15 +23,19 @@ public class OpenMinetopiaCommand extends BaseCommand {
     public void onReload(Player player) {
         OpenMinetopia.getDefaultConfiguration().getLoader().load();
         OpenMinetopia.setDefaultConfiguration(new DefaultConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.getDefaultConfiguration().saveConfiguration();
 
         OpenMinetopia.getMessageConfiguration().getLoader().load();
         OpenMinetopia.setMessageConfiguration(new MessageConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.getMessageConfiguration().saveConfiguration();
 
         OpenMinetopia.getLevelcheckConfiguration().getLoader().load();
         OpenMinetopia.setLevelcheckConfiguration(new LevelCheckConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.getLevelcheckConfiguration().saveConfiguration();
 
         OpenMinetopia.getColorsConfiguration().getLoader().load();
         OpenMinetopia.setColorsConfiguration(new ColorsConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.getColorsConfiguration().saveConfiguration();
 
         player.sendMessage(ChatUtils.color("<gold>De configuratiebestanden zijn succesvol herladen!"));
     }
