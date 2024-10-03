@@ -5,6 +5,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ClimbingStatistic extends FitnessStatistic {

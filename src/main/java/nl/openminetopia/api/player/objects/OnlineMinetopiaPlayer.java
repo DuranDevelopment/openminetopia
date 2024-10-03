@@ -120,6 +120,7 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
             this.colors = colors;
         });
 
+        this.calculatedLevel = configuration.getDefaultLevel();
         dataModule.getAdapter().getLevel(this).whenComplete((level, throwable) -> {
             if (level == null) {
                 this.level = configuration.getDefaultLevel();

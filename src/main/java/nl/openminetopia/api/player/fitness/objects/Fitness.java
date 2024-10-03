@@ -2,6 +2,7 @@ package nl.openminetopia.api.player.fitness.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
@@ -92,15 +93,14 @@ public class Fitness {
         FitnessUtils.applyFitness(Bukkit.getPlayer(uuid));
     }
 
+    public boolean statisticsReady() {
+        return statistics != null && !statistics.isEmpty();
+    }
+
+    @SneakyThrows
     public FitnessStatistic getStatistic(FitnessStatisticType type) {
-        if (statistics == null) {
-            dataModule.getAdapter().getStatistics(this).whenComplete((statistics, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                    return;
-                }
-                this.statistics = statistics;
-            });
+        if (!statisticsReady()) {
+            return type.correspondingClass().getConstructor().newInstance();
         }
 
         return statistics.stream().filter(statistic -> statistic.getType().equals(type)).findFirst().orElse(null);
