@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.configuration.ColorsConfiguration;
 import nl.openminetopia.configuration.DefaultConfiguration;
-import nl.openminetopia.configuration.LevelcheckConfiguration;
+import nl.openminetopia.configuration.LevelCheckConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.chat.ChatModule;
@@ -46,7 +46,7 @@ public final class OpenMinetopia extends JavaPlugin {
     private static MessageConfiguration messageConfiguration;
     @Getter
     @Setter
-    private static LevelcheckConfiguration levelcheckConfiguration;
+    private static LevelCheckConfiguration levelcheckConfiguration;
     @Getter
     @Setter
     private static ColorsConfiguration colorsConfiguration;
@@ -66,7 +66,7 @@ public final class OpenMinetopia extends JavaPlugin {
         messageConfiguration = new MessageConfiguration(getDataFolder());
         messageConfiguration.saveConfiguration();
 
-        levelcheckConfiguration = new LevelcheckConfiguration(getDataFolder());
+        levelcheckConfiguration = new LevelCheckConfiguration(getDataFolder());
         levelcheckConfiguration.saveConfiguration();
 
         colorsConfiguration = new ColorsConfiguration(getDataFolder());

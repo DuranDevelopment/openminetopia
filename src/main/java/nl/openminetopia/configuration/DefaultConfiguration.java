@@ -137,7 +137,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Fitness configuration
          */
-        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(225);
+        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(250);
         this.defaultFitnessLevel = rootNode.node("fitness", "defaultFitnessLevel").getInt(20);
 
         this.maxFitnessByDrinking = rootNode.node("fitness", "drinking", "maxFitnessByDrinking").getInt(20);

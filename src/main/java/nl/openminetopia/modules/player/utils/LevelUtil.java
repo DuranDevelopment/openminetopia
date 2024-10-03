@@ -5,7 +5,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.TotalStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.configuration.LevelcheckConfiguration;
+import nl.openminetopia.configuration.LevelCheckConfiguration;
 import nl.openminetopia.utils.WorldGuardUtils;
 import org.bukkit.entity.Player;
 
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 public class LevelUtil {
 
     public static int calculateLevel(MinetopiaPlayer minetopiaPlayer) {
-        LevelcheckConfiguration configuration = OpenMinetopia.getLevelcheckConfiguration();
+        LevelCheckConfiguration configuration = OpenMinetopia.getLevelcheckConfiguration();
         double points = 0;
 
         // TODO: Add points per vehicle

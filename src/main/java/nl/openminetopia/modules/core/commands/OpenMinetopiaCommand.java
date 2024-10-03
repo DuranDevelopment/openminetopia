@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.configuration.ColorsConfiguration;
 import nl.openminetopia.configuration.DefaultConfiguration;
-import nl.openminetopia.configuration.LevelcheckConfiguration;
+import nl.openminetopia.configuration.LevelCheckConfiguration;
 import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class OpenMinetopiaCommand extends BaseCommand {
         OpenMinetopia.setMessageConfiguration(new MessageConfiguration(OpenMinetopia.getInstance().getDataFolder()));
 
         OpenMinetopia.getLevelcheckConfiguration().getLoader().load();
-        OpenMinetopia.setLevelcheckConfiguration(new LevelcheckConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.setLevelcheckConfiguration(new LevelCheckConfiguration(OpenMinetopia.getInstance().getDataFolder()));
 
         OpenMinetopia.getColorsConfiguration().getLoader().load();
         OpenMinetopia.setColorsConfiguration(new ColorsConfiguration(OpenMinetopia.getInstance().getDataFolder()));
