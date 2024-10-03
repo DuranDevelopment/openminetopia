@@ -5,10 +5,10 @@ import nl.openminetopia.modules.color.objects.*;
 
 @Getter
 public enum OwnableColorType {
-    PREFIX("<red>Prefix"),
-    CHAT("<green>Chat"),
-    NAME("<blue>Name"),
-    LEVEL("<light_purple>Level"),;
+    PREFIX("<red>Prefixkleur"),
+    CHAT("<green>Chatkleur"),
+    NAME("<blue>Naamkleur"),
+    LEVEL("<light_purple>Levelkleur"),;
 
     private final String displayName;
 

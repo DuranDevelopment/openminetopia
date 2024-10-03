@@ -17,14 +17,7 @@ public class PrefixCommand extends BaseCommand {
     }
 
     @Default
-    public void prefixCommand(Player player, CommandHelp help) {
-
-        if (!player.hasPermission("openminetopia.prefix.*")) {
-            PrefixMenu menu = new PrefixMenu(player, player);
-            menu.open(player);
-            return;
-        }
-
-        help.showHelp();
+    public void prefixCommand(Player player) {
+        new PrefixMenu(player, player).open(player);
     }
 }

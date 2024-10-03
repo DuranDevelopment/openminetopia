@@ -5,6 +5,8 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.HelpCommand;
+import nl.openminetopia.modules.color.enums.OwnableColorType;
+import nl.openminetopia.modules.color.menus.ColorSelectMenu;
 import nl.openminetopia.modules.color.menus.ColorTypeMenu;
 import org.bukkit.entity.Player;
 
@@ -21,4 +23,24 @@ public class ColorCommand extends BaseCommand {
         new ColorTypeMenu(player).open(player);
     }
 
+
+    @CommandAlias("prefixcolor")
+    public void onPrefixColor(Player player) {
+        new ColorSelectMenu(player, OwnableColorType.PREFIX).open(player);
+    }
+
+    @CommandAlias("chatcolor")
+    public void onChatColor(Player player) {
+        new ColorSelectMenu(player, OwnableColorType.CHAT).open(player);
+    }
+
+    @CommandAlias("namecolor")
+    public void onNameColor(Player player) {
+        new ColorSelectMenu(player, OwnableColorType.NAME).open(player);
+    }
+
+    @CommandAlias("levelcolor")
+    public void onLevelColor(Player player) {
+        new ColorSelectMenu(player, OwnableColorType.LEVEL).open(player);
+    }
 }

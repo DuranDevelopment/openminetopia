@@ -15,7 +15,7 @@ public class ColorLockedMenu extends PaginatedMenu {
 
 
     public ColorLockedMenu(Player player, ColorSelectMenu oldMenu) {
-        super(ChatUtils.color(oldMenu.getType().getDisplayName() + " <reset>Locked Kleuren menu."), 6);
+        super(ChatUtils.color(oldMenu.getType().getDisplayName() + " <reset><dark_gray>locked menu"), 6);
         this.registerPageSlotsBetween(0, 44);
 
         List<ColorComponent> lockedColors = OpenMinetopia.getColorsConfiguration().lockedColors(oldMenu.getColors());
@@ -23,7 +23,7 @@ public class ColorLockedMenu extends PaginatedMenu {
             this.addItem(new Icon(new ItemBuilder(Material.IRON_INGOT).setName(component.displayName()).toItemStack()));
         });
 
-        this.addSpecialIcon(new Icon(49, new ItemBuilder(Material.LADDER).setName("<gray>Ga terug.").toItemStack(),
+        this.addSpecialIcon(new Icon(49, new ItemBuilder(Material.LADDER).setName("<gray>Ga terug").toItemStack(),
                 (e) -> oldMenu.open(player)));
     }
 
