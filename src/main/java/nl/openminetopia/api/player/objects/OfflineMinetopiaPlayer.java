@@ -226,10 +226,10 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
             }
 
             switch (color.getType()) {
-                case PREFIX -> colors.add(new PrefixColor(id, color.getColor(), color.getExpiresAt()));
-                case NAME -> colors.add(new NameColor(id, color.getColor(), color.getExpiresAt()));
-                case CHAT -> colors.add(new ChatColor(id, color.getColor(), color.getExpiresAt()));
-                case LEVEL -> colors.add(new LevelColor(id, color.getColor(), color.getExpiresAt()));
+                case PREFIX -> colors.add(new PrefixColor(id, color.getColorId(), color.getExpiresAt()));
+                case NAME -> colors.add(new NameColor(id, color.getColorId(), color.getExpiresAt()));
+                case CHAT -> colors.add(new ChatColor(id, color.getColorId(), color.getExpiresAt()));
+                case LEVEL -> colors.add(new LevelColor(id, color.getColorId(), color.getExpiresAt()));
             }
         });
     }
