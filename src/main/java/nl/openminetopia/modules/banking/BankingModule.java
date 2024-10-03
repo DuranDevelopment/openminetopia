@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 /**
  * Todo:
- * - Commands (delete, removeuser, setbalance, freeze, pin)
  * - Menu's (banking inventory)
  * - Debitcards
  */

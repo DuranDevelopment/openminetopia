@@ -4,8 +4,11 @@ import com.craftmend.storm.Storm;
 import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.builders.QueryBuilder;
 import com.craftmend.storm.api.enums.Where;
+import com.craftmend.storm.connection.StormDriver;
 import com.craftmend.storm.connection.hikaricp.HikariDriver;
+import com.craftmend.storm.parser.types.TypeRegistry;
 import com.zaxxer.hikari.HikariConfig;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTCity;
 import nl.openminetopia.api.places.objects.MTWorld;
@@ -23,6 +26,8 @@ import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.storm.StormDatabase;
+import nl.openminetopia.modules.data.storm.adapters.AccountPermissionAdapter;
+import nl.openminetopia.modules.data.storm.adapters.AccountTypeAdapter;
 import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.data.utils.StormUtils;
 import nl.openminetopia.modules.prefix.objects.Prefix;
@@ -64,6 +69,11 @@ public class MySQLAdapter implements DatabaseAdapter {
     }
 
     public void registerStormModels() {
+        TypeRegistry.registerAdapter(AccountType.class, new AccountTypeAdapter());
+        TypeRegistry.registerAdapter(AccountPermission.class, new AccountPermissionAdapter());
+
+        registerStormModel(new BankAccountModel());
+        registerStormModel(new BankPermissionModel());
         registerStormModel(new PlayerModel());
         registerStormModel(new FitnessModel());
         registerStormModel(new FitnessBoosterModel());
