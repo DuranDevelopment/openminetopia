@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.modules.data.DataModule;

@@ -11,7 +11,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.objects.MTCity;
 import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.api.player.PlayerManager;
-import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
+import nl.openminetopia.api.player.fitness.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
