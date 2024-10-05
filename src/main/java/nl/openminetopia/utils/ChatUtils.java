@@ -35,6 +35,7 @@ public class ChatUtils {
                 .replace("<prefix>", minetopiaPlayer.getActivePrefix().getPrefix())
                 .replace("<name_color>", minetopiaPlayer.getActiveColor(OwnableColorType.NAME).color())
                 .replace("<name>", player.getName())
+                .replace("<display_name>", ChatUtils.stripMiniMessage(player.displayName()))
                 .replace("<chat_color>", minetopiaPlayer.getActiveColor(OwnableColorType.CHAT).color())
                 .replace("<date>", new SimpleDateFormat("dd-MM-yyyy").format(new Date()))
                 .replace("<time>", new SimpleDateFormat("HH:mm").format(new Date()));

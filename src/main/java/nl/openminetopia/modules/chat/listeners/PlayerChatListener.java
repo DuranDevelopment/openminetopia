@@ -6,6 +6,7 @@ import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.modules.chat.utils.SpyUtils;
+import nl.openminetopia.modules.police.balaclava.utils.BalaclavaUtils;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -17,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerChatListener implements Listener {
-
-    private final DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
     @EventHandler
     public void onPlayerChat(AsyncChatEvent event) {
@@ -32,6 +31,8 @@ public class PlayerChatListener implements Listener {
         List<Player> recipients = new ArrayList<>();
 
         event.setCancelled(true);
+
+        DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
 
         Bukkit.getServer().getOnlinePlayers().forEach(target -> {
             if (target.getWorld().equals(source.getWorld())
@@ -56,6 +57,15 @@ public class PlayerChatListener implements Listener {
         recipients.forEach(player -> {
             // Replace <message> placeholder with original message
             String finalMessage = formattedMessage.replace("<message>", originalMessage);
+
+            if (BalaclavaUtils.isBalaclavaItem(source.getInventory().getHelmet())) {
+                finalMessage = finalMessage.replace("<level>", configuration.getDefaultLevel() + "")
+                        .replace("<prefix>", configuration.getDefaultPrefix())
+                        .replace("<name_color>", configuration.getDefaultNameColor())
+                        .replace("<level_color>", configuration.getDefaultLevelColor())
+                        .replace("<prefix_color>", configuration.getDefaultPrefixColor())
+                        .replace("<chat_color>", configuration.getDefaultChatColor());
+            }
 
             // Check if the player's name is in the original message and highlight it
             if (originalMessage.contains(player.getName())) {

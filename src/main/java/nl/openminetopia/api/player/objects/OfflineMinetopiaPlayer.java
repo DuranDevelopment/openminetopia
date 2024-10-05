@@ -258,18 +258,10 @@ public class OfflineMinetopiaPlayer implements MinetopiaPlayer {
     @Override
     public void setActiveColor(OwnableColor color, OwnableColorType type) {
         switch (type) {
-            case PREFIX:
-                this.activePrefixColor = (PrefixColor) color;
-                break;
-            case NAME:
-                this.activeNameColor = (NameColor) color;
-                break;
-            case CHAT:
-                this.activeChatColor = (ChatColor) color;
-                break;
-            case LEVEL:
-                this.activeLevelColor = (LevelColor) color;
-                break;
+            case PREFIX -> this.activePrefixColor = (PrefixColor) color;
+            case NAME -> this.activeNameColor = (NameColor) color;
+            case CHAT -> this.activeChatColor = (ChatColor) color;
+            case LEVEL -> this.activeLevelColor = (LevelColor) color;
         }
         dataModule.getAdapter().setActiveColor(this, color, type);
     }

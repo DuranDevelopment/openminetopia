@@ -370,7 +370,8 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
         if (color.isExpired()) {
             getBukkit().sendMessage(ChatUtils.color("<red>Je " + type.name().toLowerCase() + " kleur <dark_red>" + color.getColorId() + " is verlopen!"));
             removeColor(color);
-            setActiveColor(getDefaultColor(type), type);
+            color = getDefaultColor(type);
+            setActiveColor(color, type);
         }
         return color;
     }

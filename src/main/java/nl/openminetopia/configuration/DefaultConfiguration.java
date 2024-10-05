@@ -110,6 +110,12 @@ public class DefaultConfiguration extends ConfigurateConfig {
      */
     private final List<String> commandsOnPlotCreate;
 
+    /**
+     * Balaclava configuration
+     */
+    private final List<String> balaclavaItems;
+
+
     @SneakyThrows
     public DefaultConfiguration(File file) {
         super(file, "config.yml");
@@ -222,7 +228,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Chat configuration
          */
-        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<level_color>Level <level><dark_gray>] <dark_gray>[<prefix_color><prefix><dark_gray>] <name_color><name>: <chat_color><message>");
+        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<level_color>Level <level><dark_gray>] <dark_gray>[<prefix_color><prefix><dark_gray>] <name_color><display_name>: <chat_color><message>");
         this.chatEnabled = rootNode.node("chat", "enabled").getBoolean(true);
         this.chatRadiusEnabled = rootNode.node("chat", "radius", "enabled").getBoolean(true);
         this.chatRadiusRange = rootNode.node("chat", "radius", "range").getInt(20);
@@ -262,5 +268,12 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "rg flag <plot> -w <world> INTERACT -g MEMBERS ALLOW",
                 "rg flag <plot> -w <world> PVP ALLOW"
         ));
+
+        /*
+         * Balaclava configuration
+         */
+        this.balaclavaItems = rootNode.node("bivak", "items").getList(String.class, List.of(
+                "CLAY_BALL")
+        );
     }
 }
