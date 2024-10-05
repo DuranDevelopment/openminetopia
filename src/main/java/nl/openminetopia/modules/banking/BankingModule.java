@@ -1,6 +1,7 @@
 package nl.openminetopia.modules.banking;
 
 import com.craftmend.storm.api.enums.Where;
+import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
@@ -14,6 +15,7 @@ import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
 import org.bukkit.Bukkit;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,13 +32,17 @@ import java.util.stream.Collectors;
 @Getter
 public class BankingModule extends Module {
 
-    private List<BankAccountModel> bankAccountModels = new ArrayList<>();
+    private DecimalFormat decimalFormat;
+    private Collection<BankAccountModel> bankAccountModels = new ArrayList<>();
 
     @Override
     public void enable() {
+         decimalFormat = new DecimalFormat(OpenMinetopia.getDefaultConfiguration().getBankingFormat());
+
         Bukkit.getScheduler().runTaskLater(OpenMinetopia.getInstance(), () -> {
             OpenMinetopia.getInstance().getLogger().info("Loading bank accounts..");
-            loadAccounts().whenComplete((accounts, accountThrowable) -> {
+            DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
+            dataModule.getAdapter().getBankAccounts().whenComplete((accounts, accountThrowable) -> {
                 if (accountThrowable != null) {
                     OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to load all bank accounts: " + accountThrowable.getMessage());
                     return;
@@ -45,17 +51,32 @@ public class BankingModule extends Module {
                 bankAccountModels = accounts;
                 OpenMinetopia.getInstance().getLogger().info("Loaded a total of " + bankAccountModels.size() + " accounts.");
 
-                loadPermissions().whenComplete((amount, permissionThrowable) -> {
-                    if (permissionThrowable != null) {
-                        OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to bank permission: " + permissionThrowable.getMessage());
+                dataModule.getAdapter().getBankPermissions().whenComplete((permissions, throwable) -> {
+                    if (throwable != null) {
+                        OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to load all bank permissions: " + throwable.getMessage());
                         return;
                     }
 
-                    OpenMinetopia.getInstance().getLogger().info("Applied " + amount + " permissions.");
+                    permissions.forEach(permission -> {
+                        BankAccountModel accountModel = getAccountById(permission.getAccount());
+                        if(accountModel == null) {
+                            /*
+                            todo: remove permission from db?
+                             dataModule.getAdapter().deleteBankPermission(permission.getAccount(), permission.getUuid());
+                             */
+                            return;
+                        }
+
+                        accountModel.getUsers().put(permission.getUuid(), permission.getPermission());
+                    });
+
+                    OpenMinetopia.getInstance().getLogger().info("Found and applied " + permissions.size() + " bank permissions.");
                 });
 
             });
-        }, 20L);
+        }, 5L);
+
+        OpenMinetopia.getCommandManager().getCommandCompletions().registerCompletion("accountNames", context -> bankAccountModels.stream().map(BankAccountModel::getName).collect(Collectors.toList()));
 
         registerCommand(new BankingCreateCommand());
         registerCommand(new BankingDeleteCommand());
@@ -63,11 +84,14 @@ public class BankingModule extends Module {
         registerCommand(new BankingOpenCommand());
         registerCommand(new BankingFreezeCommand());
         registerCommand(new BankingInfoCommand());
+        registerCommand(new BankingBalanceCommand());
     }
 
     @Override
     public void disable() {
-        // todo: save all accounts.
+        bankAccountModels.forEach(accountModel -> {
+            StormDatabase.getInstance().saveStormModel(accountModel);
+        });
     }
 
     public List<BankAccountModel> getAccountsFromPlayer(UUID uuid) {
@@ -80,53 +104,6 @@ public class BankingModule extends Module {
 
     public BankAccountModel getAccountById(UUID uuid) {
         return bankAccountModels.stream().filter(account -> account.getUniqueId().equals(uuid)).findAny().orElse(null);
-    }
-
-    public CompletableFuture<List<BankAccountModel>> loadAccounts() {
-        CompletableFuture<List<BankAccountModel>> completableFuture = new CompletableFuture<>();
-        try {
-            CompletableFuture<Collection<BankAccountModel>> modelFuture = StormDatabase.getInstance().getStorm().buildQuery(BankAccountModel.class)
-                    .where("type", Where.NOT_EQUAL, AccountType.PRIVATE.toString())
-                    .execute();
-
-            modelFuture.whenComplete((models, throwable) -> {
-                if (throwable != null) {
-                    completableFuture.completeExceptionally(throwable);
-                    return;
-                }
-
-                completableFuture.complete(new ArrayList<>(models));
-            });
-
-        } catch (Exception e) {
-            completableFuture.completeExceptionally(e);
-        }
-        return completableFuture;
-    }
-
-    public CompletableFuture<Integer> loadPermissions() {
-        CompletableFuture<Integer> completableFuture = new CompletableFuture<>();
-        try {
-            CompletableFuture<Collection<BankPermissionModel>> permissionsFuture = StormDatabase.getInstance().getStorm().buildQuery(BankPermissionModel.class)
-                    .execute();
-
-            permissionsFuture.whenComplete((permissions, throwable) -> {
-                for (BankPermissionModel permission : permissions) {
-                    BankAccountModel accountModel = getAccountById(permission.getAccount());
-                    if (accountModel == null) {
-                        // todo: remove from db, account isn't valid?
-                        continue;
-                    }
-                    accountModel.getUsers().put(permission.getUuid(), permission.getPermission());
-                    OpenMinetopia.getInstance().getLogger().info(" -> " + permission.getUuid().toString() + ": " + permission.getPermission().toString());
-                }
-
-                completableFuture.complete(permissions.size());
-            });
-        } catch (Exception e) {
-            completableFuture.completeExceptionally(e);
-        }
-        return completableFuture;
     }
 
     @SneakyThrows
@@ -147,6 +124,10 @@ public class BankingModule extends Module {
         BankAccountModel accountModel = getAccountById(permissionModel.getAccount());
         accountModel.getUsers().put(permissionModel.getUuid(), permissionModel.getPermission());
         StormDatabase.getInstance().getStorm().save(permissionModel);
+    }
+
+    public String format(double amount) {
+        return "€" + decimalFormat.format(amount);
     }
 
 }

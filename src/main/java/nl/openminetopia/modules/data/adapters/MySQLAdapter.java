@@ -4,7 +4,6 @@ import com.craftmend.storm.Storm;
 import com.craftmend.storm.api.StormModel;
 import com.craftmend.storm.api.builders.QueryBuilder;
 import com.craftmend.storm.api.enums.Where;
-import com.craftmend.storm.connection.StormDriver;
 import com.craftmend.storm.connection.hikaricp.HikariDriver;
 import com.craftmend.storm.parser.types.TypeRegistry;
 import com.zaxxer.hikari.HikariConfig;
@@ -433,7 +432,8 @@ public class MySQLAdapter implements DatabaseAdapter {
                             new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                     case CHAT -> new ChatColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                     case NAME -> new NameColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
-                    case LEVEL -> new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                    case LEVEL ->
+                            new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                 },
                 null
         ).whenComplete((color, ex) -> {
@@ -454,7 +454,8 @@ public class MySQLAdapter implements DatabaseAdapter {
 
         StormDatabase.getExecutorService().submit(() -> {
             List<OwnableColor> colors = player.getPlayerModel().getColors().stream().map(colorModel -> switch (colorModel.getType()) {
-                case "prefix" -> new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                case "prefix" ->
+                        new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                 case "name" -> new NameColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                 case "chat" -> new ChatColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
                 case "level" -> new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
@@ -644,14 +645,10 @@ public class MySQLAdapter implements DatabaseAdapter {
 
     @Override
     public CompletableFuture<Void> setLoadingName(MTCity city, String loadingName) {
-        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
-
-        StormUtils.updateModelData(CityModel.class,
+        return StormUtils.updateModelData(CityModel.class,
                 query -> query.where("city_name", Where.EQUAL, city.getName()),
                 cityModel -> cityModel.setLoadingName(loadingName)
         );
-        completableFuture.complete(null);
-        return completableFuture;
     }
 
     /* Fitness related database queries */
@@ -700,31 +697,30 @@ public class MySQLAdapter implements DatabaseAdapter {
     public CompletableFuture<Void> saveStatistics(Fitness fitness) {
         CompletableFuture<Void> completableFuture = new CompletableFuture<>();
 
-        StormDatabase.getExecutorService().submit(() -> {
-            getFitness(fitness).thenAccept(model -> {
-                        model.setTotal((fitness.getStatistic(FitnessStatisticType.TOTAL).getFitnessGained()));
-                        model.setFitnessGainedByWalking(fitness.getStatistic(FitnessStatisticType.WALKING).getFitnessGained());
-                        model.setFitnessGainedBySprinting(fitness.getStatistic(FitnessStatisticType.SPRINTING).getFitnessGained());
-                        model.setFitnessGainedByClimbing(fitness.getStatistic(FitnessStatisticType.CLIMBING).getFitnessGained());
-                        model.setFitnessGainedBySwimming(fitness.getStatistic(FitnessStatisticType.SWIMMING).getFitnessGained());
-                        model.setFitnessGainedByFlying(fitness.getStatistic(FitnessStatisticType.FLYING).getFitnessGained());
+        getFitness(fitness).thenAccept(model -> {
+                    model.setTotal((fitness.getStatistic(FitnessStatisticType.TOTAL).getFitnessGained()));
+                    model.setFitnessGainedByWalking(fitness.getStatistic(FitnessStatisticType.WALKING).getFitnessGained());
+                    model.setFitnessGainedBySprinting(fitness.getStatistic(FitnessStatisticType.SPRINTING).getFitnessGained());
+                    model.setFitnessGainedByClimbing(fitness.getStatistic(FitnessStatisticType.CLIMBING).getFitnessGained());
+                    model.setFitnessGainedBySwimming(fitness.getStatistic(FitnessStatisticType.SWIMMING).getFitnessGained());
+                    model.setFitnessGainedByFlying(fitness.getStatistic(FitnessStatisticType.FLYING).getFitnessGained());
 
-                        DrinkingStatistic drinkingStatistic = (DrinkingStatistic) fitness.getStatistic(FitnessStatisticType.DRINKING);
-                        model.setFitnessGainedByDrinking(drinkingStatistic.getFitnessGained());
-                        model.setDrinkingPoints(drinkingStatistic.getPoints());
+                    DrinkingStatistic drinkingStatistic = (DrinkingStatistic) fitness.getStatistic(FitnessStatisticType.DRINKING);
+                    model.setFitnessGainedByDrinking(drinkingStatistic.getFitnessGained());
+                    model.setDrinkingPoints(drinkingStatistic.getPoints());
 
-                        HealthStatistic healthStatistic = (HealthStatistic) fitness.getStatistic(FitnessStatisticType.HEALTH);
-                        model.setFitnessGainedByHealth(healthStatistic.getFitnessGained());
-                        model.setHealthPoints(healthStatistic.getPoints());
+                    HealthStatistic healthStatistic = (HealthStatistic) fitness.getStatistic(FitnessStatisticType.HEALTH);
+                    model.setFitnessGainedByHealth(healthStatistic.getFitnessGained());
+                    model.setHealthPoints(healthStatistic.getPoints());
 
-                        EatingStatistic eatingStatistic = (EatingStatistic) fitness.getStatistic(FitnessStatisticType.EATING);
-                        model.setFitnessGainedByEating(eatingStatistic.getFitnessGained());
-                        model.setLuxuryFood(eatingStatistic.getLuxuryFood());
-                        model.setCheapFood(eatingStatistic.getCheapFood());
-                        StormDatabase.getInstance().saveStormModel(model);
-                    }
-            );
-        });
+                    EatingStatistic eatingStatistic = (EatingStatistic) fitness.getStatistic(FitnessStatisticType.EATING);
+                    model.setFitnessGainedByEating(eatingStatistic.getFitnessGained());
+                    model.setLuxuryFood(eatingStatistic.getLuxuryFood());
+                    model.setCheapFood(eatingStatistic.getCheapFood());
+                    StormDatabase.getInstance().saveStormModel(model);
+                }
+        );
+
 
         completableFuture.complete(null);
         return completableFuture;
@@ -773,7 +769,8 @@ public class MySQLAdapter implements DatabaseAdapter {
                     case SWIMMING -> new SwimmingStatistic(model.getFitnessGainedBySwimming());
                     case FLYING -> new FlyingStatistic(model.getFitnessGainedByFlying());
                     case HEALTH -> new HealthStatistic(model.getFitnessGainedByHealth(), model.getHealthPoints());
-                    case EATING -> new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
+                    case EATING ->
+                            new EatingStatistic(model.getFitnessGainedByEating(), model.getLuxuryFood(), model.getCheapFood());
                 },
                 null
         ).whenComplete((statistic, ex) -> {
@@ -858,6 +855,41 @@ public class MySQLAdapter implements DatabaseAdapter {
     }
 
     @Override
+    public CompletableFuture<Collection<BankAccountModel>> getBankAccounts() {
+        CompletableFuture<Collection<BankAccountModel>> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                Collection<BankAccountModel> accountModels = StormDatabase.getInstance().getStorm().buildQuery(BankAccountModel.class)
+                        .where("type", Where.NOT_EQUAL, AccountType.PRIVATE.toString())
+                        .execute().join();
+                completableFuture.complete(accountModels);
+            } catch (Exception e) {
+                completableFuture.completeExceptionally(e);
+            }
+        });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Collection<BankPermissionModel>> getBankPermissions() {
+        CompletableFuture<Collection<BankPermissionModel>> completableFuture = new CompletableFuture<>();
+
+        StormDatabase.getExecutorService().submit(() -> {
+            try {
+                Collection<BankPermissionModel> permissionModels = StormDatabase.getInstance().getStorm().buildQuery(BankPermissionModel.class)
+                        .execute().join();
+                completableFuture.complete(permissionModels);
+            } catch (Exception e) {
+                completableFuture.completeExceptionally(e);
+            }
+        });
+
+        return completableFuture;
+    }
+
+    @Override
     public CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, double balance, String name, boolean frozen) {
         CompletableFuture<BankAccountModel> completableFuture = new CompletableFuture<>();
 
@@ -872,6 +904,23 @@ public class MySQLAdapter implements DatabaseAdapter {
             StormDatabase.getInstance().saveStormModel(accountModel);
             completableFuture.complete(accountModel);
         });
+
+        return completableFuture;
+    }
+
+    @Override
+    public CompletableFuture<Void> saveBankAccount(BankAccountModel accountModel) {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+
+        StormUtils.updateModelData(BankAccountModel.class,
+                query -> query.where("uuid", Where.EQUAL, accountModel.getUniqueId().toString()),
+                model -> {
+                    model.setBalance(accountModel.getBalance());
+                    model.setFrozen(accountModel.getFrozen());
+                    model.setName(accountModel.getName());
+                    model.setType(accountModel.getType());
+                }
+        );
 
         return completableFuture;
     }

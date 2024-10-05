@@ -4,6 +4,8 @@ import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.PersistentDataUtil;
@@ -18,6 +20,8 @@ import java.util.List;
 
 @Getter
 public class BankContentsMenu extends Menu {
+
+    private final BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
 
     private final Player player;
     private final BankAccountModel accountModel;

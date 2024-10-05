@@ -18,7 +18,7 @@ import org.bukkit.command.CommandSender;
 public class BankingUsersCommand extends BaseCommand {
 
     @Subcommand("adduser")
-    @CommandPermission("horizon.accounts.user.adduser")
+    @CommandPermission("openminetopia.banking.adduser")
     @Syntax("<player> <naam> <permission>")
     public void addUser(CommandSender sender, OfflinePlayer target, String accountName, AccountPermission permission) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
@@ -48,7 +48,7 @@ public class BankingUsersCommand extends BaseCommand {
     }
 
     @Subcommand("removeuser")
-    @CommandPermission("horizon.accounts.user.removeuser")
+    @CommandPermission("openminetopia.banking.removeuser")
     @Syntax("<player> <naam>")
     public void removeUser(CommandSender sender, OfflinePlayer target, String accountName) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);

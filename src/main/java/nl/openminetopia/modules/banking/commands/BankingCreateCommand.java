@@ -2,6 +2,7 @@ package nl.openminetopia.modules.banking.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Syntax;
 import nl.openminetopia.OpenMinetopia;
@@ -18,6 +19,7 @@ public class BankingCreateCommand extends BaseCommand {
 
     @Subcommand("create")
     @Syntax("<type> <name> <balance>")
+    @CommandPermission("openminetopia.banking.create")
     public void createAccount(CommandSender sender, AccountType type, String name) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
         DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);

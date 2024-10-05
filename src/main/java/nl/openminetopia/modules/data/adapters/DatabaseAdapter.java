@@ -14,6 +14,7 @@ import nl.openminetopia.modules.color.objects.*;
 import nl.openminetopia.modules.data.storm.models.*;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -113,7 +114,13 @@ public interface DatabaseAdapter {
 
     /* Banking related database queries */
 
+    CompletableFuture<Collection<BankAccountModel>> getBankAccounts();
+
+    CompletableFuture<Collection<BankPermissionModel>> getBankPermissions();
+
     CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, double balance, String name, boolean frozen);
+
+    CompletableFuture<Void> saveBankAccount(BankAccountModel accountModel);
 
     CompletableFuture<Void> deleteBankAccount(UUID accountUuid);
 
