@@ -46,8 +46,7 @@ public class HeadCommand extends BaseCommand {
         }
 
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
-        configuration.getHeadWhitelist().add(headItemString);
-        configuration.saveConfiguration();
+        configuration.addToHeadWhitelist(headItemString);
 
         player.sendMessage(ChatUtils.color("<green>Je hebt het item toegevoegd aan de head whitelist!"));
     }
@@ -69,8 +68,7 @@ public class HeadCommand extends BaseCommand {
         }
 
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
-        configuration.getHeadWhitelist().remove(headItemString);
-        configuration.saveConfiguration();
+        configuration.removeFromHeadWhitelist(headItemString);
 
         player.sendMessage(ChatUtils.color("<green>Je hebt het item verwijderd van de head whitelist!"));
     }

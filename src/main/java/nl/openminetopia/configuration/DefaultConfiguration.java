@@ -342,4 +342,18 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "GREEN_DYE"
         ));
     }
+
+    @SneakyThrows
+    public void addToHeadWhitelist(String item) {
+        this.headWhitelist.add(item);
+        rootNode.node("head", "whitelist").set(headWhitelist);
+        saveConfiguration();
+    }
+
+    @SneakyThrows
+    public void removeFromHeadWhitelist(String item) {
+        this.headWhitelist.remove(item);
+        rootNode.node("head", "whitelist").set(headWhitelist);
+        saveConfiguration();
+    }
 }
