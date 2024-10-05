@@ -23,7 +23,7 @@ public class LevelCheckConfiguration extends ConfigurateConfig {
     private final int pointsPer20Fitness;
 
     public LevelCheckConfiguration(File file) {
-        super(file, "levelcheck.yml");
+        super(file, "levelcheck.yml", "");
 
         ConfigurationNode levelCheckNode = rootNode.node("levelcheck");
 

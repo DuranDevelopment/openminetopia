@@ -13,7 +13,7 @@ public class MessageConfiguration extends ConfigurateConfig {
     private final DatabaseType databaseType;
 
     public MessageConfiguration(File file) {
-        super(file, "messages.yml");
+        super(file, "messages.yml", "");
 
         this.databaseType = DatabaseType.valueOf(rootNode.node("database", "type").getString("mysql").toUpperCase());
     }

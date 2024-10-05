@@ -112,7 +112,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
 
     @SneakyThrows
     public DefaultConfiguration(File file) {
-        super(file, "config.yml");
+        super(file, "config.yml", "");
         /*
          * Database configuration
          */
