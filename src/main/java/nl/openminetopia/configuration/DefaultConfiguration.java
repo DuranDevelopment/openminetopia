@@ -19,6 +19,11 @@ import java.util.Map;
 public class DefaultConfiguration extends ConfigurateConfig {
 
     /**
+     * Metrics configuration
+     */
+    private final boolean metricsEnabled;
+
+    /**
      * Database configuration
      */
     private final DatabaseType databaseType;
@@ -114,6 +119,11 @@ public class DefaultConfiguration extends ConfigurateConfig {
     public DefaultConfiguration(File file) {
         super(file, "config.yml", "");
         /*
+         * Metrics configuration
+         */
+        this.metricsEnabled = rootNode.node("metrics", "enabled").getBoolean(true);
+
+        /*
          * Database configuration
          */
         this.databaseType = DatabaseType.valueOf(rootNode.node("database", "type").getString("sqlite").toUpperCase());
@@ -137,7 +147,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Fitness configuration
          */
-        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(250);
+        this.maxFitnessLevel = rootNode.node("fitness", "maxFitnessLevel").getInt(225);
         this.defaultFitnessLevel = rootNode.node("fitness", "defaultFitnessLevel").getInt(20);
 
         this.maxFitnessByDrinking = rootNode.node("fitness", "drinking", "maxFitnessByDrinking").getInt(20);
