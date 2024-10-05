@@ -77,6 +77,9 @@ dependencies {
 
     /* InventoryLib (JAZZZZ) */
     implementation("com.github.Jazzkuh.InventoryLib:spigot:bc68f4f677")
+
+    /* bStats */
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 }
 
 val targetJavaVersion = 21
@@ -121,6 +124,7 @@ tasks.named<ShadowJar>("shadowJar") {
     relocate("com.jeff_media.customblockdata", "nl.openminetopia.shaded.customblockdata")
     relocate("com.jeff_media.morepersistentdatatypes", "nl.openminetopia.shaded.morepersistentdatatypes")
     relocate("com.jazzkuh.inventorylib", "nl.openminetopia.shaded.inventorylib")
+    relocate("org.bstats", "nl.openminetopia.shaded.bstats")
 }
 
 tasks.build {
