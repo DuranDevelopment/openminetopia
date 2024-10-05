@@ -115,6 +115,10 @@ public class DefaultConfiguration extends ConfigurateConfig {
      */
     private final List<String> balaclavaItems;
 
+    /**
+     * Head configuration
+     */
+    private final List<String> headWhitelist;
 
     @SneakyThrows
     public DefaultConfiguration(File file) {
@@ -275,5 +279,38 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.balaclavaItems = rootNode.node("bivak", "items").getList(String.class, List.of(
                 "CLAY_BALL")
         );
+
+        /*
+         * Head configuration
+         */
+        this.headWhitelist = rootNode.node("head", "whitelist").getList(String.class, List.of(
+                "CLAY_BALL",
+                "BEDROCK",
+                "SPONGE",
+                "IRON_ORE",
+                "COAL_ORE",
+                "LAPIS_ORE",
+                "DIAMOND_ORE",
+                "REDSTONE_ORE",
+                "SOUL_SAND",
+                "NETHERRACK",
+                "NETHER_BRICK",
+                "END_STONE",
+                "NETHER_QUARTZ_ORE",
+                "EMERALD_ORE",
+                "PRISMARINE",
+                "RED_SANDSTONE",
+                "INK_SAC",
+                "MAGMA_CREAM",
+                "NETHER_WART",
+                "PRISMARINE_SHARD",
+                "PRISMARINE_CRYSTALS",
+                "CARROT_ON_A_STICK",
+                "SHEARS",
+                "GLASS",
+                "STAINED_GLASS",
+                "DIAMOND_HOE:89",
+                "GREEN_DYE"
+        ));
     }
 }
