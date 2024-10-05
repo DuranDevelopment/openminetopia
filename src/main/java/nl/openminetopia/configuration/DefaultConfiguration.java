@@ -116,6 +116,19 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final List<String> balaclavaItems;
 
     /**
+     * Handcuff configuration
+     */
+    private final List<String> handcuffItems;
+    private final List<String> handcuffEffects;
+    private final boolean handcuffCanDropItems;
+    private final boolean handcuffCanPickupItems;
+    private final boolean handcuffCanOpenInventory;
+    private final boolean handcuffCanRunAway;
+    private final boolean handcuffCanPvP;
+    private final boolean handcuffCanChangeSlots;
+    private final boolean handcuffShowTitle;
+
+    /**
      * Head configuration
      */
     private final List<String> headWhitelist;
@@ -279,6 +292,22 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.balaclavaItems = rootNode.node("bivak", "items").getList(String.class, List.of(
                 "CLAY_BALL")
         );
+
+        this.handcuffItems = rootNode.node("handcuffs", "items").getList(String.class, List.of(
+                "GRAY_DYE")
+        );
+        this.handcuffEffects = rootNode.node("handcuffs", "effects").getList(String.class, List.of(
+                "BLINDNESS:2",
+                "MINING_FATIGUE:1",
+                "SLOWNESS:4"
+        ));
+        this.handcuffCanDropItems = rootNode.node("handcuffs", "canDropItems").getBoolean(false);
+        this.handcuffCanPickupItems = rootNode.node("handcuffs", "canPickupItems").getBoolean(false);
+        this.handcuffCanOpenInventory = rootNode.node("handcuffs", "canOpenInventory").getBoolean(false);
+        this.handcuffCanRunAway = rootNode.node("handcuffs", "canRunAway").getBoolean(false);
+        this.handcuffCanPvP = rootNode.node("handcuffs", "canPvP").getBoolean(false);
+        this.handcuffCanChangeSlots = rootNode.node("handcuffs", "canChangeSlots").getBoolean(false);
+        this.handcuffShowTitle = rootNode.node("handcuffs", "showTitle").getBoolean(true);
 
         /*
          * Head configuration

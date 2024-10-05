@@ -78,6 +78,7 @@ public class PlayerChatListener implements Listener {
 
             // Send the formatted message to the player
             player.sendMessage(ChatUtils.format(minetopiaPlayer, finalMessage));
+            Bukkit.getConsoleSender().sendMessage(ChatUtils.format(minetopiaPlayer, finalMessage.replace("<display_name>", player.getName()))); // Log the message without potential scrambled name
         });
     }
 }
