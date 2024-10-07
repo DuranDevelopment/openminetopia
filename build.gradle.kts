@@ -79,7 +79,7 @@ dependencies {
     implementation("com.github.Jazzkuh.InventoryLib:spigot:bc68f4f677")
 
     /* bStats */
-    implementation("org.bstats:bstats-bukkit:3.0.2")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 }
 
 val targetJavaVersion = 21
