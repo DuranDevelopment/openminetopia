@@ -17,9 +17,11 @@ import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.core.CoreModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
+import nl.openminetopia.modules.misc.MiscModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.plots.PlotModule;
+import nl.openminetopia.modules.police.PoliceModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
 import nl.openminetopia.modules.staff.StaffModule;
@@ -89,7 +91,9 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new PlotModule(),
-                new TeleporterModule()
+                new TeleporterModule(),
+                new PoliceModule(),
+                new MiscModule()
         );
 
         commandManager.enableUnstableAPI("help");

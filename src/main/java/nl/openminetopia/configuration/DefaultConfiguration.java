@@ -115,6 +115,29 @@ public class DefaultConfiguration extends ConfigurateConfig {
      */
     private final List<String> commandsOnPlotCreate;
 
+    /**
+     * Balaclava configuration
+     */
+    private final List<String> balaclavaItems;
+
+    /**
+     * Handcuff configuration
+     */
+    private final List<String> handcuffItems;
+    private final List<String> handcuffEffects;
+    private final boolean handcuffCanDropItems;
+    private final boolean handcuffCanPickupItems;
+    private final boolean handcuffCanOpenInventory;
+    private final boolean handcuffCanRunAway;
+    private final boolean handcuffCanPvP;
+    private final boolean handcuffCanChangeSlots;
+    private final boolean handcuffShowTitle;
+
+    /**
+     * Head configuration
+     */
+    private final List<String> headWhitelist;
+
     @SneakyThrows
     public DefaultConfiguration(File file) {
         super(file, "config.yml", "");
@@ -232,7 +255,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         /*
          * Chat configuration
          */
-        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<level_color>Level <level><dark_gray>] <dark_gray>[<prefix_color><prefix><dark_gray>] <name_color><name>: <chat_color><message>");
+        this.chatFormat = rootNode.node("chat", "format").getString("<dark_gray>[<level_color>Level <level><dark_gray>] <dark_gray>[<prefix_color><prefix><dark_gray>] <name_color><display_name>: <chat_color><message>");
         this.chatEnabled = rootNode.node("chat", "enabled").getBoolean(true);
         this.chatRadiusEnabled = rootNode.node("chat", "radius", "enabled").getBoolean(true);
         this.chatRadiusRange = rootNode.node("chat", "radius", "range").getInt(20);
@@ -272,5 +295,75 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "rg flag <plot> -w <world> INTERACT -g MEMBERS ALLOW",
                 "rg flag <plot> -w <world> PVP ALLOW"
         ));
+
+        /*
+         * Balaclava configuration
+         */
+        this.balaclavaItems = rootNode.node("bivak", "items").getList(String.class, List.of(
+                "CLAY_BALL")
+        );
+
+        this.handcuffItems = rootNode.node("handcuffs", "items").getList(String.class, List.of(
+                "GRAY_DYE")
+        );
+        this.handcuffEffects = rootNode.node("handcuffs", "effects").getList(String.class, List.of(
+                "BLINDNESS:2",
+                "MINING_FATIGUE:1",
+                "SLOWNESS:4"
+        ));
+        this.handcuffCanDropItems = rootNode.node("handcuffs", "canDropItems").getBoolean(false);
+        this.handcuffCanPickupItems = rootNode.node("handcuffs", "canPickupItems").getBoolean(false);
+        this.handcuffCanOpenInventory = rootNode.node("handcuffs", "canOpenInventory").getBoolean(false);
+        this.handcuffCanRunAway = rootNode.node("handcuffs", "canRunAway").getBoolean(false);
+        this.handcuffCanPvP = rootNode.node("handcuffs", "canPvP").getBoolean(false);
+        this.handcuffCanChangeSlots = rootNode.node("handcuffs", "canChangeSlots").getBoolean(false);
+        this.handcuffShowTitle = rootNode.node("handcuffs", "showTitle").getBoolean(true);
+
+        /*
+         * Head configuration
+         */
+        this.headWhitelist = rootNode.node("head", "whitelist").getList(String.class, List.of(
+                "CLAY_BALL",
+                "BEDROCK",
+                "SPONGE",
+                "IRON_ORE",
+                "COAL_ORE",
+                "LAPIS_ORE",
+                "DIAMOND_ORE",
+                "REDSTONE_ORE",
+                "SOUL_SAND",
+                "NETHERRACK",
+                "NETHER_BRICK",
+                "END_STONE",
+                "NETHER_QUARTZ_ORE",
+                "EMERALD_ORE",
+                "PRISMARINE",
+                "RED_SANDSTONE",
+                "INK_SAC",
+                "MAGMA_CREAM",
+                "NETHER_WART",
+                "PRISMARINE_SHARD",
+                "PRISMARINE_CRYSTALS",
+                "CARROT_ON_A_STICK",
+                "SHEARS",
+                "GLASS",
+                "STAINED_GLASS",
+                "DIAMOND_HOE:89",
+                "GREEN_DYE"
+        ));
+    }
+
+    @SneakyThrows
+    public void addToHeadWhitelist(String item) {
+        this.headWhitelist.add(item);
+        rootNode.node("head", "whitelist").set(headWhitelist);
+        saveConfiguration();
+    }
+
+    @SneakyThrows
+    public void removeFromHeadWhitelist(String item) {
+        this.headWhitelist.remove(item);
+        rootNode.node("head", "whitelist").set(headWhitelist);
+        saveConfiguration();
     }
 }

@@ -36,6 +36,17 @@ public class ColorSelectMenu extends PaginatedMenu {
                 .filter(color -> color.getClass().equals(type.correspondingClass()))
                 .toList();
 
+
+        ItemBuilder defaultIcon = new ItemBuilder(Material.IRON_INGOT)
+                .addLoreLine("")
+                .addLoreLine("<gold>Deze kleur vervalt <yellow>nooit<gold>.")
+                .setName(type.getDefaultColor() + "Standaard");
+        this.addItem(new Icon(defaultIcon.toItemStack(), (e) -> {
+            minetopiaPlayer.setActiveColor(null, type);
+            player.sendMessage(ChatUtils.color(type.getDisplayName() + " <reset><gray>veranderd naar: "
+                    + type.getDefaultColor() + "Standaard"));
+        }));
+
         colors.forEach(color -> {
             ItemBuilder icon = new ItemBuilder(Material.IRON_INGOT)
                     .addLoreLine("")
@@ -47,6 +58,8 @@ public class ColorSelectMenu extends PaginatedMenu {
 
             this.addItem(new Icon(icon.toItemStack(), (e) -> {
                 minetopiaPlayer.setActiveColor(color, type);
+                System.out.println(color.getId());
+                System.out.println(minetopiaPlayer.getActiveColor(type).color());
                 player.sendMessage(ChatUtils.color(type.getDisplayName() + " <reset><gray>veranderd naar: "
                         + color.displayName()));
             }));

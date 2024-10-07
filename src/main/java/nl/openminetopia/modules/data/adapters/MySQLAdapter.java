@@ -422,25 +422,32 @@ public class MySQLAdapter implements DatabaseAdapter {
                 null,
                 PlayerModel::getActivePrefixColorId,
                 null
-        ).thenAccept(integer -> StormUtils.getModelData(ColorModel.class,
-                query -> query.where("id", Where.EQUAL, integer).where("type", Where.EQUAL, "prefix"),
-                null,
-                colorModel -> switch (type) {
-                    case PREFIX ->
-                            new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
-                    case CHAT -> new ChatColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
-                    case NAME -> new NameColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
-                    case LEVEL -> new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
-                },
-                null
-        ).whenComplete((color, ex) -> {
-            if (ex != null) {
-                ex.printStackTrace();
-                colorFuture.completeExceptionally(ex);
-            } else {
-                colorFuture.complete(color);
+        ).whenComplete((integer, throwable) -> {
+            if (throwable != null) {
+                throwable.printStackTrace();
+                colorFuture.completeExceptionally(throwable);
+                return;
             }
-        }));
+
+            StormUtils.getModelData(ColorModel.class,
+                    query -> query.where("id", Where.EQUAL, integer),
+                    null,
+                    colorModel -> switch (type) {
+                        case PREFIX -> new PrefixColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                        case CHAT -> new ChatColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                        case NAME -> new NameColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                        case LEVEL -> new LevelColor(colorModel.getId(), colorModel.getColorId(), colorModel.getExpiresAt());
+                    },
+                    null
+            ).whenComplete((color, ex) -> {
+                if (ex != null) {
+                    ex.printStackTrace();
+                    colorFuture.completeExceptionally(ex);
+                } else {
+                    colorFuture.complete(color);
+                }
+            });
+        });
 
         return colorFuture;
     }
