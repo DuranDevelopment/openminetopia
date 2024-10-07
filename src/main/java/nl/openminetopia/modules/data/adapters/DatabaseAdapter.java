@@ -2,7 +2,7 @@ package nl.openminetopia.modules.data.adapters;
 
 import nl.openminetopia.api.places.objects.MTCity;
 import nl.openminetopia.api.places.objects.MTWorld;
-import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
+import nl.openminetopia.api.player.fitness.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
@@ -10,8 +10,8 @@ import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
-import nl.openminetopia.modules.color.objects.*;
-import nl.openminetopia.modules.data.storm.models.*;
+import nl.openminetopia.modules.color.objects.OwnableColor;
+import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
 import java.util.Collection;

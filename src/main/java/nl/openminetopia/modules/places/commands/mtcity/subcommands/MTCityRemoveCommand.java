@@ -5,9 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.api.places.MTCityManager;
-import nl.openminetopia.api.places.MTWorldManager;
 import nl.openminetopia.api.places.objects.MTCity;
-import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 

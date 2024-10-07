@@ -7,7 +7,10 @@ import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import lombok.Setter;
-import nl.openminetopia.configuration.*;
+import nl.openminetopia.configuration.ColorsConfiguration;
+import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.LevelcheckConfiguration;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.chat.ChatModule;
@@ -21,9 +24,11 @@ import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.modules.prefix.PrefixModule;
 import nl.openminetopia.modules.scoreboard.ScoreboardModule;
+import nl.openminetopia.modules.staff.StaffModule;
 import nl.openminetopia.modules.teleporter.TeleporterModule;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.placeholderapi.OpenMinetopiaExpansion;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -36,17 +41,17 @@ public final class OpenMinetopia extends JavaPlugin {
     private static ModuleManager moduleManager;
     @Getter
     private static PaperCommandManager commandManager;
-
-    @Getter @Setter
+    @Getter
+    @Setter
     private static DefaultConfiguration defaultConfiguration;
-
-    @Getter @Setter
+    @Getter
+    @Setter
     private static MessageConfiguration messageConfiguration;
-
-    @Getter @Setter
+    @Getter
+    @Setter
     private static LevelcheckConfiguration levelcheckConfiguration;
-
-    @Getter @Setter
+    @Getter
+    @Setter
     private static ColorsConfiguration colorsConfiguration;
 
     @Getter @Setter
@@ -55,6 +60,10 @@ public final class OpenMinetopia extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        if (defaultConfiguration.isMetricsEnabled()) {
+            Metrics metrics = new Metrics(this, 23547);
+        }
 
         commandManager = new PaperCommandManager(this);
         moduleManager = new ModuleManager();
@@ -73,13 +82,9 @@ public final class OpenMinetopia extends JavaPlugin {
         colorsConfiguration = new ColorsConfiguration(getDataFolder());
         colorsConfiguration.saveConfiguration();
 
-        bankingConfiguration = new BankingConfiguration(getDataFolder());
-        bankingConfiguration.saveConfiguration();
-
         moduleManager.register(
                 new CoreModule(),
                 new DataModule(),
-                new BankingModule(),
                 new PlayerModule(),
                 new FitnessModule(),
                 new StaffModule(),

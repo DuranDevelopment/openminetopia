@@ -27,10 +27,9 @@ public class PlayerPreLoginListener implements Listener {
     @EventHandler
     public void onPlayerPreLogin(AsyncPlayerPreLoginEvent event) {
         PlayerManager.getInstance().getPlayerModels().remove(event.getUniqueId());
-        PlayerProfile player = event.getPlayerProfile();
 
-        DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
         try {
+            DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);
             dataModule.getAdapter().loadPlayer(event.getUniqueId());
         } catch (Exception e) {
             event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));

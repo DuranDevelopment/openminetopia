@@ -7,8 +7,6 @@ import com.craftmend.storm.api.markers.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.UUID;
-
 @Data
 @EqualsAndHashCode(callSuper=false)
 @Table(name = "fitness_boosters")

@@ -2,8 +2,8 @@ package nl.openminetopia.api.player.fitness.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.modules.data.DataModule;
@@ -11,7 +11,9 @@ import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.fitness.runnables.FitnessRunnable;
 import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +25,7 @@ public class Fitness {
 
     private @Setter FitnessModel fitnessModel;
 
-    private List<FitnessStatistic> statistics;
+    private List<FitnessStatistic> statistics = new ArrayList<>();
     private @Setter long lastDrinkingTime;
     private List<FitnessBooster> boosters;
 
@@ -92,18 +94,19 @@ public class Fitness {
         FitnessUtils.applyFitness(Bukkit.getPlayer(uuid));
     }
 
+    @SneakyThrows
+    public FitnessStatistic draftStatistic(FitnessStatisticType type) {
+        return type.correspondingClass().getConstructor().newInstance();
+    }
+
+    @NotNull
     public FitnessStatistic getStatistic(FitnessStatisticType type) {
-        if (statistics == null) {
-            dataModule.getAdapter().getStatistics(this).whenComplete((statistics, throwable) -> {
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                    return;
-                }
-                this.statistics = statistics;
-            });
+        if (this.statistics == null || this.statistics.isEmpty()) {
+            return draftStatistic(type);
         }
 
-        return statistics.stream().filter(statistic -> statistic.getType().equals(type)).findFirst().orElse(null);
+        return statistics.stream().filter(statistic -> statistic.getType().equals(type)).findFirst()
+                .orElse(draftStatistic(type));
     }
 
     public void addBooster(FitnessBooster booster) {

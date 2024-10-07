@@ -2,6 +2,7 @@ package nl.openminetopia.modules.player.listeners;
 
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,6 +22,6 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
-        minetopiaPlayer.load().thenAccept((unused) -> player.sendMessage(ChatUtils.color("<green>Je data is geladen!")));
+        minetopiaPlayer.load().thenAccept((unused) -> player.sendMessage(MessageConfiguration.component("player_data_loaded")));
     }
 }

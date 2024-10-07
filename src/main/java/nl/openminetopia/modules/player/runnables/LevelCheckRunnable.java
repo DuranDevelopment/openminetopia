@@ -4,11 +4,11 @@ import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.modules.player.utils.LevelUtil;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class LevelcheckRunnable extends BukkitRunnable {
+public class LevelCheckRunnable extends BukkitRunnable {
 
     private final OnlineMinetopiaPlayer player;
 
-    public LevelcheckRunnable(OnlineMinetopiaPlayer player) {
+    public LevelCheckRunnable(OnlineMinetopiaPlayer player) {
         this.player = player;
     }
 

@@ -19,6 +19,11 @@ import java.util.Map;
 public class DefaultConfiguration extends ConfigurateConfig {
 
     /**
+     * Metrics configuration
+     */
+    private final boolean metricsEnabled;
+
+    /**
      * Database configuration
      */
     private final DatabaseType databaseType;
@@ -112,7 +117,12 @@ public class DefaultConfiguration extends ConfigurateConfig {
 
     @SneakyThrows
     public DefaultConfiguration(File file) {
-        super(file, "config.yml");
+        super(file, "config.yml", "");
+        /*
+         * Metrics configuration
+         */
+        this.metricsEnabled = rootNode.node("metrics", "enabled").getBoolean(true);
+
         /*
          * Database configuration
          */

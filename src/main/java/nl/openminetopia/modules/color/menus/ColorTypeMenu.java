@@ -10,18 +10,18 @@ import org.bukkit.entity.Player;
 
 public class ColorTypeMenu extends Menu {
     public ColorTypeMenu(Player player) {
-        super(ChatUtils.color("<gray>Kies uw kleurtype."), 3);
+        super(ChatUtils.color("<black>Kies een kleurtype"), 3);
 
-        this.addItem(new Icon(10, new ItemBuilder(Material.RED_WOOL).setName(OwnableColorType.PREFIX.getDisplayName()).toItemStack(),
+        this.addItem(new Icon(10, new ItemBuilder(Material.NAME_TAG).setName(OwnableColorType.PREFIX.getDisplayName()).toItemStack(),
                 (e) -> new ColorSelectMenu(player, OwnableColorType.PREFIX).open(player)));
 
-        this.addItem(new Icon(12, new ItemBuilder(Material.LIME_WOOL).setName(OwnableColorType.CHAT.getDisplayName()).toItemStack(),
+        this.addItem(new Icon(12, new ItemBuilder(Material.WRITABLE_BOOK).setName(OwnableColorType.CHAT.getDisplayName()).toItemStack(),
                 (e) -> new ColorSelectMenu(player, OwnableColorType.CHAT).open(player)));
 
-        this.addItem(new Icon(14, new ItemBuilder(Material.BLUE_WOOL).setName(OwnableColorType.NAME.getDisplayName()).toItemStack(),
+        this.addItem(new Icon(14, new ItemBuilder(Material.OAK_HANGING_SIGN).setName(OwnableColorType.NAME.getDisplayName()).toItemStack(),
                 (e) -> new ColorSelectMenu(player, OwnableColorType.NAME).open(player)));
 
-        this.addItem(new Icon(16, new ItemBuilder(Material.PINK_WOOL).setName(OwnableColorType.LEVEL.getDisplayName()).toItemStack(),
+        this.addItem(new Icon(16, new ItemBuilder(Material.EXPERIENCE_BOTTLE).setName(OwnableColorType.LEVEL.getDisplayName()).toItemStack(),
                 (e) -> new ColorSelectMenu(player, OwnableColorType.LEVEL).open(player)));
     }
 

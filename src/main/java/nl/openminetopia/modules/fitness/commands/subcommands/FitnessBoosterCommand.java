@@ -3,11 +3,8 @@ package nl.openminetopia.modules.fitness.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.api.player.fitness.objects.FitnessBooster;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.data.storm.models.FitnessBoosterModel;
-import nl.openminetopia.api.player.fitness.booster.objects.FitnessBooster;
-import nl.openminetopia.modules.data.utils.StormUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

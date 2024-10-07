@@ -19,7 +19,7 @@ public class ColorsConfiguration extends ConfigurateConfig {
     private final ConfigurationNode colorsNode;
 
     public ColorsConfiguration(File file) {
-        super(file, "colors.yml");
+        super(file, "colors.yml", "default-colors.yml");
 
         this.colorsNode = rootNode.node("colors");
         colorsNode.childrenMap().forEach((s, colorNode) -> {
