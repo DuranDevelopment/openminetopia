@@ -38,11 +38,6 @@ public class DefaultConfiguration extends ConfigurateConfig {
     private final boolean notifyWhenNobodyInRange;
 
     /**
-     * Banking configuration
-     */
-    private final String bankingFormat;
-
-    /**
      * Fitness configuration
      */
     private final int maxFitnessLevel;
@@ -138,11 +133,6 @@ public class DefaultConfiguration extends ConfigurateConfig {
 
         this.defaultNameColor = rootNode.node("default", "nameColor").getString("<white>");
         this.defaultChatColor = rootNode.node("default", "chatColor").getString("<white>");
-
-        /**
-         * Banking configuration
-         */
-        this.bankingFormat = rootNode.node("banking", "economy-format").getString("#,##0.00");
 
         /*
          * Fitness configuration

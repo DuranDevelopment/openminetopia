@@ -2,9 +2,16 @@ package nl.openminetopia.modules.banking.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Subcommand;
+import nl.openminetopia.modules.banking.menu.BankAccountListMenu;
+import org.bukkit.entity.Player;
 
 @CommandAlias("accounts|account|rekening")
 public class BankingListCommand extends BaseCommand {
 
+    @Subcommand("list")
+    public void listAccounts(Player player) {
+        new BankAccountListMenu().open(player);
+    }
 
 }

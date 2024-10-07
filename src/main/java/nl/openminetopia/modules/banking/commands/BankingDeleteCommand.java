@@ -33,6 +33,7 @@ public class BankingDeleteCommand extends BaseCommand {
             }
 
             sender.sendMessage(ChatUtils.color("<gold>Het account</gold> <red>" + accountModel.getName() + "</red> <gold>is verwijderd."));
+            bankingModule.getBankAccountModels().remove(accountModel);
         });
     }
 

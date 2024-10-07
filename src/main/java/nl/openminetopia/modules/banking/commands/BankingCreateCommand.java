@@ -60,7 +60,7 @@ public class BankingCreateCommand extends BaseCommand {
             }
 
             sender.sendMessage(ChatUtils.color("<gold>Je hebt de rekening</gold> <red>" + accountModel.getName() + "</red> <gold>aangemaakt."));
-            bankingModule.getBankAccountModels().remove(accountModel);
+            bankingModule.getBankAccountModels().add(accountModel);
             accountModel.initSavingTask();
         }));
 

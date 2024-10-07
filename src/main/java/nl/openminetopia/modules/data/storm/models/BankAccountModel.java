@@ -47,7 +47,6 @@ public class BankAccountModel extends StormModel {
     public void initSavingTask() {
         this.savingTask = new AccountSavingTask(this);
         this.savingTask.runTaskTimer(OpenMinetopia.getInstance(), (20 * 60 * 2), (20 * 60 * 3));
-        OpenMinetopia.getInstance().getLogger().info("Initialized saving task for account " + this.getName() + " - " + this.getUniqueId());
     }
 
     public void save() {

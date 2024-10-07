@@ -27,7 +27,7 @@ public class BankContentsMenu extends Menu {
     private final BankAccountModel accountModel;
 
     public BankContentsMenu(Player player, BankAccountModel accountModel) {
-        super(ChatUtils.color(accountModel.getType().getColor() + accountModel.getName() + "<reset> | " + accountModel.getBalance()), 6);
+        super(ChatUtils.color(accountModel.getType().getColor() + accountModel.getName() + "<reset> | <red>" + OpenMinetopia.getModuleManager().getModule(BankingModule.class).format(accountModel.getBalance())), 6);
         this.player = player;
         this.accountModel = accountModel;
 
@@ -99,7 +99,7 @@ public class BankContentsMenu extends Menu {
 
         item.setAmount(0);
         accountModel.setBalance(accountModel.getBalance() + totalValue);
-        player.sendMessage(ChatUtils.color("<gold>Je hebt <red>" + totalValue + " <gold>gestort naar je rekening."));
+        player.sendMessage(ChatUtils.color("<gold>Je hebt <red>" + bankingModule.format(totalValue) + " <gold>gestort naar je rekening."));
         new BankContentsMenu(player, accountModel).open(player);
     }
 
@@ -115,7 +115,7 @@ public class BankContentsMenu extends Menu {
         accountModel.setBalance(balance - totalValue);
 
         player.getInventory().addItem(note.toNote(amount));
-        player.sendMessage(ChatUtils.color("<gold>Je hebt <red>" + (amount * note.getValue()) + " <gold>opgenomen van je rekening."));
+        player.sendMessage(ChatUtils.color("<gold>Je hebt <red>" + bankingModule.format(amount * note.getValue()) + " <gold>opgenomen van je rekening."));
         new BankContentsMenu(player, accountModel).open(player);
     }
 
@@ -127,14 +127,14 @@ public class BankContentsMenu extends Menu {
 
         private ItemStack toMenuItem(int amount) {
             return new ItemBuilder(material, amount)
-                    .setName("<gold>€" + (amount * value))
+                    .setName("<gold>" + bankingModule.format(amount * value))
                     .addLoreLine("<yellow>Klik om op te nemen.")
                     .toItemStack();
         }
 
         private ItemStack toNote(int amount) {
             return new ItemBuilder(material, amount)
-                    .setName("<gold>€" + value)
+                    .setName("<gold>" + bankingModule.format(value))
                     .addLoreLine("<yellow>Officieel Horizons bankbiljet.")
                     .addLoreLine("<yellow>Eigendom van de Centrale Bank.")
                     .setNBT("bank_note_value", value)

@@ -37,7 +37,7 @@ public class BankingModule extends Module {
 
     @Override
     public void enable() {
-         decimalFormat = new DecimalFormat(OpenMinetopia.getDefaultConfiguration().getBankingFormat());
+         decimalFormat = new DecimalFormat(OpenMinetopia.getBankingConfiguration().getEconomyFormat());
 
         Bukkit.getScheduler().runTaskLater(OpenMinetopia.getInstance(), () -> {
             OpenMinetopia.getInstance().getLogger().info("Loading bank accounts..");
@@ -49,13 +49,9 @@ public class BankingModule extends Module {
                 }
 
                 bankAccountModels = accounts;
-                OpenMinetopia.getInstance().getLogger().info("Loaded a total of " + bankAccountModels.size() + " accounts.");
+                bankAccountModels.forEach(BankAccountModel::initSavingTask);
 
-                bankAccountModels.forEach(accountModel -> {
-                    if(accountModel.getSavingTask() != null) {
-                        accountModel.getSavingTask().saveAndCancel();
-                    }
-                });
+                OpenMinetopia.getInstance().getLogger().info("Loaded a total of " + bankAccountModels.size() + " accounts.");
 
                 dataModule.getAdapter().getBankPermissions().whenComplete((permissions, throwable) -> {
                     if (throwable != null) {
@@ -80,7 +76,7 @@ public class BankingModule extends Module {
                 });
 
             });
-        }, 5L);
+        }, 3L);
 
         OpenMinetopia.getCommandManager().getCommandCompletions().registerCompletion("accountNames", context -> bankAccountModels.stream().map(BankAccountModel::getName).collect(Collectors.toList()));
 
@@ -91,11 +87,16 @@ public class BankingModule extends Module {
         registerCommand(new BankingFreezeCommand());
         registerCommand(new BankingInfoCommand());
         registerCommand(new BankingBalanceCommand());
+        registerCommand(new BankingListCommand());
     }
 
     @Override
     public void disable() {
-        bankAccountModels.forEach(BankAccountModel::save);
+        bankAccountModels.forEach(accountModel -> {
+            if(accountModel.getSavingTask() != null) {
+                accountModel.getSavingTask().saveAndCancel();
+            }
+        });
     }
 
     public List<BankAccountModel> getAccountsFromPlayer(UUID uuid) {
