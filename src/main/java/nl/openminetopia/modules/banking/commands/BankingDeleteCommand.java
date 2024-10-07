@@ -1,10 +1,7 @@
 package nl.openminetopia.modules.banking.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.annotation.Syntax;
+import co.aikar.commands.annotation.*;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.DataModule;
@@ -17,6 +14,7 @@ public class BankingDeleteCommand extends BaseCommand {
 
     @Subcommand("delete")
     @Syntax("<name>")
+    @CommandCompletion("@accountNames")
     @CommandPermission("openminetopia.banking.delete")
     public void deleteAccount(CommandSender sender, String accountName) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);

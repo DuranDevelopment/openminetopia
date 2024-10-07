@@ -51,6 +51,12 @@ public class BankingModule extends Module {
                 bankAccountModels = accounts;
                 OpenMinetopia.getInstance().getLogger().info("Loaded a total of " + bankAccountModels.size() + " accounts.");
 
+                bankAccountModels.forEach(accountModel -> {
+                    if(accountModel.getSavingTask() != null) {
+                        accountModel.getSavingTask().saveAndCancel();
+                    }
+                });
+
                 dataModule.getAdapter().getBankPermissions().whenComplete((permissions, throwable) -> {
                     if (throwable != null) {
                         OpenMinetopia.getInstance().getLogger().severe("Something went wrong while trying to load all bank permissions: " + throwable.getMessage());
@@ -89,9 +95,7 @@ public class BankingModule extends Module {
 
     @Override
     public void disable() {
-        bankAccountModels.forEach(accountModel -> {
-            StormDatabase.getInstance().saveStormModel(accountModel);
-        });
+        bankAccountModels.forEach(BankAccountModel::save);
     }
 
     public List<BankAccountModel> getAccountsFromPlayer(UUID uuid) {

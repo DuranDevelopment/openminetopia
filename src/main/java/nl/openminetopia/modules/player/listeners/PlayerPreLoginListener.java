@@ -55,6 +55,7 @@ public class PlayerPreLoginListener implements Listener {
                         event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
                     }
 
+                    accountModel.initSavingTask();
                     accountModel.getUsers().put(event.getUniqueId(), AccountPermission.ADMIN);
                     bankingModule.getBankAccountModels().add(accountModel);
                     OpenMinetopia.getInstance().getLogger().info("Loaded account for: " + player.getName() + " (" + accountModel + ")");
@@ -66,6 +67,7 @@ public class PlayerPreLoginListener implements Listener {
             OpenMinetopia.getInstance().getLogger().info("account is not null, loading.");
 
             bankAccountModel.getUsers().put(player.getId(), AccountPermission.ADMIN);
+            bankAccountModel.initSavingTask();
             bankingModule.getBankAccountModels().add(bankAccountModel);
         }));
     }

@@ -43,6 +43,7 @@ public class BankingFreezeCommand extends BaseCommand {
                 return;
             }
             accountModel.setFrozen(newState);
+            accountModel.save();
 
             if (newState) {
                 sender.sendMessage(ChatUtils.color("<gold>Het account <red>" + accountModel.getName() + " <gold>is nu bevroren."));

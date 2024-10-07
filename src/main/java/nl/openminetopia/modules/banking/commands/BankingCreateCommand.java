@@ -13,9 +13,12 @@ import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @CommandAlias("accounts|account|rekening")
 public class BankingCreateCommand extends BaseCommand {
+
+    private final Pattern namePattern = Pattern.compile("^[a-zA-Z0-9_]+$");
 
     @Subcommand("create")
     @Syntax("<type> <name> <balance>")
@@ -39,6 +42,16 @@ public class BankingCreateCommand extends BaseCommand {
             return;
         }
 
+        if(bankingModule.getAccountByName(name) != null) {
+            sender.sendMessage(ChatUtils.color("<red>Er bestaat al een rekening met deze naam."));
+            return;
+        }
+
+        if(!namePattern.matcher(name).matches()) {
+            sender.sendMessage(ChatUtils.color("<red>Rekening naam mag alleen letters, cijfers en underscores bevatten."));
+            return;
+        }
+
         UUID accountId = UUID.randomUUID();
         dataModule.getAdapter().createBankAccount(accountId, type, 0L, name, false).whenComplete(((accountModel, throwable) -> {
             if (throwable != null) {
@@ -47,7 +60,8 @@ public class BankingCreateCommand extends BaseCommand {
             }
 
             sender.sendMessage(ChatUtils.color("<gold>Je hebt de rekening</gold> <red>" + accountModel.getName() + "</red> <gold>aangemaakt."));
-            bankingModule.getBankAccountModels().add(accountModel);
+            bankingModule.getBankAccountModels().remove(accountModel);
+            accountModel.initSavingTask();
         }));
 
     }

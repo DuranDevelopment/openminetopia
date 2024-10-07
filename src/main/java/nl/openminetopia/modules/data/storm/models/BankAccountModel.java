@@ -6,8 +6,10 @@ import com.craftmend.storm.api.markers.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
+import nl.openminetopia.modules.banking.tasks.AccountSavingTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +17,6 @@ import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@RequiredArgsConstructor
 @Table(name = "banking_accounts")
 public class BankAccountModel extends StormModel {
 
@@ -35,11 +36,22 @@ public class BankAccountModel extends StormModel {
     private Boolean frozen;
 
     private Map<UUID, AccountPermission> users = new HashMap<>();
+    private AccountSavingTask savingTask;
 
     public boolean hasPermission(UUID uuid, AccountPermission accountPermission) {
         if(!users.containsKey(uuid)) return false;
         AccountPermission currentPermission = users.get(uuid);
         return currentPermission == AccountPermission.ADMIN || currentPermission == accountPermission;
+    }
+
+    public void initSavingTask() {
+        this.savingTask = new AccountSavingTask(this);
+        this.savingTask.runTaskTimer(OpenMinetopia.getInstance(), (20 * 60 * 2), (20 * 60 * 3));
+        OpenMinetopia.getInstance().getLogger().info("Initialized saving task for account " + this.getName() + " - " + this.getUniqueId());
+    }
+
+    public void save() {
+        this.savingTask.run();
     }
 
 }
