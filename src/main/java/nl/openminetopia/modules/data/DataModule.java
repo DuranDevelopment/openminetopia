@@ -23,12 +23,11 @@ public class DataModule extends Module {
         adapter.connect();
     }
 
-
-
     @Override
     public void disable() {
         if (adapter != null) {
             adapter.disconnect();
         }
     }
+
 }

@@ -7,10 +7,7 @@ import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import lombok.Setter;
-import nl.openminetopia.configuration.ColorsConfiguration;
-import nl.openminetopia.configuration.DefaultConfiguration;
-import nl.openminetopia.configuration.LevelCheckConfiguration;
-import nl.openminetopia.configuration.MessageConfiguration;
+import nl.openminetopia.configuration.*;
 import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
@@ -51,6 +48,10 @@ public final class OpenMinetopia extends JavaPlugin {
     @Getter
     @Setter
     private static ColorsConfiguration colorsConfiguration;
+
+    @Getter
+    @Setter
+    private static BankingConfiguration bankingConfiguration;
 
     @Override
     public void onEnable() {

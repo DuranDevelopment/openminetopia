@@ -7,11 +7,16 @@ import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.banking.enums.AccountPermission;
+import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.OwnableColor;
+import nl.openminetopia.modules.data.storm.models.BankAccountModel;
+import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -108,4 +113,21 @@ public interface DatabaseAdapter {
     CompletableFuture<Void> removeFitnessBooster(Fitness fitness, FitnessBooster booster);
 
     CompletableFuture<List<FitnessBooster>> getFitnessBoosters(Fitness fitness);
+
+    /* Banking related database queries */
+
+    CompletableFuture<Collection<BankAccountModel>> getBankAccounts();
+
+    CompletableFuture<Collection<BankPermissionModel>> getBankPermissions();
+
+    CompletableFuture<BankAccountModel> createBankAccount(UUID uuid, AccountType type, double balance, String name, boolean frozen);
+
+    CompletableFuture<Void> saveBankAccount(BankAccountModel accountModel);
+
+    CompletableFuture<Void> deleteBankAccount(UUID accountUuid);
+
+    CompletableFuture<BankPermissionModel> createBankPermission(UUID player, UUID accountId, AccountPermission permission);
+
+    CompletableFuture<Void> deleteBankPermission(UUID accountUuid, UUID playerUuid);
+
 }
