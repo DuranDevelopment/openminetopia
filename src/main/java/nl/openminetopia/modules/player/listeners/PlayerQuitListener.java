@@ -3,7 +3,6 @@ package nl.openminetopia.modules.player.listeners;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
-import nl.openminetopia.modules.ModuleManager;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import org.bukkit.entity.Player;

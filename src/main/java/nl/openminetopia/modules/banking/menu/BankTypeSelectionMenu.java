@@ -12,14 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
-import java.util.List;
 
 public class BankTypeSelectionMenu extends Menu {
 
     public BankTypeSelectionMenu(Player player) {
         super(ChatUtils.color("<gold>Selecteer het rekeningtype:"), 3);
 
-        for(AccountType type : AccountType.values()) {
+        for (AccountType type : AccountType.values()) {
             ItemStack iconStack = new ItemBuilder(type.getMaterial())
                     .setName(type.getName())
                     .toItemStack();
@@ -32,7 +31,7 @@ public class BankTypeSelectionMenu extends Menu {
                         .stream().filter(account -> account.getType() == type)
                         .toList();
 
-                if(accountModels.isEmpty()) {
+                if (accountModels.isEmpty()) {
                     player.sendMessage(ChatUtils.color("<red>Je hebt geen rekeningen in deze catogorie."));
                     return;
                 }

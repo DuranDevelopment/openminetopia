@@ -11,6 +11,8 @@ import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.objects.OwnableColor;
+import nl.openminetopia.modules.data.storm.models.BankAccountModel;
+import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
 import nl.openminetopia.modules.data.storm.models.FitnessModel;
 import nl.openminetopia.modules.prefix.objects.Prefix;
 

@@ -5,7 +5,6 @@ import com.craftmend.storm.api.markers.Column;
 import com.craftmend.storm.api.markers.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
@@ -39,7 +38,7 @@ public class BankAccountModel extends StormModel {
     private AccountSavingTask savingTask;
 
     public boolean hasPermission(UUID uuid, AccountPermission accountPermission) {
-        if(!users.containsKey(uuid)) return false;
+        if (!users.containsKey(uuid)) return false;
         AccountPermission currentPermission = users.get(uuid);
         return currentPermission == AccountPermission.ADMIN || currentPermission == accountPermission;
     }

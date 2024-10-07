@@ -7,18 +7,13 @@ import com.jazzkuh.inventorylib.objects.Menu;
 import com.jeff_media.customblockdata.CustomBlockData;
 import lombok.Getter;
 import lombok.Setter;
-import nl.openminetopia.configuration.ColorsConfiguration;
-import nl.openminetopia.configuration.DefaultConfiguration;
-import nl.openminetopia.configuration.LevelcheckConfiguration;
-import nl.openminetopia.configuration.MessageConfiguration;
+import nl.openminetopia.configuration.*;
 import nl.openminetopia.modules.ModuleManager;
-import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.core.CoreModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
-import nl.openminetopia.modules.staff.StaffModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
 import nl.openminetopia.modules.plots.PlotModule;
@@ -49,12 +44,13 @@ public final class OpenMinetopia extends JavaPlugin {
     private static MessageConfiguration messageConfiguration;
     @Getter
     @Setter
-    private static LevelcheckConfiguration levelcheckConfiguration;
+    private static LevelCheckConfiguration levelcheckConfiguration;
     @Getter
     @Setter
     private static ColorsConfiguration colorsConfiguration;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private static BankingConfiguration bankingConfiguration;
 
     @Override
@@ -76,7 +72,7 @@ public final class OpenMinetopia extends JavaPlugin {
         messageConfiguration = new MessageConfiguration(getDataFolder());
         messageConfiguration.saveConfiguration();
 
-        levelcheckConfiguration = new LevelcheckConfiguration(getDataFolder());
+        levelcheckConfiguration = new LevelCheckConfiguration(getDataFolder());
         levelcheckConfiguration.saveConfiguration();
 
         colorsConfiguration = new ColorsConfiguration(getDataFolder());

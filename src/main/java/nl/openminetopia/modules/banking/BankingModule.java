@@ -1,13 +1,11 @@
 package nl.openminetopia.modules.banking;
 
 import com.craftmend.storm.api.enums.Where;
-import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.banking.commands.*;
-import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
@@ -37,7 +35,7 @@ public class BankingModule extends Module {
 
     @Override
     public void enable() {
-         decimalFormat = new DecimalFormat(OpenMinetopia.getBankingConfiguration().getEconomyFormat());
+        decimalFormat = new DecimalFormat(OpenMinetopia.getBankingConfiguration().getEconomyFormat());
 
         Bukkit.getScheduler().runTaskLater(OpenMinetopia.getInstance(), () -> {
             OpenMinetopia.getInstance().getLogger().info("Loading bank accounts..");
@@ -61,7 +59,7 @@ public class BankingModule extends Module {
 
                     permissions.forEach(permission -> {
                         BankAccountModel accountModel = getAccountById(permission.getAccount());
-                        if(accountModel == null) {
+                        if (accountModel == null) {
                             /*
                             todo: remove permission from db?
                              dataModule.getAdapter().deleteBankPermission(permission.getAccount(), permission.getUuid());
@@ -93,7 +91,7 @@ public class BankingModule extends Module {
     @Override
     public void disable() {
         bankAccountModels.forEach(accountModel -> {
-            if(accountModel.getSavingTask() != null) {
+            if (accountModel.getSavingTask() != null) {
                 accountModel.getSavingTask().saveAndCancel();
             }
         });

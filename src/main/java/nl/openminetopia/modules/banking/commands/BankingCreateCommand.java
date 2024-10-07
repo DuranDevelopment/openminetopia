@@ -42,12 +42,12 @@ public class BankingCreateCommand extends BaseCommand {
             return;
         }
 
-        if(bankingModule.getAccountByName(name) != null) {
+        if (bankingModule.getAccountByName(name) != null) {
             sender.sendMessage(ChatUtils.color("<red>Er bestaat al een rekening met deze naam."));
             return;
         }
 
-        if(!namePattern.matcher(name).matches()) {
+        if (!namePattern.matcher(name).matches()) {
             sender.sendMessage(ChatUtils.color("<red>Rekening naam mag alleen letters, cijfers en underscores bevatten."));
             return;
         }

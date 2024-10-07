@@ -15,7 +15,7 @@ public class BankingConfiguration extends ConfigurateConfig {
     private final String accountContentsTitle;
 
     public BankingConfiguration(File file) {
-        super(file, "banking.yml");
+        super(file, "banking.yml", "");
 
         this.economyFormat = rootNode.node("banking", "economy-format").getString("#,##0.00");
 

@@ -2,7 +2,6 @@ package nl.openminetopia.configuration;
 
 import net.kyori.adventure.text.Component;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.modules.data.types.DatabaseType;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.ConfigurateConfig;
 
