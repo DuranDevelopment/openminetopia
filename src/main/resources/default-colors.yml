@@ -1,0 +1,28 @@
+colors:
+  red:
+    display_name: "<red>Rood"
+    color_prefix: "<red>"
+  red_bold:
+    display_name: "<bold><red>Rood (Bold)"
+    color_prefix: "<bold><red>"
+
+  blue:
+    display_name: "<blue>Blauw"
+    color_prefix: "<blue>"
+  blue_bold:
+    display_name: "<bold><blue>Blauw (Bold)"
+    color_prefix: "<bold><blue>"
+
+  green:
+    display_name: "<green>Groen"
+    color_prefix: "<green>"
+  green_bold:
+    display_name: "<bold><green>Groen (Bold)"
+    color_prefix: "<bold><green>"
+
+  yellow:
+    display_name: "<yellow>Geel"
+    color_prefix: "<yellow>"
+  yellow_bold:
+    display_name: "<bold><yellow>Geel (Bold)"
+    color_prefix: "<bold><yellow>"
