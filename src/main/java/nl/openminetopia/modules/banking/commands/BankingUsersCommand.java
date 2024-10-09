@@ -48,6 +48,7 @@ public class BankingUsersCommand extends BaseCommand {
     @Subcommand("removeuser")
     @CommandPermission("openminetopia.banking.removeuser")
     @Syntax("<player> <naam>")
+    @CommandCompletion("@players @accountNames")
     public void removeUser(CommandSender sender, OfflinePlayer target, String accountName) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
         DataModule dataModule = OpenMinetopia.getModuleManager().getModule(DataModule.class);

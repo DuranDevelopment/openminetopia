@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.banking.commands.*;
+import nl.openminetopia.modules.banking.listeners.BankingInteractionListener;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
@@ -86,6 +87,8 @@ public class BankingModule extends Module {
         registerCommand(new BankingInfoCommand());
         registerCommand(new BankingBalanceCommand());
         registerCommand(new BankingListCommand());
+
+        registerListener(new BankingInteractionListener());
     }
 
     @Override
