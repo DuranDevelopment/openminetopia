@@ -3,11 +3,17 @@ package nl.openminetopia.modules.staff.admintool.menus;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import lombok.Getter;
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.TotalStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.banking.BankingModule;
+import nl.openminetopia.modules.banking.enums.AccountType;
+import nl.openminetopia.modules.banking.menu.BankContentsMenu;
 import nl.openminetopia.modules.color.enums.OwnableColorType;
+import nl.openminetopia.modules.color.menus.ColorTypeMenu;
+import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.modules.player.utils.PlaytimeUtil;
 import nl.openminetopia.modules.staff.admintool.menus.colors.AdminToolColorMenu;
 import nl.openminetopia.utils.ChatUtils;
@@ -15,6 +21,8 @@ import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import java.util.Collection;
 
 @Getter
 public class AdminToolInfoMenu extends Menu {
@@ -50,9 +58,7 @@ public class AdminToolInfoMenu extends Menu {
                 .addLoreLine("");
 
         Icon targetColorIcon = new Icon(11, colorItemBuilder.toItemStack(), event -> {
-            AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
-            menu.open((Player) event.getWhoClicked());
-
+            new ColorTypeMenu(player, offlinePlayer).open(player);
         });
         this.addItem(targetColorIcon);
 
@@ -68,7 +74,7 @@ public class AdminToolInfoMenu extends Menu {
         Icon targetLevelIcon = new Icon(12, levelItemBuilder.toItemStack(), event -> {
             minetopiaPlayer.setLevel(event.isRightClick() ? minetopiaPlayer.getLevel() + 1 : minetopiaPlayer.getLevel() - 1);
             player.sendMessage(ChatUtils.color("<gold>Je hebt het level van <yellow>" + offlinePlayer.getName() + " <gold>aangepast naar <yellow>" + minetopiaPlayer.getLevel() + "<gold>."));
-            new AdminToolInfoMenu(player, offlinePlayer).open((Player) event.getWhoClicked());
+            new AdminToolInfoMenu(player, offlinePlayer).open(player);
         });
         this.addItem(targetLevelIcon);
 
@@ -81,21 +87,29 @@ public class AdminToolInfoMenu extends Menu {
 
 
         Icon targetFitnessIcon = new Icon(13, fitnessItemBuilder.toItemStack(), event -> {
-            AdminToolFitnessMenu menu = new AdminToolFitnessMenu(player, offlinePlayer);
-            menu.open((Player) event.getWhoClicked());
+            new AdminToolFitnessMenu(player, offlinePlayer).open(player);
         });
         this.addItem(targetFitnessIcon);
 
+
+        BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
+        BankAccountModel accountModel = bankingModule.getAccountsFromPlayer(player.getUniqueId())
+                .stream().filter(account -> account.getType() == AccountType.PRIVATE)
+                .findFirst().orElse(null);
+
+        if (accountModel == null) {
+            player.sendMessage(ChatUtils.color("<red>Er is geen account gevonden voor deze speler."));
+            return;
+        }
+
         ItemBuilder bankItemBuilder = new ItemBuilder(Material.GOLD_INGOT)
                 .setName("<gold>Banksaldo")
-                .addLoreLine("<gold>Banksaldo: " + "€") // TODO: Add bank balance
+                .addLoreLine("<gold>Banksaldo: " + bankingModule.format(accountModel.getBalance()))
                 .addLoreLine("")
                 .addLoreLine("<gold>Klik <yellow>hier <gold>om de <yellow>bank <gold>van de speler te openen.");
 
         Icon targetBankIcon = new Icon(14, bankItemBuilder.toItemStack(), event -> {
-            AdminToolColorMenu menu = new AdminToolColorMenu(player, offlinePlayer);
-            menu.open((Player) event.getWhoClicked());
-
+            new BankContentsMenu(player, accountModel, true).open(player);
         });
         this.addItem(targetBankIcon);
 
@@ -103,9 +117,7 @@ public class AdminToolInfoMenu extends Menu {
                 .setName("<gray>Terug");
 
         Icon backIcon = new Icon(22, backItemBuilder.toItemStack(), event -> {
-            AdminToolMenu menu = new AdminToolMenu(player, offlinePlayer);
-            menu.open((Player) event.getWhoClicked());
-
+            new AdminToolMenu(player, offlinePlayer).open(player);
         });
         this.addItem(backIcon);
     }

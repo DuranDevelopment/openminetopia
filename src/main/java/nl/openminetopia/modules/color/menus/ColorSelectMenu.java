@@ -10,6 +10,7 @@ import nl.openminetopia.modules.color.objects.OwnableColor;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -20,13 +21,13 @@ public class ColorSelectMenu extends PaginatedMenu {
     private List<OwnableColor> colors;
     private final OwnableColorType type;
 
-    public ColorSelectMenu(Player player, OwnableColorType type) {
+    public ColorSelectMenu(Player player, OfflinePlayer target, OwnableColorType type) {
         super(ChatUtils.color(type.getDisplayName() + "<reset><dark_gray> menu"), 2);
         this.registerPageSlotsBetween(0, 8);
 
         this.type = type;
 
-        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
+        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(target);
         if (minetopiaPlayer == null) {
             inventory.close();
             return;
@@ -53,7 +54,7 @@ public class ColorSelectMenu extends PaginatedMenu {
         });
 
         this.addSpecialIcon(new Icon(13, new ItemBuilder(Material.LADDER).setName("<gray>Ga terug").toItemStack(),
-                (e) -> new ColorTypeMenu(player).open(player)));
+                (e) -> new ColorTypeMenu(player, target).open(player)));
 
         this.addSpecialIcon(new Icon(14, new ItemBuilder(Material.BARRIER).setName("<red>Locked").toItemStack(),
                 (e) -> new ColorLockedMenu(player, this).open(player)));
