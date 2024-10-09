@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     java
-    id("io.freefair.lombok") version "8.10"
+    id("io.freefair.lombok") version "8.10.2"
     id("com.gradleup.shadow") version "8.3.3"
     id("io.papermc.paperweight.userdev") version "1.7.3"
 }
