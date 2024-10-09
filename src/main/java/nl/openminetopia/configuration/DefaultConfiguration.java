@@ -133,6 +133,7 @@ public class DefaultConfiguration extends ConfigurateConfig {
         this.username = rootNode.node("database", "username").getString("root");
         this.password = rootNode.node("database", "password").getString("password");
 
+
         /*
          * Default settings configuration
          */

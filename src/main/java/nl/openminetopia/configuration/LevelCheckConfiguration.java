@@ -22,6 +22,8 @@ public class LevelCheckConfiguration extends ConfigurateConfig {
     private final int pointsPerHourPlayed;
     private final int pointsPer20Fitness;
 
+    private final boolean autoLevelUp;
+
     public LevelCheckConfiguration(File file) {
         super(file, "levelcheck.yml", "");
 
@@ -38,6 +40,8 @@ public class LevelCheckConfiguration extends ConfigurateConfig {
         this.pointsPerHourPlayed = levelCheckNode.node("points-per-hour-played").getInt(350);
         this.pointsPer20Fitness = levelCheckNode.node("points-per-fitness").getInt(1500);
 
+        this.autoLevelUp = levelCheckNode.node("auto-level-up").getBoolean(false);
+
         for (int i = 1; i <= maxLevel; i++) {
             levelsNode.node(i, "cost").getInt(0);
             levelsNode.node(i, "wage").getInt(0);
@@ -51,4 +55,9 @@ public class LevelCheckConfiguration extends ConfigurateConfig {
     public int getHourWage(int level) {
         return levelsNode.node(level, "wage").getInt(0);
     }
+
+    public boolean isAutoLevelUp() {
+        return autoLevelUp;
+    }
+
 }
