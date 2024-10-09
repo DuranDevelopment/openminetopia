@@ -38,4 +38,4 @@ jobs:
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       with:
-        args: ./target/OpenMinetopia-*.jar
+        args: ./build/libs/OpenMinetopia-*.jar
