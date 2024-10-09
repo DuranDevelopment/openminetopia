@@ -50,6 +50,7 @@ public class LevelUtil {
         level = Math.max(OpenMinetopia.getDefaultConfiguration().getDefaultLevel(),
                 Math.min(level, OpenMinetopia.getLevelcheckConfiguration().getMaxLevel()));
 
+
         return level;
     }
 }

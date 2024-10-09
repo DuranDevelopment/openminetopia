@@ -240,8 +240,10 @@ public class OnlineMinetopiaPlayer implements MinetopiaPlayer {
 
     /* Level */
 
-    @Override
     public void setLevel(int level) {
+        if (level < 0) {
+            return;
+        }
         this.level = level;
         dataModule.getAdapter().setLevel(this, level);
     }
