@@ -57,10 +57,6 @@ public final class OpenMinetopia extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        if (defaultConfiguration.isMetricsEnabled()) {
-            Metrics metrics = new Metrics(this, 23547);
-        }
-
         commandManager = new PaperCommandManager(this);
         moduleManager = new ModuleManager();
 
@@ -68,6 +64,10 @@ public final class OpenMinetopia extends JavaPlugin {
 
         defaultConfiguration = new DefaultConfiguration(getDataFolder());
         defaultConfiguration.saveConfiguration();
+
+        if (defaultConfiguration.isMetricsEnabled()) {
+            Metrics metrics = new Metrics(this, 23547);
+        }
 
         messageConfiguration = new MessageConfiguration(getDataFolder());
         messageConfiguration.saveConfiguration();
