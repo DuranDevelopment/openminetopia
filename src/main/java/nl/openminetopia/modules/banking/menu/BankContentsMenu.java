@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.banking.BankingModule;
+import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.PersistentDataUtil;
@@ -94,6 +95,11 @@ public class BankContentsMenu extends Menu {
         if (!PersistentDataUtil.contains(item, "bank_note_value")) return;
         if (PersistentDataUtil.getDouble(item, "bank_note_value") == null) return;
 
+        if(!accountModel.hasPermission(player.getUniqueId(), AccountPermission.DEPOSIT)) {
+            player.sendMessage(ChatUtils.color("<red>Je hebt geen recht om geld te storten op deze rekening."));
+            return;
+        }
+
         double noteValue = PersistentDataUtil.getDouble(item, "bank_note_value");
         double totalValue = noteValue * item.getAmount();
 
@@ -109,6 +115,11 @@ public class BankContentsMenu extends Menu {
 
         if (balance < totalValue) {
             player.sendMessage(ChatUtils.color("<red>Je hebt niet genoeg op je rekening staan!"));
+            return;
+        }
+
+        if(!accountModel.hasPermission(player.getUniqueId(), AccountPermission.WITHDRAW)) {
+            player.sendMessage(ChatUtils.color("<red>Je hebt geen recht om geld op te nemen van deze rekening."));
             return;
         }
 

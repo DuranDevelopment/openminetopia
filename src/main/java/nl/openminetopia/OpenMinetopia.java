@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import nl.openminetopia.configuration.*;
 import nl.openminetopia.modules.ModuleManager;
+import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.chat.ChatModule;
 import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.core.CoreModule;
@@ -80,9 +81,13 @@ public final class OpenMinetopia extends JavaPlugin {
         colorsConfiguration = new ColorsConfiguration(getDataFolder());
         colorsConfiguration.saveConfiguration();
 
+        bankingConfiguration = new BankingConfiguration(getDataFolder());
+        bankingConfiguration.saveConfiguration();
+
         moduleManager.register(
                 new CoreModule(),
                 new DataModule(),
+                new BankingModule(),
                 new PlayerModule(),
                 new FitnessModule(),
                 new StaffModule(),
