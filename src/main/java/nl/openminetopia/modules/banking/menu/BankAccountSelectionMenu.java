@@ -44,7 +44,7 @@ public class BankAccountSelectionMenu extends PaginatedMenu {
 
             Icon accountIcon = new Icon(accountStack, event -> {
                 event.setCancelled(true);
-                new BankContentsMenu(player, accountModel).open(player);
+                new BankContentsMenu(player, accountModel, false).open(player);
             });
 
             this.addItem(accountIcon);

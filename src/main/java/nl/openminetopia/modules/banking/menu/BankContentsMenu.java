@@ -26,11 +26,13 @@ public class BankContentsMenu extends Menu {
 
     private final Player player;
     private final BankAccountModel accountModel;
+    private final boolean asAdmin;
 
-    public BankContentsMenu(Player player, BankAccountModel accountModel) {
+    public BankContentsMenu(Player player, BankAccountModel accountModel, boolean asAdmin) {
         super(ChatUtils.color(accountModel.getType().getColor() + accountModel.getName() + "<reset> | <red>" + OpenMinetopia.getModuleManager().getModule(BankingModule.class).format(accountModel.getBalance())), 6);
         this.player = player;
         this.accountModel = accountModel;
+        this.asAdmin = asAdmin;
 
         List<BankNote> bankNotes = new LinkedList<>();
         bankNotes.add(new BankNote(Material.GHAST_TEAR, 500));
@@ -95,7 +97,7 @@ public class BankContentsMenu extends Menu {
         if (!PersistentDataUtil.contains(item, "bank_note_value")) return;
         if (PersistentDataUtil.getDouble(item, "bank_note_value") == null) return;
 
-        if(!accountModel.hasPermission(player.getUniqueId(), AccountPermission.DEPOSIT)) {
+        if(!isAsAdmin() && !accountModel.hasPermission(player.getUniqueId(), AccountPermission.DEPOSIT)) {
             player.sendMessage(ChatUtils.color("<red>Je hebt geen recht om geld te storten op deze rekening."));
             return;
         }
@@ -106,7 +108,7 @@ public class BankContentsMenu extends Menu {
         item.setAmount(0);
         accountModel.setBalance(accountModel.getBalance() + totalValue);
         player.sendMessage(ChatUtils.color("<gold>Je hebt <red>" + bankingModule.format(totalValue) + " <gold>gestort naar je rekening."));
-        new BankContentsMenu(player, accountModel).open(player);
+        new BankContentsMenu(player, accountModel, isAsAdmin()).open(player);
     }
 
     private void withdrawMoney(BankNote note, int amount) {
@@ -118,7 +120,7 @@ public class BankContentsMenu extends Menu {
             return;
         }
 
-        if(!accountModel.hasPermission(player.getUniqueId(), AccountPermission.WITHDRAW)) {
+        if(!isAsAdmin() && !accountModel.hasPermission(player.getUniqueId(), AccountPermission.WITHDRAW)) {
             player.sendMessage(ChatUtils.color("<red>Je hebt geen recht om geld op te nemen van deze rekening."));
             return;
         }
@@ -127,7 +129,7 @@ public class BankContentsMenu extends Menu {
 
         player.getInventory().addItem(note.toNote(amount));
         player.sendMessage(ChatUtils.color("<gold>Je hebt <red>" + bankingModule.format(amount * note.getValue()) + " <gold>opgenomen van je rekening."));
-        new BankContentsMenu(player, accountModel).open(player);
+        new BankContentsMenu(player, accountModel, isAsAdmin()).open(player);
     }
 
     @Getter
