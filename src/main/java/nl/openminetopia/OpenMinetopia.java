@@ -24,6 +24,7 @@ import nl.openminetopia.modules.teleporter.TeleporterModule;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.placeholderapi.OpenMinetopiaExpansion;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -67,6 +68,7 @@ public final class OpenMinetopia extends JavaPlugin {
 
         if (defaultConfiguration.isMetricsEnabled()) {
             Metrics metrics = new Metrics(this, 23547);
+            metrics.addCustomChart(new SimplePie("storage", () -> defaultConfiguration.getDatabaseType().toString()));
         }
 
         messageConfiguration = new MessageConfiguration(getDataFolder());
