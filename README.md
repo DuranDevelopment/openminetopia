@@ -1,5 +1,5 @@
 # ✨ OpenMinetopia ✨
-[![](https://dcbadge.limes.pink/api/server/Tz6MebCjrw)](https://discord.gg/Tz6MebCjrw) [![Modrinth](https://img.shields.io/badge/Modrinth-1D1F23?style=for-the-badge&logo=Modrinth&link=https://modrinth.com/plugin/openminetopia)](https://modrinth.com/plugin/openminetopia)
+[![](https://dcbadge.limes.pink/api/server/Tz6MebCjrw)](https://discord.gg/Tz6MebCjrw) [![Modrinth](https://img.shields.io/badge/Modrinth-1D1F23?style=for-the-badge&logo=Modrinth&link=https://modrinth.com/plugin/openminetopia)](https://modrinth.com/plugin/openminetopia) [![Ko-fi]([https://img.shields.io/badge/Modrinth-1D1F23?style=for-the-badge&logo=Modrinth&link=https://modrinth.com/plugin/openminetopia)](https://modrinth.com/plugin/openminetopia](https://shields.io/badge/ko--fi-Buy_me_a_coffee-ff5f5f?logo=ko-fi&style=for-the-badgeKo-fi))
 
 OpenMinetopia is een open-source project voor de Minetopia community. 
 Het doel van dit project is om een goed onderhouden Minetopia plugin te ontwikkelen die voor iedereen toegankelijk is. 
