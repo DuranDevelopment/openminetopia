@@ -2,6 +2,7 @@ package nl.openminetopia.modules.player.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import nl.openminetopia.api.player.PlayerManager;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 public class PlaytimeCommand extends BaseCommand {
 
     @Default
+    @CommandCompletion("@players")
     public void onPlaytimeCommand(Player player, @Optional OfflinePlayer target) {
         if (target != null && player.hasPermission("openminetopia.playtime.others")) {
             MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(target);

@@ -15,13 +15,12 @@ public class PrefixAddCommand extends BaseCommand {
      * Add a prefix to a player.
      * @param expiresAt The time in minutes when the prefix expires.
      */
-
     @Subcommand("add")
-    @Syntax("<player> <expiresAt> <prefix>")
+    @Syntax("<player> <minutes> <prefix>")
     @CommandCompletion("@players")
     @CommandPermission("openminetopia.prefix.add")
     @Description("Add a prefix to a player.")
-    public static void addPrefix(Player player, OfflinePlayer offlinePlayer, Integer expiresAt, String prefix) {
+    public void addPrefix(Player player, OfflinePlayer offlinePlayer, Integer expiresAt, String prefix) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage("This player does not exist.");
             return;

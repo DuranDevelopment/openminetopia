@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.plots.commands;
+package nl.openminetopia.modules.plots.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
@@ -29,6 +29,7 @@ public class PlotCreateCommand extends BaseCommand {
 
     @Subcommand("create")
     @CommandPermission("openminetopia.plot.create")
+    @Syntax("<naam> [topToDown]")
     @Description("Maak een plot aan.")
     public void plotCreate(Player player, String name, @Optional Boolean topToDown) {
         BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);

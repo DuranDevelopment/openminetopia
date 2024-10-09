@@ -20,7 +20,7 @@ public class ColorRemoveCommand extends BaseCommand {
     /* This and the add code is horrific */
     @Subcommand("remove")
     @Syntax("<player> <type> <color>")
-    @CommandCompletion("@players")
+    @CommandCompletion("@players @colorTypes @playerColors")
     @CommandPermission("openminetopia.color.remove")
     @Description("Remove a color from a player.")
     public void prefix(Player player, OfflinePlayer offlinePlayer, OwnableColorType type, String draftColor) {

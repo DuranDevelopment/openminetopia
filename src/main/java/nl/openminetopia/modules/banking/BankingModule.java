@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
-import nl.openminetopia.modules.banking.commands.*;
+import nl.openminetopia.modules.banking.commands.BankingCommand;
+import nl.openminetopia.modules.banking.commands.subcommands.*;
 import nl.openminetopia.modules.banking.listeners.BankingInteractionListener;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
@@ -79,6 +80,7 @@ public class BankingModule extends Module {
 
         OpenMinetopia.getCommandManager().getCommandCompletions().registerCompletion("accountNames", context -> bankAccountModels.stream().map(BankAccountModel::getName).collect(Collectors.toList()));
 
+        registerCommand(new BankingCommand());
         registerCommand(new BankingCreateCommand());
         registerCommand(new BankingDeleteCommand());
         registerCommand(new BankingUsersCommand());

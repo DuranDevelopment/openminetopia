@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.banking.commands;
+package nl.openminetopia.modules.banking.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -12,12 +12,12 @@ import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.command.CommandSender;
 
 @CommandAlias("accounts|account|rekening")
-public class BankingBalanceCommand extends BaseCommand {
+public class BankingInfoCommand extends BaseCommand {
 
-    @Subcommand("setbalance")
+    @Subcommand("info")
     @CommandCompletion("@accountNames")
-    @CommandPermission("openminetopia.banking.setbalance")
-    public void setBalance(CommandSender sender, String accountName, double balance) {
+    @CommandPermission("openminetopia.banking.info")
+    public void infoAccount(CommandSender sender, String accountName) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
         BankAccountModel accountModel = bankingModule.getAccountByName(accountName);
 
@@ -26,9 +26,10 @@ public class BankingBalanceCommand extends BaseCommand {
             return;
         }
 
-        accountModel.setBalance(balance);
-        accountModel.save();
-        sender.sendMessage(ChatUtils.color("<gold>De balans van <red>" + accountModel.getName() + " <gold>is nu ingesteld op <red>" + bankingModule.format(balance) + "<gold>."));
+        sender.sendMessage(ChatUtils.color("<gold>Rekening Naam: <red>" + accountModel.getName() + " <gold>(<red>ID: " + accountModel.getId() + "<gold>)"));
+        sender.sendMessage(ChatUtils.color("<gold> - Frozen: <red>" + accountModel.getFrozen()));
+        sender.sendMessage(ChatUtils.color("<gold> - Balance: <red>" + accountModel.getBalance()));
+        sender.sendMessage(ChatUtils.color("<gold> - Users: <red>" + accountModel.getUsers().size()));
     }
 
 }

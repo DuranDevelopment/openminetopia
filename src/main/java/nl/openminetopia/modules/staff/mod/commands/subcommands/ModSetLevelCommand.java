@@ -15,9 +15,9 @@ public class ModSetLevelCommand extends BaseCommand {
     @Subcommand("setlevel")
     @Syntax("<player> <level>")
     @CommandPermission("openminetopia.mod.setlevel")
-    @CommandCompletion("@players")
+    @CommandCompletion("@players @range:1-100")
     @Description("Set the level of a player.")
-    public static void setLevelCommand(Player player, OfflinePlayer offlinePlayer, int newLevel) {
+    public void level(Player player, OfflinePlayer offlinePlayer, int newLevel) {
         if (offlinePlayer.getPlayer() == null) {
             player.sendMessage("This player does not exist.");
             return;

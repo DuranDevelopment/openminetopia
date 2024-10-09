@@ -23,14 +23,8 @@ public class ModCommandSpyCommand extends BaseCommand {
         if (optional.isEmpty()) return;
 
         OnlineMinetopiaPlayer mPlayer = optional.get();
-        if (mPlayer.isCommandSpyEnabled()) {
-            mPlayer.setCommandSpyEnabled(false);
-            player.sendMessage(ChatUtils.color("<gold>Je hebt <yellow>CommandSpy <gold>uitgezet!"));
-            return;
-        }
 
-        mPlayer.setCommandSpyEnabled(true);
-        player.sendMessage(ChatUtils.color("<gold>Je hebt <yellow>CommandSpy <gold>aangezet!"));
+        mPlayer.setCommandSpyEnabled(!mPlayer.isCommandSpyEnabled());
+        player.sendMessage(ChatUtils.color("<gold>Je hebt <yellow>CommandSpy <gold>" + (mPlayer.isCommandSpyEnabled() ? "aangezet" : "uitgezet") + "!"));
     }
-
 }

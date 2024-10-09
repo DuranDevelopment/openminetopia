@@ -47,6 +47,14 @@ public class WorldGuardUtils {
         return manager.getRegions().values().stream().filter(protectedRegion -> priorityPredicate.test(protectedRegion.getPriority())).toList();
     }
 
+    public List<ProtectedRegion> getProtectedRegions(Predicate<Integer> priorityPredicate) {
+        List<ProtectedRegion> protectedRegions = new ArrayList<>();
+        for (World world : Bukkit.getWorlds()) {
+            protectedRegions.addAll(getProtectedRegions(world, priorityPredicate));
+        }
+        return protectedRegions;
+    }
+
     public int getOwnedRegions(Player player) {
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionManager manager = container.get(BukkitAdapter.adapt(player.getWorld()));

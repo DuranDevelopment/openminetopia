@@ -1,7 +1,10 @@
 package nl.openminetopia.modules.places;
 
+import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.places.MTCityManager;
 import nl.openminetopia.api.places.MTWorldManager;
+import nl.openminetopia.api.places.objects.MTCity;
+import nl.openminetopia.api.places.objects.MTWorld;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.places.commands.mtcity.MTCityCommand;
 import nl.openminetopia.modules.places.commands.mtcity.subcommands.MTCityCreateCommand;
@@ -35,6 +38,12 @@ public class PlacesModule extends Module {
         registerListener(new PlayerJoinListener());
         registerListener(new PlayerTeleportListener());
         registerListener(new PlayerMoveListener());
+
+        OpenMinetopia.getCommandManager().getCommandCompletions().registerCompletion("worldNames", c ->
+                MTWorldManager.getInstance().getWorlds().stream().map(MTWorld::getName).toList());
+
+        OpenMinetopia.getCommandManager().getCommandCompletions().registerCompletion("cityNames", c ->
+                MTCityManager.getInstance().getCities().stream().map(MTCity::getName).toList());
     }
 
     @Override

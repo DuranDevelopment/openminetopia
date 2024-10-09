@@ -1,10 +1,7 @@
-package nl.openminetopia.modules.plots.commands;
+package nl.openminetopia.modules.plots.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
@@ -18,6 +15,7 @@ public class PlotDescriptionCommand extends BaseCommand {
 
     @Subcommand("description")
     @CommandPermission("openminetopia.plot.description")
+    @Syntax("<beschrijving>")
     @Description("Set een beschrijving van een plot.")
     public void plotDescription(Player player, String description) {
         ProtectedRegion region = WorldGuardUtils.getProtectedRegion(player.getLocation(), priority -> priority >= 0);

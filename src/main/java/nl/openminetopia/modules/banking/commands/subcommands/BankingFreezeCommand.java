@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.banking.commands;
+package nl.openminetopia.modules.banking.commands.subcommands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
