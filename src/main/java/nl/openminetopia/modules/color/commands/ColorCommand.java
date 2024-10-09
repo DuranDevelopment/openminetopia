@@ -20,27 +20,27 @@ public class ColorCommand extends BaseCommand {
 
     @Default
     public void onDefault(Player player) {
-        new ColorTypeMenu(player).open(player);
+        new ColorTypeMenu(player, player).open(player);
     }
 
 
     @CommandAlias("prefixcolor|prefixkleur")
     public void onPrefixColor(Player player) {
-        new ColorSelectMenu(player, OwnableColorType.PREFIX).open(player);
+        new ColorSelectMenu(player, player, OwnableColorType.PREFIX).open(player);
     }
 
     @CommandAlias("chatcolor|chatkleur")
     public void onChatColor(Player player) {
-        new ColorSelectMenu(player, OwnableColorType.CHAT).open(player);
+        new ColorSelectMenu(player, player, OwnableColorType.CHAT).open(player);
     }
 
     @CommandAlias("namecolor|naamkleur")
     public void onNameColor(Player player) {
-        new ColorSelectMenu(player, OwnableColorType.NAME).open(player);
+        new ColorSelectMenu(player, player, OwnableColorType.NAME).open(player);
     }
 
     @CommandAlias("levelcolor|levelkleur")
     public void onLevelColor(Player player) {
-        new ColorSelectMenu(player, OwnableColorType.LEVEL).open(player);
+        new ColorSelectMenu(player, player, OwnableColorType.LEVEL).open(player);
     }
 }
