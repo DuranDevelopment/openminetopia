@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 public class PlayerDrinkListener implements Listener {
 
     @EventHandler
-    public void onPlayerDrink(PlayerItemConsumeEvent event) {
+    public void playerDrink(final PlayerItemConsumeEvent event) {
         ItemStack item = event.getItem();
         if (item.getType() != Material.POTION) return;
 

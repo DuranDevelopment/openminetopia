@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 public class PlayerEatListener implements Listener {
 
     @EventHandler
-    public void onPlayerEat(PlayerItemConsumeEvent event) {
+    public void playerEat(final PlayerItemConsumeEvent event) {
 
         if (!event.getItem().getType().isEdible()) return;
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();

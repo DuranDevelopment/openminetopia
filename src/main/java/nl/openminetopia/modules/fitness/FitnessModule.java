@@ -6,6 +6,7 @@ import nl.openminetopia.modules.fitness.commands.subcommands.FitnessBoosterComma
 import nl.openminetopia.modules.fitness.commands.subcommands.FitnessInfoCommand;
 import nl.openminetopia.modules.fitness.listeners.PlayerDeathListener;
 import nl.openminetopia.modules.fitness.listeners.PlayerDrinkListener;
+import nl.openminetopia.modules.fitness.listeners.PlayerChangeWorldListener;
 
 public class FitnessModule extends Module {
 
@@ -16,7 +17,9 @@ public class FitnessModule extends Module {
         registerCommand(new FitnessBoosterCommand());
 
         registerListener(new PlayerDrinkListener());
+        registerListener(new PlayerDrinkListener());
         registerListener(new PlayerDeathListener());
+        registerListener(new PlayerChangeWorldListener());
     }
 
     @Override

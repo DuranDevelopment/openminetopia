@@ -11,7 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class PlayerDeathListener implements Listener {
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void playerDeath(final PlayerDeathEvent event) {
         var configuration = OpenMinetopia.getDefaultConfiguration();
         if (!configuration.isFitnessDeathPunishmentEnabled()) return;
 
