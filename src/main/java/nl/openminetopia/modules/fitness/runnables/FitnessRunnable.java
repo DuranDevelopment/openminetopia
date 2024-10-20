@@ -9,6 +9,7 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.FitnessConfiguration;
 import nl.openminetopia.modules.fitness.utils.FitnessUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -35,7 +36,7 @@ public class FitnessRunnable extends BukkitRunnable {
             return;
         }
 
-        DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+        FitnessConfiguration configuration = OpenMinetopia.getFitnessConfiguration();
 
         /* Walking points */
 

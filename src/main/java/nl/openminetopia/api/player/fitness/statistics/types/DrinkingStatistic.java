@@ -15,7 +15,7 @@ public class DrinkingStatistic extends FitnessStatistic {
     private double points;
 
     public DrinkingStatistic(int fitnessGained, double points) {
-        super(FitnessStatisticType.DRINKING, OpenMinetopia.getDefaultConfiguration().getMaxFitnessByDrinking(), fitnessGained);
+        super(FitnessStatisticType.DRINKING, OpenMinetopia.getFitnessConfiguration().getMaxFitnessByDrinking(), fitnessGained);
         this.points = points;
     }
 }

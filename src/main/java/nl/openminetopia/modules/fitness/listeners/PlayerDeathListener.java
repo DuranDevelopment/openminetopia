@@ -12,7 +12,7 @@ public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void playerDeath(final PlayerDeathEvent event) {
-        var configuration = OpenMinetopia.getDefaultConfiguration();
+        var configuration = OpenMinetopia.getFitnessConfiguration();
         if (!configuration.isFitnessDeathPunishmentEnabled()) return;
 
         var player = event.getEntity();

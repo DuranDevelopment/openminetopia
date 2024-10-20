@@ -7,12 +7,11 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import lombok.SneakyThrows;
 import nl.openminetopia.OpenMinetopia;
-import nl.openminetopia.configuration.ColorsConfiguration;
-import nl.openminetopia.configuration.DefaultConfiguration;
-import nl.openminetopia.configuration.LevelCheckConfiguration;
-import nl.openminetopia.configuration.MessageConfiguration;
+import nl.openminetopia.configuration.*;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.entity.Player;
+
+import java.io.File;
 
 @CommandAlias("openminetopia|sdb|minetopia|omt")
 public class OpenMinetopiaCommand extends BaseCommand {
@@ -21,17 +20,22 @@ public class OpenMinetopiaCommand extends BaseCommand {
     @SneakyThrows
     @CommandPermission("openminetopia.reload")
     public void onReload(Player player) {
-        OpenMinetopia.setDefaultConfiguration(new DefaultConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        File dataFolder = OpenMinetopia.getInstance().getDataFolder();
+
+        OpenMinetopia.setDefaultConfiguration(new DefaultConfiguration(dataFolder));
         OpenMinetopia.getDefaultConfiguration().saveConfiguration();
 
-        OpenMinetopia.setMessageConfiguration(new MessageConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.setMessageConfiguration(new MessageConfiguration(dataFolder));
         OpenMinetopia.getMessageConfiguration().saveConfiguration();
 
-        OpenMinetopia.setLevelcheckConfiguration(new LevelCheckConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.setLevelcheckConfiguration(new LevelCheckConfiguration(dataFolder));
         OpenMinetopia.getLevelcheckConfiguration().saveConfiguration();
 
-        OpenMinetopia.setColorsConfiguration(new ColorsConfiguration(OpenMinetopia.getInstance().getDataFolder()));
+        OpenMinetopia.setColorsConfiguration(new ColorsConfiguration(dataFolder));
         OpenMinetopia.getColorsConfiguration().saveConfiguration();
+
+        OpenMinetopia.setFitnessConfiguration(new FitnessConfiguration(dataFolder));
+        OpenMinetopia.getFitnessConfiguration().saveConfiguration();
 
         player.sendMessage(ChatUtils.color("<gold>De configuratiebestanden zijn succesvol herladen!"));
     }

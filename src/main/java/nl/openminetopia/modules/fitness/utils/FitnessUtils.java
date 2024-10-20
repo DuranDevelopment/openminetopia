@@ -7,6 +7,7 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.fitness.statistics.types.HealthStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.FitnessConfiguration;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -32,7 +33,7 @@ public class FitnessUtils {
             return;
         }
 
-        DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+        FitnessConfiguration configuration = OpenMinetopia.getFitnessConfiguration();
 
         int totalFitness = minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL).getFitnessGained();
         double walkSpeed = 0.2;
@@ -94,7 +95,7 @@ public class FitnessUtils {
 
     public static void clearFitnessEffects(Player player) {
         List<PotionEffectType> possibleEffects = new ArrayList<>();
-        for (FitnessLevel fitnessLevel : OpenMinetopia.getDefaultConfiguration().getFitnessLevels().values()) {
+        for (FitnessLevel fitnessLevel : OpenMinetopia.getFitnessConfiguration().getFitnessLevels().values()) {
             fitnessLevel.getEffects().forEach(effect -> {
                 String effectName = effect.split(":")[0].toLowerCase();
                 if (!possibleEffects.contains(Registry.EFFECT.get(NamespacedKey.minecraft(effectName))))
@@ -121,13 +122,13 @@ public class FitnessUtils {
         int newHealthPoints;
 
         if (player.getFoodLevel() >= 18) {
-            newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getDefaultConfiguration().getPointsAbove9Hearts();
+            newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getFitnessConfiguration().getPointsAbove9Hearts();
             healthStatistic.setPoints(newHealthPoints);
         } else if (player.getFoodLevel() <= 4) {
-            newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow2Hearts();
+            newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getFitnessConfiguration().getPointsBelow2Hearts();
             healthStatistic.setPoints(newHealthPoints);
         } else if (player.getFoodLevel() <= 10) {
-            newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getDefaultConfiguration().getPointsBelow5Hearts();
+            newHealthPoints = healthStatistic.getPoints() + OpenMinetopia.getFitnessConfiguration().getPointsBelow5Hearts();
             healthStatistic.setPoints(newHealthPoints);
         }
 

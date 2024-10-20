@@ -4,9 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.api.player.fitness.objects.Fitness;
 import nl.openminetopia.api.player.fitness.statistics.FitnessStatistic;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.FitnessConfiguration;
 
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -17,12 +19,12 @@ public class EatingStatistic extends FitnessStatistic {
     private int cheapFood;
     private double points;
 
-    private final DefaultConfiguration defaultConfiguration = OpenMinetopia.getDefaultConfiguration();
+    private final FitnessConfiguration fitnessConfiguration = OpenMinetopia.getFitnessConfiguration();
 
     public EatingStatistic(int fitnessGained, int luxuryFood, int cheapFood) {
-        super(FitnessStatisticType.EATING, OpenMinetopia.getDefaultConfiguration().getMaxFitnessByHealth(), fitnessGained);
+        super(FitnessStatisticType.EATING, OpenMinetopia.getFitnessConfiguration().getMaxFitnessByHealth(), fitnessGained);
         this.luxuryFood = luxuryFood;
         this.cheapFood = cheapFood;
-        this.points = (luxuryFood * defaultConfiguration.getPointsForLuxuryFood()) + (cheapFood * defaultConfiguration.getPointsForCheapFood());
+        this.points = (luxuryFood * fitnessConfiguration.getPointsForLuxuryFood()) + (cheapFood * fitnessConfiguration.getPointsForCheapFood());
     }
 }

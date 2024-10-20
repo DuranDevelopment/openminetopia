@@ -66,6 +66,10 @@ public final class OpenMinetopia extends JavaPlugin {
     @Setter
     private static BankingConfiguration bankingConfiguration;
 
+    @Getter
+    @Setter
+    private static FitnessConfiguration fitnessConfiguration;
+
     @Override
     public void onEnable() {
         instance = this;
@@ -94,6 +98,9 @@ public final class OpenMinetopia extends JavaPlugin {
 
         bankingConfiguration = new BankingConfiguration(getDataFolder());
         bankingConfiguration.saveConfiguration();
+
+        fitnessConfiguration = new FitnessConfiguration(getDataFolder());
+        fitnessConfiguration.saveConfiguration();
 
         moduleManager.register(
                 new CoreModule(),

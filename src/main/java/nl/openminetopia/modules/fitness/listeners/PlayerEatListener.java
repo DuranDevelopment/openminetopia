@@ -6,6 +6,7 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.fitness.statistics.types.EatingStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.FitnessConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -16,7 +17,7 @@ public class PlayerEatListener implements Listener {
     public void playerEat(final PlayerItemConsumeEvent event) {
 
         if (!event.getItem().getType().isEdible()) return;
-        DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+        FitnessConfiguration configuration = OpenMinetopia.getFitnessConfiguration();
 
         if (!configuration.getCheapFood().contains(event.getItem().getType().name()) && !configuration.getLuxuryFood().contains(event.getItem().getType().name())) return;
 

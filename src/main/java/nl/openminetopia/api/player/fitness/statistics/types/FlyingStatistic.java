@@ -13,6 +13,6 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 public class FlyingStatistic extends FitnessStatistic {
 
     public FlyingStatistic(int fitnessGained) {
-        super(FitnessStatisticType.FLYING, OpenMinetopia.getDefaultConfiguration().getMaxFitnessByFlying(), fitnessGained);
+        super(FitnessStatisticType.FLYING, OpenMinetopia.getFitnessConfiguration().getMaxFitnessByFlying(), fitnessGained);
     }
 }

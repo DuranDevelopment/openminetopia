@@ -15,7 +15,7 @@ public class HealthStatistic extends FitnessStatistic {
     private int points;
 
     public HealthStatistic(int fitnessGained, int points) {
-        super(FitnessStatisticType.HEALTH, OpenMinetopia.getDefaultConfiguration().getMaxFitnessByHealth(), fitnessGained);
+        super(FitnessStatisticType.HEALTH, OpenMinetopia.getFitnessConfiguration().getMaxFitnessByHealth(), fitnessGained);
         this.points = points;
     }
 }

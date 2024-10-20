@@ -9,6 +9,7 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.FitnessConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
@@ -30,7 +31,7 @@ public class AdminToolFitnessMenu extends Menu {
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(offlinePlayer);
         if (minetopiaPlayer == null) return;
 
-        DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+        FitnessConfiguration configuration = OpenMinetopia.getFitnessConfiguration();
 
         DrinkingStatistic drinkingStatistic = (DrinkingStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.DRINKING);
         ItemBuilder drinkingItemBuilder = new ItemBuilder(Material.POTION)

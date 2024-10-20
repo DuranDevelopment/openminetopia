@@ -13,6 +13,6 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 public class SwimmingStatistic extends FitnessStatistic {
 
     public SwimmingStatistic(int fitnessGained) {
-        super(FitnessStatisticType.SWIMMING, OpenMinetopia.getDefaultConfiguration().getMaxFitnessBySwimming(), fitnessGained);
+        super(FitnessStatisticType.SWIMMING, OpenMinetopia.getFitnessConfiguration().getMaxFitnessBySwimming(), fitnessGained);
     }
 }
