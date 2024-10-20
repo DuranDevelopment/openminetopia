@@ -26,14 +26,14 @@ banking_account_info_line1: "<gold>Rekening Naam: <red><account_name></red> <gol
 banking_account_info_line2: "<gold> - Frozen: <red><account_frozen></red>"
 banking_account_info_line3: "<gold> - Balance: <red><account_balance></red>"
 banking_account_info_line4: "<gold> - Users: <red><account_users></red>"
-banking_user_already_exists: "<red><playername> is al toegevoegd op deze rekening."
-banking_user_added: "<gold>Je hebt</gold> <red><playername></red><gold>toegevoegd aan de rekening</gold> <red><account_name></red> <gold>met de rechten</gold> <red><permission></red><gold>."
+banking_user_already_exists: "<red><player> is al toegevoegd op deze rekening."
+banking_user_added: "<gold>Je hebt</gold> <red><player></red><gold>toegevoegd aan de rekening</gold> <red><account_name></red> <gold>met de rechten</gold> <red><permission></red><gold>."
 banking_user_deleted: "<gold>Je hebt</gold> <red><player_name></red><gold>verwijderd van de de rekening</gold> <red><account_name></red><gold>."
 banking_private_account: "Privérekening" # No nolors supported.
 banking_company_account: "Bedrijfsrekening" # No colors supported.
 banking_savings_account: "Spaarrekening" # No colors supported.
 banking_government_account: "Overheidsrekening" # No colors supported.
-banking_all_accounts: "<gold>All Bank Accounts"
+banking_all_accounts: "<gold>Alle Rekeningen"
 banking_select_account_type: "<gold>Selecteer het rekeningtype:"
 banking_no_accounts_in_category: "<red>Je hebt geen rekeningen in deze categorie."
 banking_not_enough_money: "<red>Je hebt niet genoeg geld op deze rekening."
@@ -41,8 +41,8 @@ banking_no_withdraw_permission: "<red>Je hebt geen recht om geld op te nemen van
 banking_withdraw_message: "<gold>Je hebt <red><withdraw_value></red> <gold>opgenomen van je rekening."
 banking_no_deposit_permission: "<red>Je hebt geen recht om geld te storten op deze rekening."
 banking_deposit_message: "<gold>Je hebt <red><deposit_value></red> <gold>gestort naar je rekening."
-banking_note_lore1: "<yellow>Officieel Horizons bankbiljet."
-banking_note_lore2: "<yello>Eigendom van de Centrale Bank."
+banking_note_lore1: "<yellow>Officieel Minetopia bankbiljet."
+banking_note_lore2: "<yellow>Eigendom van de Centrale Bank."
 
 # Chat
 chat_no_players_in_range: "<red>Er zijn geen spelers in de buurt om je bericht te horen!"
@@ -78,8 +78,8 @@ color_expires_never: "<gold>Deze kleur vervalt <yellow>nooit<gold>."
 color_time_format: "<yellow><hours> uur, <yellow><minutes> <gold>minuten en <yellow><seconds> <gold>seconden"
 
 # Fitness
-fitness_booster_added_to: "<gold>Added fitness booster to <yellow><playername><gold>."
-fitness_info_header: "<gold>Fitness informatie van <yellow><playername><gold>:"
+fitness_booster_added_to: "<gold>Fitness booster toegevoegd aan <yellow><player><gold>."
+fitness_info_header: "<gold>Fitness informatie van <yellow><player><gold>:"
 fitness_booster_info: "<gold>Booster: <yellow><amount> - <expires_at>"
 fitness_drinking_points: "<gold>Drinkpunten: <yellow><points>"
 fitness_drinking_fitness: "<gold>Fitness verdiend door drinken: <yellow><fitness><gold>/<yellow><max_fitness>"
@@ -108,7 +108,7 @@ player_data_loaded: "<green>Je gegevens zijn succesvol geladen!"
 player_data_not_loaded: "<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."
 player_bank_data_not_loaded: "<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."
 player_time_self: "<gold>Jouw huidige speeltijd is momenteel <playtime>"
-player_time_other_player: "<gold>De speeltijd van <playername> is momenteel <playtime>"
+player_time_other_player: "<gold>De speeltijd van <player> is momenteel <playtime>"
 player_time_format: "<yellow><days> dagen, <yellow><hours> uur, <yellow><minutes> <gold>minuten en <yellow><seconds> <gold>seconden"
 
 # Plots
@@ -131,6 +131,6 @@ plot_info_members: "<dark_aqua>Leden: <aqua><members>"
 plot_info_description: "<dark_aqua>Beschrijving: <aqua><description>"
 plot_info_footer: "<dark_aqua><st>----------------------------------------------"
 plot_not_owner: "<red>Je bent geen eigenaar van dit plot."
-plot_member_already: "<red><playername> is al een member van dit plot."
-plot_member_added: "<dark_aqua>Je hebt <aqua><playername><dark_aqua>toegevoegd aan het plot."
-plot_member_not_added: "<red><playername> is geen member van dit plot."
+plot_member_already: "<red><player> is al een member van dit plot."
+plot_member_added: "<dark_aqua>Je hebt <aqua><player><dark_aqua>toegevoegd aan het plot."
+plot_member_not_added: "<red><player> is geen member van dit plot."
