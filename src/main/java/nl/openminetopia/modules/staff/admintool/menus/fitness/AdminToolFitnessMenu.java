@@ -1,4 +1,4 @@
-package nl.openminetopia.modules.staff.admintool.menus;
+package nl.openminetopia.modules.staff.admintool.menus.fitness;
 
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
@@ -8,8 +8,8 @@ import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.fitness.statistics.types.*;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
-import nl.openminetopia.configuration.DefaultConfiguration;
 import nl.openminetopia.configuration.FitnessConfiguration;
+import nl.openminetopia.modules.staff.admintool.menus.AdminToolInfoMenu;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
@@ -148,18 +148,21 @@ public class AdminToolFitnessMenu extends Menu {
 
         TotalStatistic totalStatistic = (TotalStatistic) minetopiaPlayer.getFitness().getStatistic(FitnessStatisticType.TOTAL);
         ItemBuilder totalItemBuilder = new ItemBuilder(Material.PAPER)
-                .setName("<gold>Totaal: <yellow>" + totalStatistic.getFitnessGained() + "<gold>/<yellow>" + totalStatistic.getMaxFitnessGainable());
+                .setName("<gold>Totaal: <yellow>" + totalStatistic.getFitnessGained() + "<gold>/<yellow>" + totalStatistic.getMaxFitnessGainable())
+                .addLoreLine(" ")
+                .addLoreLine("<gold>Klik om de <yellow>fitness boosters <gold>te bekijken.");
 
-        Icon targetTotalIcon = new Icon(17, totalItemBuilder.toItemStack(), event -> event.setCancelled(true));
+        Icon targetTotalIcon = new Icon(17, totalItemBuilder.toItemStack(), event -> {
+            event.setCancelled(true);
+            new AdminToolFitnessBoostersMenu(player, offlinePlayer).open((Player) event.getWhoClicked());
+        });
         this.addItem(targetTotalIcon);
 
         ItemBuilder backItemBuilder = new ItemBuilder(Material.OAK_DOOR)
                 .setName("<gray>Terug");
 
         Icon backIcon = new Icon(22, backItemBuilder.toItemStack(), event -> {
-            AdminToolInfoMenu menu = new AdminToolInfoMenu(player, offlinePlayer);
-            menu.open((Player) event.getWhoClicked());
-
+            new AdminToolInfoMenu(player, offlinePlayer).open((Player) event.getWhoClicked());
         });
         this.addItem(backIcon);
     }

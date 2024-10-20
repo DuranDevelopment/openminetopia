@@ -17,15 +17,13 @@ public class PlayerMoveListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-
-        MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
-        if (minetopiaPlayer == null) return;
-
-        if (!minetopiaPlayer.isInPlace() || minetopiaPlayer.getPlace() == null) return;
-
         Bukkit.getScheduler().runTaskAsynchronously(OpenMinetopia.getInstance(), () -> {
+            Player player = event.getPlayer();
 
+            MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
+            if (minetopiaPlayer == null) return;
+
+            if (!minetopiaPlayer.isInPlace() || minetopiaPlayer.getPlace() == null) return;
 
             MTPlace from = MTPlaceManager.getInstance().getPlace(event.getFrom());
             MTPlace to = minetopiaPlayer.getPlace();

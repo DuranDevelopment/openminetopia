@@ -15,14 +15,12 @@ import nl.openminetopia.modules.color.enums.OwnableColorType;
 import nl.openminetopia.modules.color.menus.ColorTypeMenu;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.modules.player.utils.PlaytimeUtil;
-import nl.openminetopia.modules.staff.admintool.menus.colors.AdminToolColorMenu;
+import nl.openminetopia.modules.staff.admintool.menus.fitness.AdminToolFitnessMenu;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
-import java.util.Collection;
 
 @Getter
 public class AdminToolInfoMenu extends Menu {
