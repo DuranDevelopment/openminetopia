@@ -21,7 +21,7 @@ public class BankingCreateCommand extends BaseCommand {
     private final Pattern namePattern = Pattern.compile("^[a-zA-Z0-9_]+$");
 
     @Subcommand("create")
-    @Syntax("<type> <name> <balance>")
+    @Syntax("<type> <name>")
     @CommandPermission("openminetopia.banking.create")
     public void createAccount(CommandSender sender, AccountType type, String name) {
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
