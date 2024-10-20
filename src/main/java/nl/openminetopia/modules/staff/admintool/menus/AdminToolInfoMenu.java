@@ -93,7 +93,7 @@ public class AdminToolInfoMenu extends Menu {
 
 
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
-        BankAccountModel accountModel = bankingModule.getAccountsFromPlayer(player.getUniqueId())
+        BankAccountModel accountModel = bankingModule.getAccountsFromPlayer(offlinePlayer.getUniqueId())
                 .stream().filter(account -> account.getType() == AccountType.PRIVATE)
                 .findFirst().orElse(null);
 
