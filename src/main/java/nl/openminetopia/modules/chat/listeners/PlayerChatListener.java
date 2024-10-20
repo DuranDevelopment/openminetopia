@@ -5,6 +5,7 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.chat.utils.SpyUtils;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
@@ -41,7 +42,7 @@ public class PlayerChatListener implements Listener {
 
         recipients.remove(source);
         if (recipients.isEmpty() && configuration.isNotifyWhenNobodyInRange()) {
-            event.getPlayer().sendMessage(ChatUtils.color("<red>Er zijn geen spelers in de buurt om je bericht te horen."));
+            event.getPlayer().sendMessage(MessageConfiguration.component("chat_no_players_in_range"));
             return;
         }
         recipients.add(source);

@@ -9,7 +9,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.modules.plots.PlotModule;
-import nl.openminetopia.utils.ChatUtils;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.utils.WorldGuardUtils;
 import org.bukkit.entity.Player;
 
@@ -26,19 +26,18 @@ public class PlotClearCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
 
         if (region == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je staat niet op een geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_invalid_location"));
             return;
         }
 
         if (region.getFlag(PlotModule.PLOT_FLAG) == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Dit is geen geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_invalid"));
             return;
         }
 
         region.getOwners().clear();
         region.getMembers().clear();
 
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Je hebt alle plot <aqua>owners <dark_aqua>en <aqua>members <dark_aqua>verwijderd."));
+        player.sendMessage(MessageConfiguration.component("plot_clear_success"));
     }
-
 }

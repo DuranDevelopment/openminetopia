@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.utils.ChatUtils;
@@ -22,14 +23,17 @@ public class BankingInfoCommand extends BaseCommand {
         BankAccountModel accountModel = bankingModule.getAccountByName(accountName);
 
         if (accountModel == null) {
-            sender.sendMessage(ChatUtils.color("<red>Er is geen account gevonden met deze naam."));
+            sender.sendMessage(MessageConfiguration.component("banking_account_not_found"));
             return;
         }
 
-        sender.sendMessage(ChatUtils.color("<gold>Rekening Naam: <red>" + accountModel.getName() + " <gold>(<red>ID: " + accountModel.getId() + "<gold>)"));
-        sender.sendMessage(ChatUtils.color("<gold> - Frozen: <red>" + accountModel.getFrozen()));
-        sender.sendMessage(ChatUtils.color("<gold> - Balance: <red>" + accountModel.getBalance()));
-        sender.sendMessage(ChatUtils.color("<gold> - Users: <red>" + accountModel.getUsers().size()));
+        // TODO: Replace <account_name> <account_id> <account_frozen> <account_balance> <account_users> with the actual values
+        // TODO: When boolean is used, show yes or no component.
+        sender.sendMessage(MessageConfiguration.component("banking_account_info_line1"));
+        sender.sendMessage(MessageConfiguration.component("banking_account_info_line2"));
+        sender.sendMessage(MessageConfiguration.component("banking_account_info_line3"));
+        sender.sendMessage(MessageConfiguration.component("banking_account_info_line4"));
+
     }
 
 }
