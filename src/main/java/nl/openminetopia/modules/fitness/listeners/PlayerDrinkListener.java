@@ -6,6 +6,7 @@ import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType
 import nl.openminetopia.api.player.fitness.statistics.types.DrinkingStatistic;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.configuration.DefaultConfiguration;
+import nl.openminetopia.configuration.MessageConfiguration;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +34,7 @@ public class PlayerDrinkListener implements Listener {
         long drinkingCooldown = configuration.getDrinkingCooldown() * 60000L;
         if (minetopiaPlayer.getFitness().getLastDrinkingTime() + drinkingCooldown > System.currentTimeMillis()) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage("Je moet nog even wachten voor je weer kunt drinken.");
+            event.getPlayer().sendMessage(MessageConfiguration.component("fitness_drinking_cooldown"));
             return;
         }
 
@@ -44,14 +45,14 @@ public class PlayerDrinkListener implements Listener {
 
         switch (meta.getBasePotionType()) {
             case WATER:
-                event.getPlayer().sendMessage("Je hebt water gedronken.");
+                event.getPlayer().sendMessage(MessageConfiguration.component("fitness_drinking_water"));
                 drinkingStatistic.setPoints(currentDrinkingPoints + drinkingPointsPerBottle);
                 minetopiaPlayer.getFitness().setLastDrinkingTime(System.currentTimeMillis());
                 break;
             case null:
             default:
                 double drinkingPointsPerPotion = configuration.getDrinkingPointsPerPotion();
-                event.getPlayer().sendMessage("Je hebt een potion gedronken.");
+                event.getPlayer().sendMessage(MessageConfiguration.component("fitness_drinking_water"));
                 drinkingStatistic.setPoints(currentDrinkingPoints + drinkingPointsPerPotion);
                 minetopiaPlayer.getFitness().setLastDrinkingTime(System.currentTimeMillis());
         }

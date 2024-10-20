@@ -3,6 +3,7 @@ package nl.openminetopia.modules.banking.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.data.DataModule;
@@ -24,23 +25,25 @@ public class BankingUsersCommand extends BaseCommand {
         BankAccountModel accountModel = bankingModule.getAccountByName(accountName);
 
         if (accountModel == null) {
-            sender.sendMessage(ChatUtils.color("<red>Er is geen account gevonden met deze naam."));
+            sender.sendMessage(MessageConfiguration.component("banking_account_not_found"));
             return;
         }
 
         if (accountModel.getUsers().containsKey(target.getUniqueId())) {
-            sender.sendMessage(ChatUtils.color("<red>" + target.getName() + " is al toegevoegd op deze rekening."));
+            // TODO: Replace <player_name> with the actual value
+            sender.sendMessage(MessageConfiguration.component("banking_user_already_exists"));
             return;
         }
 
         dataModule.getAdapter().createBankPermission(target.getUniqueId(), accountModel.getUniqueId(), permission).whenComplete(((permissionModel, throwable) -> {
             if (throwable != null) {
-                sender.sendMessage(ChatUtils.color("<red>Er is iets mis gegaan met het aanmaken van de permissie data."));
+                sender.sendMessage(MessageConfiguration.component("database_update_error"));
                 return;
             }
 
             accountModel.getUsers().put(target.getUniqueId(), permission);
-            sender.sendMessage(ChatUtils.color("<gold>Je hebt</gold> <red>" + target.getName() + "</red> <gold>toegevoegd aan de rekening</gold> <red>" + accountName + "</red> <gold>met de rechten</gold> <red>" + permission + "</red><gold>."));
+            // TODO: Replace <player_name> <account_name> <permission> with the actual values
+            sender.sendMessage(MessageConfiguration.component("banking_user_added"));
         }));
 
     }
@@ -55,17 +58,18 @@ public class BankingUsersCommand extends BaseCommand {
         BankAccountModel accountModel = bankingModule.getAccountByName(accountName);
 
         if (accountModel == null) {
-            sender.sendMessage(ChatUtils.color("<red>Er is geen account gevonden met deze naam."));
+            sender.sendMessage(MessageConfiguration.component("banking_account_not_found"));
             return;
         }
 
         dataModule.getAdapter().deleteBankPermission(accountModel.getUniqueId(), target.getUniqueId()).whenComplete((v, throwable) -> {
             if (throwable != null) {
-                sender.sendMessage(ChatUtils.color("<red>Er is iets mis gegaan met het verwijderen van de speler."));
+                sender.sendMessage(MessageConfiguration.component("database_update_error"));
                 return;
             }
 
             accountModel.getUsers().remove(target.getUniqueId());
+            // TODO: Replace <player_name> <account_name> with the actual values
             sender.sendMessage(ChatUtils.color("<gold>Je hebt</gold> <red>" + target.getName() + "</red> <gold>verwijderd van de de rekening</gold> <red>" + accountModel.getName() + "</red><gold>."));
         });
     }

@@ -19,7 +19,7 @@ import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
 import nl.openminetopia.api.plots.events.PlotCreateEvent;
 import nl.openminetopia.modules.plots.PlotModule;
-import nl.openminetopia.utils.ChatUtils;
+import nl.openminetopia.configuration.MessageConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -57,7 +57,7 @@ public class PlotCreateCommand extends BaseCommand {
             RegionManager manager = container.get(region.getWorld());
 
             if (manager == null) {
-                player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Er ging iets mis met het aanmaken van je plot."));
+                player.sendMessage(MessageConfiguration.component("plot_creation_error"));
                 return;
             }
 
@@ -73,11 +73,9 @@ public class PlotCreateCommand extends BaseCommand {
             PlotCreateEvent event = new PlotCreateEvent(player, wgRegion);
             Bukkit.getPluginManager().callEvent(event);
 
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Je hebt het plot <aqua>" + wgRegion.getId() + " <dark_aqua>aangemaakt."));
+            player.sendMessage(MessageConfiguration.component("plot_creation_success"));
         } catch (IncompleteRegionException e) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je hebt nog geen selectie gemaakt, maak er een met de WorldEdit wand via //wand."));
+            player.sendMessage(MessageConfiguration.component("plot_no_selection"));
         }
-
     }
-
 }

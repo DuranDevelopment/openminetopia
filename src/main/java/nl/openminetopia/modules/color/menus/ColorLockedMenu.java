@@ -3,6 +3,7 @@ package nl.openminetopia.modules.color.menus;
 import com.jazzkuh.inventorylib.objects.PaginatedMenu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.configuration.components.ColorComponent;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.item.ItemBuilder;
@@ -23,21 +24,21 @@ public class ColorLockedMenu extends PaginatedMenu {
             this.addItem(new Icon(new ItemBuilder(Material.IRON_INGOT).setName(component.displayName()).toItemStack()));
         });
 
-        this.addSpecialIcon(new Icon(49, new ItemBuilder(Material.LADDER).setName("<gray>Ga terug").toItemStack(),
+        this.addSpecialIcon(new Icon(49, new ItemBuilder(Material.LADDER).setName(MessageConfiguration.message("go_back")).toItemStack(),
                 (e) -> oldMenu.open(player)));
     }
 
     @Override
     public Icon getPreviousPageItem() {
         return new Icon(45, new ItemBuilder(Material.ARROW)
-                .setName("<gold>Vorige pagina")
+                .setName(MessageConfiguration.message("previous_page"))
                 .toItemStack(), event -> event.setCancelled(true));
     }
 
     @Override
     public Icon getNextPageItem() {
         return new Icon(53, new ItemBuilder(Material.ARROW)
-                .setName("<gold>Volgende pagina")
+                .setName(MessageConfiguration.message("next_page"))
                 .toItemStack(), event -> event.setCancelled(true));
     }
 }

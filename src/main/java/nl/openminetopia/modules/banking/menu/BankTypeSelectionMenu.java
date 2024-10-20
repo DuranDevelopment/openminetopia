@@ -3,6 +3,7 @@ package nl.openminetopia.modules.banking.menu;
 import com.jazzkuh.inventorylib.objects.Menu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.banking.enums.AccountType;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
@@ -16,7 +17,7 @@ import java.util.Collection;
 public class BankTypeSelectionMenu extends Menu {
 
     public BankTypeSelectionMenu(Player player) {
-        super(ChatUtils.color("<gold>Selecteer het rekeningtype:"), 3);
+        super(MessageConfiguration.component("banking_select_account_type"), 3);
 
         for (AccountType type : AccountType.values()) {
             ItemStack iconStack = new ItemBuilder(type.getMaterial())
@@ -32,7 +33,7 @@ public class BankTypeSelectionMenu extends Menu {
                         .toList();
 
                 if (accountModels.isEmpty()) {
-                    player.sendMessage(ChatUtils.color("<red>Je hebt geen rekeningen in deze catogorie."));
+                    player.sendMessage(MessageConfiguration.component("banking_no_accounts_in_category"));
                     return;
                 }
 

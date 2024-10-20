@@ -10,6 +10,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.WorldGuardUtils;
@@ -28,29 +29,31 @@ public class PlotMembersCommand extends BaseCommand {
 
         MinetopiaPlayer minetopiaPlayer = PlayerManager.getInstance().getMinetopiaPlayer(player);
         if (minetopiaPlayer == null) return;
-        
+
         if (region == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je staat niet op een geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_invalid_location"));
             return;
         }
 
         if (region.getFlag(PlotModule.PLOT_FLAG) == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Dit is geen geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_not_valid"));
             return;
         }
 
         if (!region.getOwners().contains(player.getUniqueId())) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je bent geen eigenaar van dit plot."));
+            player.sendMessage(MessageConfiguration.component("plot_not_owner"));
             return;
         }
 
         if (region.getMembers().contains(target.getUniqueId())) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>" + target.getName() + " is al een member van dit plot."));
+            // TODO: Repalce <playername> with actual value.
+            player.sendMessage(MessageConfiguration.component("plot_member_already"));
             return;
         }
 
         region.getMembers().addPlayer(target.getUniqueId());
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Je hebt <aqua>" + target.getName() + " <dark_aqua>toegevoegd aan het plot."));
+        // TODO: Replace <playername> with actual value.
+        player.sendMessage(MessageConfiguration.component("plot_member_added"));
     }
 
     @Subcommand("removemember")
@@ -64,22 +67,22 @@ public class PlotMembersCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
 
         if (region == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je staat niet op een geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_invalid_location"));
             return;
         }
 
         if (region.getFlag(PlotModule.PLOT_FLAG) == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Dit is geen geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_not_valid"));
             return;
         }
 
         if (!region.getOwners().contains(player.getUniqueId())) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je bent geen eigenaar van dit plot."));
+            player.sendMessage(MessageConfiguration.component("plot_not_owner"));
             return;
         }
 
         if (!region.getMembers().contains(profile.getId())) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>" + profile.getName() + " is geen member van dit plot."));
+            player.sendMessage(MessageConfiguration.component("plot_member_not_added"));
             return;
         }
 
