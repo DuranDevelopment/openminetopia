@@ -29,6 +29,7 @@ public class DetectionListener implements Listener {
 
         if (event.getAction() != Action.PHYSICAL) return;
         DefaultConfiguration configuration = OpenMinetopia.getDefaultConfiguration();
+        if(!configuration.isDetectionGateEnabled()) return;
         Block block = event.getClickedBlock();
         if (block.getType() != configuration.getDetectionPressurePlate()) return;
         if (block.getRelative(BlockFace.DOWN).getType() != configuration.getDetectionActivationBlock()) return;
