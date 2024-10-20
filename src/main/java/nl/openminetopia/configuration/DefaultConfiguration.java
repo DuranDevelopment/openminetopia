@@ -6,14 +6,12 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.data.types.DatabaseType;
 import nl.openminetopia.modules.fitness.objects.FitnessLevel;
 import nl.openminetopia.utils.ConfigurateConfig;
+import org.bukkit.Material;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 public class DefaultConfiguration extends ConfigurateConfig {
@@ -109,6 +107,18 @@ public class DefaultConfiguration extends ConfigurateConfig {
      * Teleporter configuration
      */
     private final List<String> displayLines;
+
+    /**
+     * Detection Gate configuration
+     */
+    private final boolean detectionGateEnabled;
+    private final int detectionBlocksReplacementRange;
+    private final int detectionCooldown;
+    private final Material detectionPressurePlate;
+    private final Material detectionActivationBlock;
+    private final List<Material> detectionMaterials;
+    private final Map<Material, Material> detectionSafeBlocks;
+    private final Map<Material, Material> detectionFlaggedBlocks;
 
     /**
      * Plot configuration
@@ -262,6 +272,78 @@ public class DefaultConfiguration extends ConfigurateConfig {
                 "<gold>Teleporter",
                 "<grey><x>;<y>;<z>;<world>"
         ));
+
+        /*
+         * Detection Gate configuration
+         */
+        this.detectionGateEnabled = rootNode.node("detection-gate", "enabled").getBoolean(true);
+        this.detectionBlocksReplacementRange = rootNode.node("detection-gate", "blocks", "replacement-range").getInt(5);
+        this.detectionCooldown = rootNode.node("detection-gate", "cooldown").getInt(3);
+        this.detectionPressurePlate = Material.matchMaterial(rootNode.node("detection-gate", "blocks", "pressure-plate-type").getString(Material.LIGHT_WEIGHTED_PRESSURE_PLATE.toString()));
+        this.detectionActivationBlock = Material.matchMaterial(rootNode.node("detection-gate", "blocks", "activation-block").getString(Material.IRON_BLOCK.toString()));
+        this.detectionMaterials = new ArrayList<>();
+        rootNode.node("detection-gate", "flagged-materials").getList(String.class, List.of(
+                Material.SUGAR.toString(),
+                Material.IRON_HOE.toString(),
+                Material.STICK.toString(),
+                Material.WOODEN_SWORD.toString(),
+                Material.SPIDER_EYE.toString(),
+                Material.FERMENTED_SPIDER_EYE.toString(),
+                Material.SNOWBALL.toString(),
+                Material.ARROW.toString(),
+                Material.BOW.toString(),
+                Material.ROTTEN_FLESH.toString(),
+                Material.STONE_HOE.toString(),
+                Material.POISONOUS_POTATO.toString()
+        )).forEach(materialString -> {
+            Material material = Material.matchMaterial(materialString);
+            if (material != null) {
+                this.detectionMaterials.add(material);
+            }
+        });
+
+        ConfigurationNode safeBlocksNode = rootNode.node("detection-gate", "flag-blocks", "safe");
+        if (safeBlocksNode.isNull()) {
+            Map<String, String> safeBlocks = new HashMap<>();
+            safeBlocks.put(Material.BLACK_WOOL.toString(), Material.LIME_WOOL.toString());
+            safeBlocks.put(Material.BLACK_CONCRETE.toString(), Material.LIME_CONCRETE.toString());
+            safeBlocks.put(Material.BLACK_TERRACOTTA.toString(), Material.LIME_TERRACOTTA.toString());
+            safeBlocks.put(Material.BLACK_STAINED_GLASS.toString(), Material.LIME_STAINED_GLASS.toString());
+            OpenMinetopia.getInstance().getLogger().info("loading new blocks.");
+            safeBlocks.forEach((key, value) -> {
+                safeBlocksNode.node(key).getString(value);
+            });
+        }
+
+        this.detectionSafeBlocks = new HashMap<>();
+        safeBlocksNode.childrenMap().forEach((key, val) -> {
+            Material keyMaterial = Material.matchMaterial(key.toString());
+            Material valueMaterial = Material.matchMaterial(val.getString().toString());
+            if (keyMaterial != null && valueMaterial != null) {
+                this.detectionSafeBlocks.put(keyMaterial, valueMaterial);
+            }
+        });
+
+        ConfigurationNode flaggedBlocksNode = rootNode.node("detection-gate", "flag-blocks", "flagged");
+        if (flaggedBlocksNode.isNull()) {
+            Map<String, String> flaggedBlocks = new HashMap<>();
+            flaggedBlocks.put(Material.BLACK_WOOL.toString(), Material.RED_WOOL.toString());
+            flaggedBlocks.put(Material.BLACK_CONCRETE.toString(), Material.RED_CONCRETE.toString());
+            flaggedBlocks.put(Material.BLACK_TERRACOTTA.toString(), Material.RED_TERRACOTTA.toString());
+            flaggedBlocks.put(Material.BLACK_STAINED_GLASS.toString(), Material.RED_STAINED_GLASS.toString());
+            flaggedBlocks.forEach((key, value) -> {
+                flaggedBlocksNode.node(key).getString(value);
+            });
+        }
+
+        this.detectionFlaggedBlocks = new HashMap<>();
+        flaggedBlocksNode.childrenMap().forEach((key, val) -> {
+            Material keyMaterial = Material.matchMaterial(key.toString());
+            Material valueMaterial = Material.matchMaterial(val.getString().toString());
+            if (keyMaterial != null && valueMaterial != null) {
+                this.detectionFlaggedBlocks.put(keyMaterial, valueMaterial);
+            }
+        });
 
         /*
          * Plot configuration

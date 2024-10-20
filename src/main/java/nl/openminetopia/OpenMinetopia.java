@@ -15,6 +15,7 @@ import nl.openminetopia.modules.color.ColorModule;
 import nl.openminetopia.modules.core.CoreModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
+import nl.openminetopia.modules.detectiongates.DetectionModule;
 import nl.openminetopia.modules.fitness.FitnessModule;
 import nl.openminetopia.modules.places.PlacesModule;
 import nl.openminetopia.modules.player.PlayerModule;
@@ -37,19 +38,26 @@ public final class OpenMinetopia extends JavaPlugin {
 
     @Getter
     private static OpenMinetopia instance;
+
     @Getter
     private static ModuleManager moduleManager;
+
     @Getter
+    @Setter
     private static PaperCommandManager commandManager;
+
     @Getter
     @Setter
     private static DefaultConfiguration defaultConfiguration;
+
     @Getter
     @Setter
     private static MessageConfiguration messageConfiguration;
+
     @Getter
     @Setter
     private static LevelCheckConfiguration levelcheckConfiguration;
+
     @Getter
     @Setter
     private static ColorsConfiguration colorsConfiguration;
@@ -100,7 +108,8 @@ public final class OpenMinetopia extends JavaPlugin {
                 new PlacesModule(),
                 new ScoreboardModule(),
                 new PlotModule(),
-                new TeleporterModule()
+                new TeleporterModule(),
+                new DetectionModule()
         );
 
         commandManager.enableUnstableAPI("help");
