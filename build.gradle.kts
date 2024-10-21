@@ -80,6 +80,11 @@ dependencies {
 
     /* bStats */
     implementation("org.bstats:bstats-bukkit:3.1.0")
+
+    /* Vault */
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+        exclude(group = "org.bukkit", module = "bukkit")
+    }
 }
 
 val targetJavaVersion = 21

@@ -5,6 +5,8 @@ import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.statistics.enums.FitnessStatisticType;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.modules.banking.BankingModule;
+import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +53,18 @@ public class OpenMinetopiaExpansion extends PlaceholderExpansion {
 
         if (params.equalsIgnoreCase("temperature")) {
             return minetopiaPlayer.getPlace().getTemperature() + "";
+        }
+
+        if(params.startsWith("balance")) {
+            BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
+            BankAccountModel accountModel = bankingModule.getAccountById(player.getUniqueId());
+            if(accountModel == null) return null;
+
+            if(params.equalsIgnoreCase("balance_formatted")) {
+                return bankingModule.format(accountModel.getBalance());
+            }
+
+            return String.valueOf(accountModel.getBalance());
         }
 
         if (params.equalsIgnoreCase("fitness")) {
