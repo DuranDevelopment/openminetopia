@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.*;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.fitness.objects.FitnessBooster;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.configuration.MessageConfiguration;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -25,7 +26,8 @@ public class FitnessBoosterCommand extends BaseCommand {
 
         FitnessBooster fitnessBooster = new FitnessBooster(amount, expiresAtMillis);
         minetopiaPlayer.getFitness().addBooster(fitnessBooster);
-        
-        player.sendMessage("Added fitness booster to " + offlinePlayer.getName());
+
+        // TODO: Replace <playername> with actual value
+        player.sendMessage(MessageConfiguration.component("fitness_booster_added_to"));
     }
 }

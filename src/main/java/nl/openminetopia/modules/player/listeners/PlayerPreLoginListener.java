@@ -2,6 +2,7 @@ package nl.openminetopia.modules.player.listeners;
 
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.api.player.PlayerManager;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.banking.enums.AccountPermission;
 import nl.openminetopia.modules.banking.enums.AccountType;
@@ -22,7 +23,7 @@ public class PlayerPreLoginListener implements Listener {
         try {
             dataModule.getAdapter().loadPlayer(event.getUniqueId());
         } catch (Exception e) {
-            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er is een fout opgetreden bij het laden van je gegevens! Probeer het later opnieuw."));
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MessageConfiguration.component("player_data_not_loaded"));
             OpenMinetopia.getInstance().getLogger().warning("Error loading player model: " + e.getMessage());
         }
 
@@ -31,7 +32,7 @@ public class PlayerPreLoginListener implements Listener {
         bankingModule.getAccountModel(event.getUniqueId()).whenComplete(((bankAccountModel, throwable) -> {
             if (throwable != null) {
                 OpenMinetopia.getInstance().getLogger().info("Could not account for: " + throwable.getMessage());
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MessageConfiguration.component("player_bank_data_not_loaded"));
                 return;
             }
 
@@ -41,7 +42,7 @@ public class PlayerPreLoginListener implements Listener {
                 dataModule.getAdapter().createBankAccount(event.getUniqueId(), AccountType.PRIVATE, 0L, event.getName(), false).whenComplete((accountModel, accountThrowable) -> {
                     if (accountThrowable != null) {
                         OpenMinetopia.getInstance().getLogger().severe("Couldn't create account for " + event.getName() + ": " + accountThrowable.getMessage());
-                        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, ChatUtils.color("<red>Er ging iets fout tijdens het ophalen van je bank gegevens."));
+                        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, MessageConfiguration.component("player_bank_data_not_loaded"));
                     }
 
                     accountModel.initSavingTask();

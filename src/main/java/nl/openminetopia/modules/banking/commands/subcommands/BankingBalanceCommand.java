@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.utils.ChatUtils;
@@ -22,7 +23,7 @@ public class BankingBalanceCommand extends BaseCommand {
         BankAccountModel accountModel = bankingModule.getAccountByName(accountName);
 
         if (accountModel == null) {
-            sender.sendMessage(ChatUtils.color("<red>Er is geen account gevonden met deze naam."));
+            sender.sendMessage(MessageConfiguration.component("banking_account_not_found"));
             return;
         }
 

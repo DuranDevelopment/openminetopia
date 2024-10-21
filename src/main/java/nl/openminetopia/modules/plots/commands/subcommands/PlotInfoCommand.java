@@ -8,6 +8,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.kyori.adventure.text.Component;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.MinetopiaPlayer;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.plots.PlotModule;
 import nl.openminetopia.utils.ChatUtils;
 import nl.openminetopia.utils.WorldGuardUtils;
@@ -28,12 +29,12 @@ public class PlotInfoCommand extends BaseCommand {
         if (minetopiaPlayer == null) return;
 
         if (region == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Je staat niet op een geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_invalid_location"));
             return;
         }
 
         if (region.getFlag(PlotModule.PLOT_FLAG) == null) {
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<red>Dit is geen geldig plot."));
+            player.sendMessage(MessageConfiguration.component("plot_not_valid"));
             return;
         }
 
@@ -45,18 +46,22 @@ public class PlotInfoCommand extends BaseCommand {
                 .map(memberId -> Bukkit.getOfflinePlayer(memberId).getName())
                 .collect(Collectors.joining(", "));
 
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua><st>----------------------------------------------"));
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Plot informatie voor: <aqua>" + region.getId()));
+        player.sendMessage(MessageConfiguration.component("plot_info_header"));
+        // TODO: Replace <plotname> with actual plot name.
+        player.sendMessage(MessageConfiguration.component("plot_info_title"));
         player.sendMessage(Component.empty());
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Owners: <aqua>" + (region.getOwners().size() > 0 ? owners : "Geen.")));
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Members: <aqua>" + (region.getMembers().size() > 0 ? members : "Geen.")));
+        // TODO: Replace <owners> with actual owners. (If there are no owners, replace with "Geen.")
+        player.sendMessage(MessageConfiguration.component("plot_info_owners"));
+        // TODO: Replace <members> with actual owners. (If there are no owners, replace with "Geen.")
+        player.sendMessage(MessageConfiguration.component("plot_info_members"));
 
         if(region.getFlag(PlotModule.PLOT_DESCRIPTION) != null) {
             String description = region.getFlag(PlotModule.PLOT_DESCRIPTION);
-            player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua>Beschrijving: <aqua>" + description));
+            // TODO: Replace <description> with actual description.
+            player.sendMessage(MessageConfiguration.component("plot_info_description"));
         }
 
-        player.sendMessage(ChatUtils.format(minetopiaPlayer, "<dark_aqua><st>----------------------------------------------"));
+        player.sendMessage(MessageConfiguration.component("plot_info_footer"));
     }
 
 }

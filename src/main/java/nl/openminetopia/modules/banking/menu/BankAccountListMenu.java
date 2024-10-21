@@ -3,6 +3,7 @@ package nl.openminetopia.modules.banking.menu;
 import com.jazzkuh.inventorylib.objects.PaginatedMenu;
 import com.jazzkuh.inventorylib.objects.icon.Icon;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.utils.ChatUtils;
@@ -13,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 public class BankAccountListMenu extends PaginatedMenu {
 
     public BankAccountListMenu() {
-        super(ChatUtils.color("All Bank Accounts"), 6);
+        super(MessageConfiguration.component("banking_all_accounts"), 6);
         this.registerPageSlotsBetween(0, 45);
 
         BankingModule bankingModule = OpenMinetopia.getModuleManager().getModule(BankingModule.class);
@@ -42,7 +43,7 @@ public class BankAccountListMenu extends PaginatedMenu {
     @Override
     public Icon getPreviousPageItem() {
         ItemStack previousStack = new ItemBuilder(Material.ARROW)
-                .setName("Vorige Pagina")
+                .setName(MessageConfiguration.message("previous_page"))
                 .toItemStack();
         return new Icon(47, previousStack, e -> e.setCancelled(true));
     }
@@ -50,7 +51,7 @@ public class BankAccountListMenu extends PaginatedMenu {
     @Override
     public Icon getNextPageItem() {
         ItemStack previousStack = new ItemBuilder(Material.ARROW)
-                .setName("Volgende Pagina")
+                .setName(MessageConfiguration.message("next_page"))
                 .toItemStack();
         return new Icon(51, previousStack, e -> e.setCancelled(true));
     }

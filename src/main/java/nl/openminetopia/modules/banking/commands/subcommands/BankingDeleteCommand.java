@@ -3,6 +3,7 @@ package nl.openminetopia.modules.banking.commands.subcommands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import nl.openminetopia.OpenMinetopia;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.modules.banking.BankingModule;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
@@ -22,17 +23,18 @@ public class BankingDeleteCommand extends BaseCommand {
         BankAccountModel accountModel = bankingModule.getAccountByName(accountName);
 
         if (accountModel == null) {
-            sender.sendMessage(ChatUtils.color("<red>Er is geen account gevonden met deze naam."));
+            sender.sendMessage(MessageConfiguration.component("banking_account_not_found"));
             return;
         }
 
         dataModule.getAdapter().deleteBankAccount(accountModel.getUniqueId()).whenComplete((v, throwable) -> {
             if (throwable != null) {
-                sender.sendMessage(ChatUtils.color("<red>Er ging iets fout tijdens het verwijderen van het account."));
+                sender.sendMessage(MessageConfiguration.component("banking_account_deletion_error"));
                 return;
             }
 
-            sender.sendMessage(ChatUtils.color("<gold>Het account</gold> <red>" + accountModel.getName() + "</red> <gold>is verwijderd."));
+            // TODO: Replace <account_name> with the actual value
+            sender.sendMessage(MessageConfiguration.component("banking_account_deleted"));
             bankingModule.getBankAccountModels().remove(accountModel);
         });
     }

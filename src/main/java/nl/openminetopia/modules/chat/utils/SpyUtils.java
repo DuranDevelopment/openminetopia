@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import nl.openminetopia.api.player.PlayerManager;
 import nl.openminetopia.api.player.objects.OnlineMinetopiaPlayer;
+import nl.openminetopia.configuration.MessageConfiguration;
 import nl.openminetopia.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,8 +16,8 @@ import java.util.Optional;
 public class SpyUtils {
 
     public void chatSpy(Player player, String message, List<Player> ignore) {
-        Component spiedMessage = ChatUtils
-                .color("<dark_gray>[<gray>ChatSpy<dark_gray>]<gray> " + player.getName() + ": " + message);
+        // TODO: Replace <player_name> <message> with actual values
+        Component spiedMessage = MessageConfiguration.component("chat_chatspy_format");
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getUniqueId().equals(player.getUniqueId())) continue;
@@ -31,8 +32,8 @@ public class SpyUtils {
     }
 
     public void commandSpy(Player player, String command) {
-        Component spiedMessage = ChatUtils
-                .color("<dark_gray>[<gray>CommandSpy<dark_gray>]<gray> " + player.getName() + ": " + command);
+        // TODO: Replace <player_name> <command> with actual values
+        Component spiedMessage = MessageConfiguration.component("chat_commandspy_format");
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.getUniqueId().equals(player.getUniqueId())) continue;
