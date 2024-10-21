@@ -127,7 +127,10 @@ public final class OpenMinetopia extends JavaPlugin {
         Menu.init(this);
         InventoryLoader.setFormattingProvider(message -> ChatUtils.color("<red>" + message));
 
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) new OpenMinetopiaExpansion().register();
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new OpenMinetopiaExpansion().register();
+            getLogger().info("Registered PlaceholderAPI expansion.");
+        }
     }
 
     @Override

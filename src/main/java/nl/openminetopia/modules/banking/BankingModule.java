@@ -3,16 +3,19 @@ package nl.openminetopia.modules.banking;
 import com.craftmend.storm.api.enums.Where;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import net.milkbowl.vault.economy.Economy;
 import nl.openminetopia.OpenMinetopia;
 import nl.openminetopia.modules.Module;
 import nl.openminetopia.modules.banking.commands.BankingCommand;
 import nl.openminetopia.modules.banking.commands.subcommands.*;
 import nl.openminetopia.modules.banking.listeners.BankingInteractionListener;
+import nl.openminetopia.modules.banking.vault.VaultEconomyHandler;
 import nl.openminetopia.modules.data.DataModule;
 import nl.openminetopia.modules.data.storm.StormDatabase;
 import nl.openminetopia.modules.data.storm.models.BankAccountModel;
 import nl.openminetopia.modules.data.storm.models.BankPermissionModel;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.ServicePriority;
 
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -68,13 +71,10 @@ public class BankingModule extends Module {
                              */
                             return;
                         }
-
                         accountModel.getUsers().put(permission.getUuid(), permission.getPermission());
                     });
-
                     OpenMinetopia.getInstance().getLogger().info("Found and applied " + permissions.size() + " bank permissions.");
                 });
-
             });
         }, 3L);
 
@@ -91,6 +91,11 @@ public class BankingModule extends Module {
         registerCommand(new BankingListCommand());
 
         registerListener(new BankingInteractionListener());
+
+        if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
+            Bukkit.getServicesManager().register(Economy.class, new VaultEconomyHandler(), OpenMinetopia.getInstance(), ServicePriority.Normal);
+            OpenMinetopia.getInstance().getLogger().info("Registered Vault economy handler.");
+        }
     }
 
     @Override
